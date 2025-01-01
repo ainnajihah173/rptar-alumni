@@ -242,7 +242,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -262,7 +262,24 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    @if (session()->has('success'))
+                        <br>
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                        
+                    @endif
 
+                    @if ($errors->any())
+                        <br>
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <!-- Page Content -->
                     @yield('content')
 
@@ -309,7 +326,7 @@
                 <!-- Modal Header -->
                 <h5 class="modal-title fw-bold mb-2" id="logoutModalLabel">Ready to Logout?</h5>
                 <p class="text-muted mb-4">
-                     Click "Logout" below to exit safely.
+                    Click "Logout" below to exit safely.
                 </p>
                 <!-- Buttons -->
                 <div class="d-flex justify-content-center gap-3">
@@ -331,6 +348,12 @@
     <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
         @csrf
     </form>
+    <!-- Add the following JavaScript to auto-dismiss the alert after 3 seconds -->
+    <script>
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 3000); // 3000 milliseconds = 3 seconds
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('../assets/vendor/jquery/jquery.min.js') }}"></script>
@@ -346,13 +369,7 @@
     <!-- Page level plugins -->
     <script src="{{ asset('../assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <!--<script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js"></script>-->
+
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('../assets/js/demo/chart-area-demo.assets') }}"></script>
@@ -418,11 +435,7 @@
             progressBar.style.width = `${progressPercentage}%`;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('modal'))
-                $('#successModal').modal('show'); // Trigger the modal when there's a success message
-            @endif
-        });
+        
     </script>
 
 

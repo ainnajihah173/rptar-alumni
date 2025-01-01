@@ -10,7 +10,13 @@ class UserController extends Controller
 {
   public function dashboard()
   {
-    return view('dashboard');
+    if(auth()->user()->role === 'staff' || auth()->user()->role === 'admin'){
+      return view('dashboard');
+    }
+    else{
+      return view('welcome');
+    }
+    
   }
 
   public function index()
@@ -25,9 +31,12 @@ class UserController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'name' => 'required|string|max:255',
+      'name' => 'required|string|max:255|unique:users,name',
       'email' => 'required|email|unique:users,email',
       'password' => 'required|min:8',
+    ], [
+      'name.unique' => 'The name has already been taken.',
+      'email.unique' => 'The email address has already been registered.',
     ]);
 
     $user = User::create([
@@ -39,8 +48,8 @@ class UserController extends Controller
 
     // Return to user list with success message
     return redirect()->route('user.index')
-    ->with('success', 'User created successfully.')
-    ->with('modal', '<strong>Email:</strong> ' . $user->email . '<br><br><strong>Password:</strong> ' . $request->password);
+      ->with('success', 'User created successfully.')
+      ->with('modal', '<strong>Email:</strong> ' . $user->email . '<br><br><strong>Password:</strong> ' . $request->password);
   }
 
   /**
@@ -64,7 +73,7 @@ class UserController extends Controller
   {
     User::destroy($id);
     return redirect()->route('user.index')
-        ->with('success', "User Deleted Successfully!");
+      ->with('success', "User Deleted Successfully!");
 
   }
 

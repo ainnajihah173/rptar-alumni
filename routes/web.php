@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,11 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
+    //Profile
+    Route::get('/profile/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/staff/alumni-profile', [StaffController::class, 'index'])->name('staff.index');
+    Route::get('/staff/alumni-profile/details', [StaffController::class, 'show'])->name('staff.show');
+
     //Dashboard 
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 
@@ -56,19 +62,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{id}/reject', [EventsController::class, 'reject'])->name('events.reject');
 
     //Manage Inquiries
-
+    Route::resource('inquiries', InquiriesController::class);
 
     //Manage Donations
 
 
     //Manage Communications
-
-
-    //Profiles
-
-    Route::get('/staff/alumni-profile', [StaffController::class, 'index'])->name('staff.index');
-    Route::get('/staff/alumni-profile/details', [StaffController::class, 'show'])->name('staff.show');
-
 
 
 });
