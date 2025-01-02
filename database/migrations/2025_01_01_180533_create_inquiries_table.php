@@ -14,12 +14,17 @@ return new class extends Migration
         Schema::create('inquiries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id'); // Reference to the users table
-            $table->foreignId('category_id');
-            $table->string('subject');
-            $table->text('message');
-            $table->enum('status', ['pending', 'in_progress', 'resolved'])->default('pending');
+            $table->foreignId('assign_id')->nullable();
+            $table->enum('category', ['general', 'complaint', 'others']); // Example categories
+            $table->string('title');
+            $table->string('image_path')->nullable();
+            $table->text('description');
+            $table->date('resolved_date')->nullable();
+            $table->text('solution')->nullable();
+            $table->enum('status', ['Pending', 'In Progress', 'Resolved'])->default('Pending');
             $table->timestamps();
         });
+        
     }
 
     /**

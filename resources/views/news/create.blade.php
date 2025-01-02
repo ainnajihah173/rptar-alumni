@@ -21,13 +21,15 @@
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <label for="example-readonly">News Title</label>
-                            <input type="text" id="example-readonly" class="form-control" name="title" required placeholder="News Headline">
+                            <input type="text" id="example-readonly" class="form-control" name="title" required
+                                placeholder="News Headline">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
                             <label for="example-readonly">Slug</label>
-                            <input type="text" id="example-readonly" class="form-control" name="slug" required placeholder="eg: news-headline">
+                            <input type="text" id="example-readonly" class="form-control" name="slug" required
+                                placeholder="eg: news-headline">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -59,7 +61,7 @@
                             <textarea class="form-control" id="editor" name="content"></textarea>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!-- end row-->
                 <div class="text-center mt-2">
@@ -70,4 +72,6 @@
         </div>
 
     </div>
+
+
 @endsection

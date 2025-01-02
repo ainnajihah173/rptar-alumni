@@ -47,8 +47,10 @@
 
         @if (auth()->user()->role === 'admin')
             <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
-            @else
+            @elseif(auth()->user()->role === 'staff')
                 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                @else
+                    <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
         @endif
 
         <!-- Sidebar - Brand -->
@@ -76,7 +78,7 @@
             Manage
         </div>
 
-        @if (auth()->user()->role === 'staff')
+        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
             <li class="nav-item {{ request()->routeIs('news.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('news.index') }}">
@@ -114,7 +116,7 @@
             </div>
         </li>
 
-        @if (auth()->user()->role === 'staff')
+        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
             <li class="nav-item">
                 <a class="nav-link" href="">
@@ -124,13 +126,13 @@
         @endif
 
         <!-- Nav Item - News -->
-        <li class="nav-item">
-            <a class="nav-link" href="">
+        <li class="nav-item {{ request()->routeIs('inquiries.index') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('inquiries.index')}}">
                 <i class="fas fa-fw fa-envelope"></i>
                 <span>Inquiries</span></a>
         </li>
 
-        @if (auth()->user()->role === 'staff')
+        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
             <li class="nav-item {{ request()->routeIs('staff.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('staff.index') }}">
@@ -267,7 +269,6 @@
                         <div class="alert alert-success">
                             {{ session()->get('success') }}
                         </div>
-                        
                     @endif
 
                     @if ($errors->any())
@@ -372,8 +373,8 @@
 
 
     <!-- Page level custom scripts -->
-    <script src="{{ asset('../assets/js/demo/chart-area-demo.assets') }}"></script>
-    <script src="{{ asset('../assets/js/demo/chart-pie-demo.js') }}"></script>
+    <!--<script src="{{ asset('../assets/js/demo/chart-area-demo.assets') }}"></script>
+    <script src="{{ asset('../assets/js/demo/chart-pie-demo.js') }}"></script>-->
     <script src="{{ asset('../assets/js/demo/datatables-demo.js') }}"></script>
 
     <!-- Text Editor -->
@@ -434,8 +435,6 @@
             const progressPercentage = ((currentStep + 1) / steps.length) * 100;
             progressBar.style.width = `${progressPercentage}%`;
         }
-
-        
     </script>
 
 

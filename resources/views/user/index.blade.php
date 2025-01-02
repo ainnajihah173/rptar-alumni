@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm border-left-info">
+                <div class="card shadow-sm border-left-danger">
                     <div class="card-body">
                         <div class="text-center">
                             <h6 class="text-gray-900 font-weight-bold">User</h6>
@@ -88,7 +88,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-dark">Manage Users</h6>
-                <a href="" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#create-modal">
+                <a href="" class="btn btn-sm btn-info shadow-sm" data-toggle="modal" data-target="#create-modal">
                     <i class="fas fa-plus fa-sm text-white-50"></i> Create Users
                 </a>
             </div>
@@ -202,7 +202,7 @@
                                                 <div class="modal-footer border-0 d-flex justify-content-center py-3">
                                                     <button type="button" class="btn btn-secondary px-4 mr-4"
                                                         data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                                                    <button type="submit" class="btn btn-info px-4">Save</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -270,7 +270,7 @@
                                                 <div class="modal-footer border-0 d-flex justify-content-center py-3">
                                                     <button type="button" class="btn btn-secondary px-4 mr-4"
                                                         data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                                                    <button type="submit" class="btn btn-info px-4">Save</button>
                                                 </div>
                                             </form>
                                         </div>

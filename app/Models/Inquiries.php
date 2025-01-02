@@ -11,20 +11,24 @@ class Inquiries extends Model
 
     protected $fillable = [
         'user_id',
-        'category_id',
-        'subject',
-        'message',
+        'assign_id',
+        'category',
+        'title',
+        'image_path',
+        'description',
+        'resolved_date',
+        'solution',
         'status',
     ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function category()
+    public function assignedTo()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'assign_id');
     }
 
 }

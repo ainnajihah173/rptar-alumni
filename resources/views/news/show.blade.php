@@ -8,7 +8,7 @@
             <i class="fas fa-arrow-left"></i> Back to News List
         </a>
     </div>
-    <div class="container-fluid bg-light">
+   
         <!-- News Article Container -->
         <div class="row">
             <div class="col-12">
@@ -43,5 +43,5 @@
                 </div> <!-- End Card -->
             </div> <!-- End Column -->
         </div> <!-- End Row -->
-    </div> <!-- End Container -->
+
 @endsection

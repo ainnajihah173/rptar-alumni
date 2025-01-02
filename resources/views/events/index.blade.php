@@ -1,35 +1,10 @@
 @extends('layouts.staff-base')
 @section('content')
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800 mb-3">List of Events</h1>
-
-    @if ($message = session()->has('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <p class="text-black mb-0">{{ session()->get('success') }}</p>
-        </div>
-
-        <!-- Add the following JavaScript to auto-dismiss the alert after 3 seconds -->
-        <script>
-            setTimeout(function() {
-                $('.alert').alert('close');
-            }, 3000); // 3000 milliseconds = 3 seconds
-        </script>
-    @elseif($message = session()->has('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <p class="text-black mb-0">{{ session()->get('error') }}</p>
-        </div>
-
-        <!-- Add the following JavaScript to auto-dismiss the alert after 3 seconds -->
-        <script>
-            setTimeout(function() {
-                $('.alert').alert('close');
-            }, 3000); // 3000 milliseconds = 3 seconds
-        </script>
-    @endif
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-dark">Manage Events Content</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Events Content</h6>
             @if (auth()->user()->role === 'staff')
                 <a href="{{ route('events.create') }}" class="btn btn-sm btn-primary shadow-sm">
                     <i class="fas fa-plus fa-sm text-white-50"></i> Create Events

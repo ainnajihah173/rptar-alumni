@@ -53,11 +53,11 @@ Route::middleware('auth')->group(function () {
 
     //Manage News
     Route::resource('news', NewsController::class);
-    Route::put('/news/{id}', [NewsController::class, 'update'])->name('news.update');
+    //Route::put('/news/{id}', [NewsController::class, 'update'])->name('news.update');
 
     //Manage Events
     Route::resource('events', EventsController::class);
-    Route::put('/events/{id}', [EventsController::class, 'update'])->name('events.update');
+    //Route::put('/events/{id}', [EventsController::class, 'update'])->name('events.update');
     Route::get('/events/{id}/approve', [EventsController::class, 'approve'])->name('events.approve');
     Route::get('/events/{id}/reject', [EventsController::class, 'reject'])->name('events.reject');
 

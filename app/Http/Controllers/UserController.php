@@ -10,13 +10,7 @@ class UserController extends Controller
 {
   public function dashboard()
   {
-    if(auth()->user()->role === 'staff' || auth()->user()->role === 'admin'){
       return view('dashboard');
-    }
-    else{
-      return view('welcome');
-    }
-    
   }
 
   public function index()
