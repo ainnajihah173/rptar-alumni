@@ -33,13 +33,7 @@
                                     <td>{{ $news->slug }}</td>
                                     <td>{!! Str::limit($news->content, 100) !!}</td>
                                     <td>{{ $news->users->name }}</td>
-
-                                    @if ($news->is_active == 1)
-                                        <td>{{ $news->updated_at->format('d-m-Y') }}</td>
-                                    @else
-                                        <td>None</td>
-                                    @endif
-
+                                    <td>{{ $news->published_date ? date('d-m-Y', strtotime($news->published_date)) : 'N/A' }}</td>
                                     <td>
                                         @if ($news->is_active == 1)
                                             <span class="badge bg-success text-white">Published</span>

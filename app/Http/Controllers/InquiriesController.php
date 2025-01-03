@@ -65,18 +65,22 @@ class InquiriesController extends Controller
             'image_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
+        // Handle file upload if applicable
+        $imagePath = null; // Default if no image is uploaded
+        if ($request->hasFile('image_path')) {
+            $image = $request->file('image_path');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('inquiries_images', $imageName, 'public'); // Stored in 'storage/app/public/news_images'
+        }
+
         // Create new inquiry
         $inquiry = new Inquiries();
         $inquiry->user_id = auth()->user()->id;
         $inquiry->category = $request->category;
         $inquiry->title = $request->title;
         $inquiry->description = $request->description;
-
-        // Handle file upload if applicable
-        if ($request->hasFile('image_path')) {
-            $filePath = $request->file('image_path')->store('inquiries_images', 'public');
-            $inquiry->image_path = $filePath;
-        }
+        $inquiry->image_path = $imagePath;
+        
 
         // Save to the database
         $inquiry->save();
@@ -125,13 +129,15 @@ class InquiriesController extends Controller
         // Handle file upload if a new file is provided
         if ($request->hasFile('image_path')) {
             // Delete the old file if exists
-            if ($inquiry->image_path && Storage::exists($inquiry->image_path)) {
-                Storage::delete($inquiry->image_path);
+            if ($inquiry->image_path) {
+                Storage::delete('public/' . $inquiry->image_path);
             }
-    
             // Store the new file
-            $filePath = $request->file('image_path')->store('inquiries');
-            $inquiry->image_path = $filePath;
+            $image = $request->file('image_path');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('inquiries_images', $imageName, 'public');
+
+            $inquiry->image = $imagePath; // Update the image path
         }
     
         $inquiry->save();
@@ -145,6 +151,10 @@ class InquiriesController extends Controller
      */
     public function destroy($id)
     {
+        $inquiry = Inquiries::findOrFail($id);
+        if ($inquiry->image_path) {
+            Storage::delete('public/' . $inquiry->image_path);
+        }
         Inquiries::destroy($id);
         return redirect()->route('inquiries.index')
             ->with('success', "Inquiries Deleted Successfully!");

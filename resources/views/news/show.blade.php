@@ -20,7 +20,7 @@
 
                         <!-- News Author and Date -->
                         <p class="text-muted mb-4">
-                            By <strong>{{ $news->users->name }}</strong> | <em>{{ $news->updated_at->format('d-m-Y') }}</em>
+                            By <strong>{{ $news->users->name }}</strong> | <em>{{ $news->published_date ? date('d-m-Y', strtotime($news->published_date)) : 'Draft' }}</em>
                         </p>
 
                         <!-- News Image -->

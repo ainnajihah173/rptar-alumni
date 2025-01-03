@@ -18,6 +18,7 @@ class News extends Model
         'image',
         'is_active',
         'views',
+        'published_date',
     ];
 
     public function users(){

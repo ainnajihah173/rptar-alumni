@@ -1,122 +1,203 @@
 @extends('layouts.staff-base')
 
 @section('content')
+    @php
+        $roleColors = [
+            'user' => 'linear-gradient(to right, #f53b57, #ff6f61)',
+            'admin' => 'linear-gradient(to right, #117a8b, #23c6c8)',
+            'staff' => 'linear-gradient(to right, #007bff, #6c757d)',
+        ];
+        $roleButtons = [
+            'user' => 'btn-danger',
+            'admin' => 'btn-info',
+            'staff' => 'btn-primary',
+        ];
+    @endphp
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
+        /* Custom CSS for modern aesthetics */
+        .form-card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .profile-header {
-            background: linear-gradient(to right, #e3f2fd, #ede7f6);
-            border-radius: 8px;
-            padding: 40px;
-            position: relative;
-            margin-bottom: 30px;
+        .form-header {
+            color: #fff;
+            padding: 20px;
+            text-align: center;
         }
 
-        .profile-header .profile-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        .form-body {
+            padding: 30px;
         }
 
-        .profile-header h2 {
-            margin-left: 150px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .profile-header p {
-            margin-left: 150px;
+        .upload-feedback {
+            margin-top: 10px;
+            font-size: 0.9em;
             color: #6c757d;
         }
 
-        .save-btn {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            background-color: #004085;
-            color: #fff;
-            border-radius: 8px;
-            border: none;
-            padding: 8px 20px;
+        .rounded-img {
+            border: 5px solid #f8f9fc;
         }
 
-        .form-control {
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .upload-btn {
-            background-color: #dee2e6;
-            border: none;
-            color: #6c757d;
-            padding: 6px 15px;
-            border-radius: 8px;
-        }
-
-        .delete-btn {
-            background-color: #e3342f;
-            border: none;
-            color: #fff;
-            padding: 6px 15px;
-            border-radius: 8px;
-            margin-left: 10px;
+        .password-card {
+            margin-top: 20px;
         }
     </style>
 
-    <div class="container mt-5">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <img src="https://via.placeholder.com/120" alt="Profile" class="profile-image">
-            <button class="save-btn">Save</button>
-            <h2>Alumni Profile</h2>
-            <p>Update your details for Rumah Penyayang Tun Abdul Razak</p>
+    <!-- Edit Profile Card -->
+    <div class="card form-card" style="max-width: 1100px; margin: auto;">
+        <div class="form-header" style="background: {{ $roleColors[$user->role] }}">
+            <h5 class="m-0">Edit {{ ucfirst($user->role) }} Profile</h5>
         </div>
 
-        <!-- Profile Form -->
-        <form>
-            <div class="form-group">
-                <label for="fullname">Full Name</label>
-                <input type="text" class="form-control" id="fullname" placeholder="Enter your full name">
-            </div>
-            <div class="form-group">
-                <label for="year">Year of Graduation</label>
-                <input type="text" class="form-control" id="year" placeholder="E.g., 2010">
-            </div>
-            <div class="form-group">
-                <label for="occupation">Current Occupation</label>
-                <input type="text" class="form-control" id="occupation" placeholder="Your current job or field">
-            </div>
-            <div class="form-group">
-                <label for="contact">Contact Number</label>
-                <input type="text" class="form-control" id="contact" placeholder="Your phone number">
-            </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" class="form-control" id="email" placeholder="Your email address">
-            </div>
-            <div class="form-group">
-                <label>Your Photo</label>
-                <div class="d-flex align-items-center">
-                    <button type="button" class="upload-btn">Update</button>
-                    <button type="button" class="delete-btn">Delete</button>
+        <div class="card-body form-body">
+            <p class="text-muted font-14 mb-4">Update the {{ $user->role }}'s profile information below.</p>
+
+            <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <!-- Profile Picture -->
+                <div class="text-center mb-2">
+                    <label for="profile_picture">
+                        <img src="{{ $profile && $profile->profile_pic ? asset('storage/' . $profile->profile_pic) : asset('assets/images/default-avatar.png') }}"
+                            id="profile-preview" alt="Profile Picture" class="img-fluid rounded-circle rounded-img"
+                            style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
+                    </label>
+                    <input type="file" id="profile_picture" class="d-none" name="profile_pic"
+                        onchange="previewImage(event)">
+                    <small class="upload-feedback" id="upload-feedback">Click the image to upload a new profile
+                        picture.</small>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="bio">Your Bio</label>
-                <textarea class="form-control" id="bio" rows="3" placeholder="Add a short bio..."></textarea>
-            </div>
-            <div class="form-group">
-                <label for="address">Current Address</label>
-                <textarea class="form-control" id="address" rows="3" placeholder="Your current residential address"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-        </form>
+
+                <!-- Form Fields -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="username">Username<span class="text-danger">*</span></label>
+                        <input type="text" id="username" class="form-control" name="name" value="{{ $user->name }}"
+                            readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email">Email Address<span class="text-danger">*</span></label>
+                        <input type="email" id="email" class="form-control" name="email" value="{{ $user->email }}"
+                            readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="full_name">Full Name<span class="text-danger">*</span></label>
+                        <input type="text" id="full_name" class="form-control" name="full_name"
+                            value="{{ $profile->full_name ?? '' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="gender">Gender<span class="text-danger">*</span></label>
+                        <select name="gender" id="gender" class="form-control" required>
+                            <option selected disabled>Please Select...</option>
+                            <option value="male" {{ ($profile->gender ?? '') === 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ ($profile->gender ?? '') === 'female' ? 'selected' : '' }}>Female
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="date_of_birth">Date of Birth<span class="text-danger">*</span></label>
+                        <input type="date" id="date_of_birth" class="form-control" name="date_of_birth"
+                            value="{{ $profile->date_of_birth ?? '' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="contact_number">Contact Number<span class="text-danger">*</span></label>
+                        <input type="tel" id="contact_number" class="form-control" name="contact_number"
+                            value="{{ $profile->contact_number ?? '' }}" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="address">Address<span class="text-danger">*</span></label>
+                        <textarea id="address" class="form-control" name="address" rows="3" required>{{ $profile->address ?? '' }}</textarea>
+                    </div>
+                    @if ($user->role === 'user')
+                        <div class="col-md-12 mb-3">
+                            <label for="bio">Bio<span class="text-danger">*</span></label>
+                            <textarea id="bio" class="form-control" name="bio" rows="4" required>{{ $profile->bio ?? '' }}</textarea>
+                            <small class="text-muted">Write a short bio about the alumni.</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="job">Occupation</label>
+                            <input type="text" id="job" class="form-control" name="job"
+                                value="{{ $profile->job ?? '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="facebook">Facebook (Optional)</label>
+                            <input type="text" id="facebook" class="form-control" name="facebook"
+                                value="{{ $profile->facebook ?? '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="instagram">Instagram (Optional)</label>
+                            <input type="text" id="instagram" class="form-control" name="instagram"
+                                value="{{ $profile->instagram ?? '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="linkedin">LinkedIn (Optional)</label>
+                            <input type="text" id="linkedin" class="form-control" name="linkedin"
+                                value="{{ $profile->linkedin ?? '' }}">
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="text-center mt-4">
+                    <button type="button" onclick="history.back()" class="btn btn-light mr-3">Cancel</button>
+                    <button type="submit" class="btn {{ $roleButtons[$user->role] }}">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- Change Password Card -->
+    <div class="card form-card password-card my-3" style="max-width: 1100px; margin:auto;">
+        <div class="form-header" style="background: {{ $roleColors[$user->role] }}">
+            <h5 class="m-0">Change Password</h5>
+        </div>
+
+        <div class="card-body form-body">
+            <p class="text-muted font-14 mb-4">Ensure your new password is strong and unique.</p>
+
+            <form action="{{ route('profile.change-password', $user->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="current_password">Current Password<span class="text-danger">*</span></label>
+                        <input type="password" id="current_password" class="form-control" name="current_password"
+                            required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="new_password">New Password<span class="text-danger">*</span></label>
+                        <input type="password" id="new_password" class="form-control" name="new_password" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="new_password_confirmation">Confirm New Password<span
+                                class="text-danger">*</span></label>
+                        <input type="password" id="new_password_confirmation" class="form-control"
+                            name="new_password_confirmation" required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn {{ $roleButtons[$user->role] }}">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Preview uploaded image
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('profile-preview').src = reader.result;
+                document.getElementById('upload-feedback').innerText = "Image uploaded successfully.";
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 @endsection

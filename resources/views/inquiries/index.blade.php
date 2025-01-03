@@ -102,12 +102,14 @@
                                 <td>
                                     <a href="{{ route('inquiries.show', $inquiry->id) }}">
                                         <i class="fas fa-eye text-dark mr-2"></i></a>
-                                    <a href="{{ route('inquiries.edit', $inquiry->id) }}">
-                                        <i class="fas fa-edit mr-2"></i></a>
-                                    <a href="#" class="action-icon-danger" data-toggle="modal"
-                                        data-target="#deleteModal-{{ $inquiry->id }}">
-                                        <i class="fas fa-trash text-danger"></i>
-                                    </a>
+                                    @if (auth()->user()->role === 'user' && $inquiry->status === 'Pending')
+                                        <a href="{{ route('inquiries.edit', $inquiry->id) }}">
+                                            <i class="fas fa-edit mr-2"></i></a>
+                                        <a href="#" class="action-icon-danger" data-toggle="modal"
+                                            data-target="#deleteModal-{{ $inquiry->id }}">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                             <div class="modal fade" id="deleteModal-{{ $inquiry->id }}" tabindex="-1" role="dialog"

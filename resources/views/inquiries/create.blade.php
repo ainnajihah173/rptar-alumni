@@ -35,7 +35,7 @@
                             <label for="status">Category<span class="text-danger">*</span></label>
                             <select name="category" id="status" class="form-control" required>
                                 <option selected disabled>Please Select...</option>
-                                <option value="general">General</option>
+                                <option value="general">General Inquiries</option>
                                 <option value="complaint">Complaint</option>
                                 <option value="others">Others</option>
                             </select>

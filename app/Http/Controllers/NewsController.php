@@ -14,7 +14,10 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::paginate(10)->sortByDesc('created_at');
+        if (auth()->user()->role === 'staff')
+            $news = News::paginate('10');
+        else
+            $news = News::whereNotNull('published_date')->orderByDesc('published_date')->get();
         return view('news.index', compact('news'));
     }
 
@@ -56,7 +59,8 @@ class NewsController extends Controller
         $news->slug = $request->input('slug');
         $news->user_id = auth()->user()->id; // Using the currently authenticated user
         $news->is_active = $request->input('is_active');
-        $news->content = $request->input('content');
+        $news->published_date = $news->is_active === '1' ? now() : null;
+        $news->content = strip_tags($request->input('content'), '<a><strong><em><i>');
         $news->views = 0;
         $news->image = $imagePath; // Save the path to the image
         $news->save();
@@ -120,6 +124,7 @@ class NewsController extends Controller
         $news->title = $request->input('title');
         $news->slug = $request->input('slug');
         $news->is_active = $request->input('is_active');
+        $news->published_date = $news->is_active === '1' ? now() : null;
         $news->content = $request->input('content');
         $news->save();
 
@@ -133,6 +138,10 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
+        $news = News::findOrFail($id);
+        if ($news->image) {
+            Storage::delete('public/' . $news->image);
+        }
         News::destroy($id);
         return redirect()->route('news.index')
             ->with('success', "News Deleted Successfully!");

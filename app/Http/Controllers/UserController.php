@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Profile;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -39,6 +39,10 @@ class UserController extends Controller
       'password' => Hash::make($request->password),
       'role' => $request->role,
     ]);
+
+    Profile::create([
+      'user_id' => $user->id,
+  ]);
 
     // Return to user list with success message
     return redirect()->route('user.index')

@@ -35,23 +35,23 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="title">Title<span class="text-danger">*</span></label>
-                            <input type="text" id="title" class="form-control" name="title"
-                                value="{{ $inquiries->title }}" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group mb-3">
                             <label for="status">Category<span class="text-danger">*</span></label>
                             <select name="category" id="status" class="form-control" required>
                                 <option selected disabled>Please Select...</option>
-                                <option value="general" {{ $inquiries->category == 'general' ? 'selected' : '' }}>General
+                                <option value="general" {{ $inquiries->category == 'general' ? 'selected' : '' }}>General Inquiries
                                 </option>
                                 <option value="complaint" {{ $inquiries->category == 'complaint' ? 'selected' : '' }}>
                                     Complaint</option>
                                 <option value="others" {{ $inquiries->category == 'others' ? 'selected' : '' }}>
                                     Others</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-3">
+                            <label for="title">Title<span class="text-danger">*</span></label>
+                            <input type="text" id="title" class="form-control" name="title"
+                                value="{{ $inquiries->title }}" required>
                         </div>
                     </div>
                     <div class="col-lg-6">

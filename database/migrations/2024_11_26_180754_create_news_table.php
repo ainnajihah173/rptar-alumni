@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image');
             $table->boolean('is_active');
             $table->integer('views');
+            $table->dateTime('published_date')->nullable();
             $table->timestamps();
         });
     }

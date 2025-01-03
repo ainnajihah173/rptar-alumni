@@ -41,9 +41,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
 
     //Profile
-    Route::get('/profile/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/staff/alumni-profile', [StaffController::class, 'index'])->name('staff.index');
-    Route::get('/staff/alumni-profile/details', [StaffController::class, 'show'])->name('staff.show');
+    Route::resource('profile', ProfileController::class);
+    Route::put('/profile/{id}/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
 
     //Dashboard 
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
