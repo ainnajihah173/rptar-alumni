@@ -63,6 +63,10 @@
                                 <span>{{ $events->capacity }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
+                                <span><strong>Available Slot:</strong></span>
+                                <span>{{ $events->capacity - $events->registered_count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
                                 <span><strong>Registered Participants:</strong></span>
                                 <span>{{ $events->registered_count }}</span>
                             </li>
@@ -115,10 +119,10 @@
                                     @foreach ($participants as $key => $participant)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $participant->name }}</td>
-                                            <td>{{ $participant->email }}</td>
-                                            <td>{{ $participant->contact }}</td>
-                                            <td>{{ $participant->created_at->format('d M Y H:i') }}</td>
+                                            <td>{{ $participant->users->profile->full_name }}</td>
+                                            <td>{{ $participant->users->email }}</td>
+                                            <td>{{ $participant->users->profile->contact_number }}</td>
+                                            <td>{{ $participant->created_at->format('d M Y') }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

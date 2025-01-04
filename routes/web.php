@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\MessageController;
@@ -32,10 +33,13 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 
-//guest routes
-Route::get('/', function () {
-    return view('welcome');
-});
+// //guest routes
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+//Portal
+Route::get('/', [UserController::class, 'portal'])->name('portal');
 
 Route::middleware('auth')->group(function () {
 
@@ -58,12 +62,13 @@ Route::middleware('auth')->group(function () {
     //Route::put('/events/{id}', [EventsController::class, 'update'])->name('events.update');
     Route::get('/events/{id}/approve', [EventsController::class, 'approve'])->name('events.approve');
     Route::get('/events/{id}/reject', [EventsController::class, 'reject'])->name('events.reject');
+    Route::post('/events/register/{id}', [EventsController::class, 'register'])->name('events.register');
 
     //Manage Inquiries
     Route::resource('inquiries', InquiriesController::class);
 
     //Manage Donations
-
+    Route::resource('donations', DonationController::class);
 
     //Manage Communications
     Route::get('/communication', [MessageController::class, 'index'])->name('message.index');

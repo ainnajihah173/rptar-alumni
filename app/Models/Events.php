@@ -31,7 +31,7 @@ class Events extends Model
     }
 
     public function participants(){
-        return $this->hasMany(EventParticipant::class);
+        return $this->hasMany(EventParticipant::class, 'event_id');
     }
 
     public function users(){

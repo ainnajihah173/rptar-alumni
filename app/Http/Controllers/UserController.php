@@ -1,16 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Campaign;
 use App\Models\User;
+use App\Models\Events;
+use App\Models\News;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+  public function portal()
+  {
+    // Fetch data for each section
+    $events = Events::where('is_active', true)->orderBy('start_date', 'asc')->take(3)->get();
+    $news = News::orderBy('published_date', 'desc')->take(4)->get();
+    $donations = Campaign::where('status', 'active') // ENUM value
+      ->orderBy('created_at', 'desc')
+      ->take(1)
+      ->get();
+
+    // Pass data to the view
+    return view('welcome', compact('events', 'news', 'donations'));
+  }
+
   public function dashboard()
   {
-      return view('dashboard');
+    return view('dashboard');
   }
 
   public function index()
@@ -42,7 +60,7 @@ class UserController extends Controller
 
     Profile::create([
       'user_id' => $user->id,
-  ]);
+    ]);
 
     // Return to user list with success message
     return redirect()->route('user.index')

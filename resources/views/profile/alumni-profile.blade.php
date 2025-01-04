@@ -2,9 +2,8 @@
 
 @section('content')
     <!-- Page Heading -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="h4 text-gray-800">Alumni Profiles</h1>
-    </div>
+    <h3 class="text-center" style="color: #eb3a2a;">Alumnus Profile</h3>
+    <p class="text-center text-muted">Your profile, your story. Share your journey with us</p>
 
     <!-- Alumni Cards Section -->
     <div class="row">
@@ -144,16 +143,15 @@
 
         /* Pagination Styling */
         .pagination .page-item .page-link {
-            color: #007bff;
-            border: 1px solid #dee2e6;
+            color: #6f6e6e;
+            border: 1px solid #6f6e6e;
             margin: 0 5px;
             border-radius: 25px;
             transition: all 0.3s ease;
         }
 
         .pagination .page-item.active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #6f6e6e;
             color: #fff;
         }
 
@@ -162,7 +160,7 @@
         }
 
         .pagination .page-item .page-link:hover {
-            background-color: #007bff;
+            background-color: #6f6e6e;
             color: #fff;
         }
     </style>

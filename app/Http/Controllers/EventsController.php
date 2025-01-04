@@ -15,7 +15,15 @@ class EventsController extends Controller
      */
     public function index()
     {
-        $events = Events::paginate(10);
+        if (auth()->user()->role === 'user') {
+            $events = Events::where('is_active', true)
+                ->where('end_date', '>=', now()) // Ensure the event hasn't ended
+                ->whereRaw('capacity > registered_count') // Ensure the event is not full
+                ->paginate(6); // 6 events per page
+        } else {
+            $events = Events::paginate(10);
+        }
+
         return view('events.index', compact('events'));
     }
 
@@ -204,5 +212,32 @@ class EventsController extends Controller
         $events->update(['status' => 'rejected']);
         return redirect()->route('events.index')->with('success', 'Event rejected successfully!');
     }
+
+    public function register(Request $request, $id)
+    {
+        $event = Events::findOrFail($id);
+
+        // Check if the user is already registered for the event
+        if ($event->participants->contains('user_id', auth()->id())) {
+            return redirect()->back()->with('error', 'You are already registered for this event.');
+        }
+
+        if ($event->registered_count >= $event->capacity) {
+            return redirect()->back()->with('error', 'Event is full.');
+        }
+
+        EventParticipant::create([
+            'event_id' => $event->id,
+            'user_id' => auth()->id(),
+            'registration_date' => now(),
+            'status' => 'Registered',
+        ]);
+
+        $event->increment('registered_count');
+
+        return redirect()->back()->with('success', 'You have successfully registered for the event.');
+    }
+
+
 
 }

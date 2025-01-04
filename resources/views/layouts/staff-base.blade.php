@@ -102,7 +102,7 @@
                 <span>Events</span></a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                 aria-expanded="true" aria-controls="collapseThree">
                 <i class="fas fa-fw fa-credit-card"></i>
@@ -114,20 +114,27 @@
                     <a class="collapse-item" href="cards.html">List of Donors</a>
                 </div>
             </div>
+        </li> --}}
+
+        <!-- Nav Item - News -->
+        <li class="nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('donations.index') }}">
+                <i class="fas fa-fw fa-credit-card"></i>
+                <span>Donations</span></a>
         </li>
 
         @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
             <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('message.index')}}">
+                <a class="nav-link" href="{{ route('message.index') }}">
                     <i class="fas fa-fw fa-comment"></i>
-                    <span>Communications</span></a>
+                    <span>Messages</span></a>
             </li>
         @endif
 
         <!-- Nav Item - News -->
         <li class="nav-item {{ request()->routeIs('inquiries.index') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('inquiries.index')}}">
+            <a class="nav-link" href="{{ route('inquiries.index') }}">
                 <i class="fas fa-fw fa-envelope"></i>
                 <span>Inquiries</span></a>
         </li>
@@ -169,15 +176,15 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Alerts -->
+                        <!-- Nav Item - Alerts
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
+                                 Counter - Alerts
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
-                            <!-- Dropdown - Alerts -->
+                             Dropdown - Alerts
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
@@ -198,36 +205,16 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All
                                     Alerts</a>
                             </div>
-                        </li>
+                        </li>-->
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
+                                <i class="fas fa-comment fa-fw"></i>
                                 <!-- Counter - Messages -->
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More
-                                    Messages</a>
-                            </div>
                         </li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -236,7 +223,8 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                                <span
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
                                 <img class="img-profile rounded-circle"
                                     src="{{ auth()->user()->profile && auth()->user()->profile->profile_pic ? asset('storage/' . auth()->user()->profile->profile_pic) : asset('assets/images/default-avatar.png') }}">
                             </a>
@@ -270,14 +258,10 @@
                         </div>
                     @endif
 
-                    @if ($errors->any())
+                    @if (session()->has('error'))
                         <br>
                         <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                            {{ session()->get('error') }}
                         </div>
                     @endif
                     <!-- Page Content -->

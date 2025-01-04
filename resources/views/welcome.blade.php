@@ -25,6 +25,28 @@
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet">
 
+    <style>
+        .event-image {
+            width: 100%;
+            /* Full width of the card */
+            height: 200px;
+            /* Fixed height for the image container */
+            overflow: hidden;
+            /* Ensures the image doesn't overflow */
+            border-radius: 10px 10px 0 0;
+            /* Rounded corners at the top */
+        }
+
+        .event-image img {
+            width: 100%;
+            /* Full width of the container */
+            height: 100%;
+            /* Full height of the container */
+            object-fit: cover;
+            /* Ensures the image covers the container without distortion */
+        }
+    </style>
+
 </head>
 
 <body class="index-page">
@@ -34,7 +56,7 @@
 
             <a href="index.html" class="logo d-flex align-items-center me-auto">
                 <!--<img src="assets/images/RP.png" alt="">-->
-                <h1 class="sitename">RPTAR Alumni</h1>
+                <h1 class="sitename text-danger">RPTAR Alumni</h1>
             </a>
 
             <nav id="navmenu" class="navmenu">
@@ -49,7 +71,7 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="{{ route('login')}}">Login Account</a>
+            <a class="btn-getstarted bg-danger" href="{{ route('login') }}">Login Account</a>
 
         </div>
     </header>
@@ -63,11 +85,11 @@
             </div>
             <div class="container text-center">
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <h1 data-aos="fade-up">Welcome to <span>RPTAR Alumni</span></h1>
+                    <h1 data-aos="fade-up">Welcome to <span class="text-danger">RPTAR Alumni</span></h1>
                     <p data-aos="fade-up" data-aos-delay="100">This is a alumni portal for Rumah Penyayang Tun Abdul
                         Razak<br></p>
                     <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
-                        <a href="#about" class="btn-get-started">Login Account</a>
+                        <a href="#about" class="btn-get-started bg-danger">Login Account</a>
                     </div>
                 </div>
             </div>
@@ -123,7 +145,8 @@
                                             alt="Children at Rumah Penyayang">
                                     </div>
                                     <div class="col-lg-12">
-                                        <img src="assets/images/rptar3.jpg" class="img-fluid" alt="Community Program">
+                                        <img src="assets/images/rptar3.jpg" class="img-fluid"
+                                            alt="Community Program">
                                     </div>
                                 </div>
                             </div>
@@ -136,130 +159,104 @@
         </section>
         <!-- /About Section -->
 
-        <!-- Events Section -->
-        <section id="events" class="features section">
+        <!-- Event Section -->
+        <section id="pricing" class="pricing section">
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Events</h2>
-                <p>Come and Join Events for Rumah Penyayang Tun Abdul Razak</p>
+                <h2>Upcoming Events</h2>
+                <p>Join our exciting events and connect with like-minded individuals.</p>
             </div><!-- End Section Title -->
+
             <div class="container">
 
-                <div class="row gy-4 justify-content-between features-item">
+                <div class="row gy-4">
 
-                    <div class="col-lg-5 d-flex align-items-center order-2 order-lg-1" data-aos="fade-up"
-                        data-aos-delay="100">
+                    @foreach ($events as $event)
+                        <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="pricing-item {{ $event->featured ? 'featured' : '' }}">
+                                <!-- Event Image -->
+                                <div class="event-image">
+                                    <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->name }}"
+                                        class="img-fluid">
+                                </div>
+                                <h3 class="mt-2">{{ $event->name }}</h3>
+                                <p class="description">{{ $event->description }}</p>
+                                <p><i class="bi bi-calendar-event"></i> <span>{{ $event->start_date }}</p>
+                                <p><i class="bi bi-clock"></i> <span>{{ $event->start_time }}</p>
+                                <p><i class="bi bi-geo-alt"></i> <span>{{ $event->location }}</p>
+                                <a href="{{ route('login') }}" class="cta-btn">Register Now</a>
 
-                        <div class="content">
-                            <h3>Program Kasih Ramadan 2023</h3>
-                            <p>
-                                Quidem qui dolore incidunt aut. In assumenda harum id iusto lorena plasico mares
-                            </p>
-                            <ul>
-                                <li><i class="bi bi-clock flex-shrink-0"></i> 17:00 PM</li>
-                                <li><i class="bi bi-calendar-event flex-shrink-0"></i> 28 November 2023
-                                </li>
-                                <li><i class="bi bi-geo-alt flex-shrink-0"></i> Rumah Penyayang Tun Abdul Razak</li>
-                            </ul>
-                            <p></p>
-                            <a href="#" class="btn more-btn btn-primary">Register Event</a>
-                        </div>
 
-                    </div>
+                            </div>
+                        </div><!-- End Event Item -->
+                    @endforeach
 
-                    <div class="col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="200">
-                        <img src="assets/images/kasih.jpg" class="img-fluid" alt="">
-                    </div>
-
-                </div><!-- Events Item -->
+                </div>
 
             </div>
-        </section><!-- /Events Section -->
+
+        </section><!-- /Event Section -->
 
         <!-- News Section -->
         <section id="news" class="services section light-background">
-
-            <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>News</h2>
                 <p>Stay updated with our latest news and stories</p>
-            </div><!-- End Section Title -->
+            </div>
 
             <div class="container">
-
                 <div class="row g-5">
-
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="service-item item-cyan position-relative">
-                            <img src="assets/images/kasih.jpg" alt="News Image 1" class="img-fluid p-3"
-                                style="width: 40%; height: 100px; object-fit: cover;">
-                            <div>
-                                <h3>Majlis Berbuka Puasa</h3>
-                                <p>Discover what's new in our company and industry. Stay ahead with the latest trends.
-                                </p>
-                                <a href="#" class="read-more stretched-link">Read More <i
-                                        class="bi bi-arrow-right"></i></a>
+                    @foreach ($news as $newsItem)
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item item-cyan position-relative">
+                                <img src="{{ asset('storage/' . $newsItem->image) }}" alt="{{ $newsItem->title }}"
+                                    class="img-fluid p-3" style="width: 40%; height: 100px; object-fit: cover;">
+                                <div>
+                                    <h3>{{ $newsItem->title }}</h3>
+                                    <p>{{ Str::limit($newsItem->content, 100) }}</p>
+                                    <a href="{{ route('login') }}" class="read-more stretched-link">Read More <i
+                                            class="bi bi-arrow-right"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div><!-- End Service Item -->
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="service-item item-cyan position-relative">
-                            <img src="assets/images/slide.jpg" alt="News Image 1" class="img-fluid p-3"
-                                style="width: 40%; height: 100px; object-fit: cover;">
-                            <div>
-                                <h3>Pungutan Duit Sumbangan</h3>
-                                <p>Discover what's new in our company and industry. Stay ahead with the latest trends.
-                                </p>
-                                <a href="#" class="read-more stretched-link">Read More <i
-                                        class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div><!-- End Service Item -->
-
-
-                </div><!-- End Row -->
-            </div><!-- End Container -->
-
-        </section><!-- /News Section -->
-
-
-
-
-        <!-- Donations Section -->
-        <section id="donations" class="features section">
+        <!-- Donation Section -->
+        <section id="donations" class="pricing section">
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Donations</h2>
-                <p>Come and Join Donations for Rumah Penyayang Tun Abdul Razak</p>
+                <h2>Support Our Causes</h2>
+                <p>Your contributions make a difference. Join us in supporting these initiatives.</p>
             </div><!-- End Section Title -->
+
             <div class="container">
-
-                <div class="row gy-4 justify-content-between features-item">
-
-                    <div class="col-lg-5 d-flex align-items-center order-2 order-lg-1" data-aos="fade-up"
-                        data-aos-delay="100">
-
-                        <div class="content">
-                            <h3>Sumbangan untuk Program Kasih Ramadan 2023</h3>
-                            <p>
-                                Quidem qui dolore incidunt aut. In assumenda harum id iusto lorena plasico mares
-                            </p>
-                            <a href="#" class="btn more-btn btn-primary">Make Donation</a>
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="200">
-                        <img src="assets/images/kasih.jpg" class="img-fluid" alt="">
-                    </div>
-
-                </div><!-- Donations Item -->
-
+                <div class="row gy-4">
+                    @foreach ($donations as $donation)
+                        <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="pricing-item {{ $donation->featured ? 'featured' : '' }}">
+                                <!-- Donation Image -->
+                                <div class="donation-image">
+                                    <img src="{{ asset('storage/' . $donation->image_path) }}"
+                                        alt="{{ $donation->title }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <h3 class="mt-2">{{ $donation->title }}</h3>
+                                <p class="description">{{ $donation->description }}</p>
+                                <p><i class="bi bi-cash"></i> <span>Goal:
+                                        RM{{ number_format($donation->target_amount, 2) }}</span></p>
+                                <p><i class="bi bi-calendar-check"></i> <span>Deadline:
+                                        {{ $donation->start_date }} to {{ $donation->end_date }}</span></p>
+                                <a href="{{ route('login') }}" class="cta-btn">Donate Now</a>
+                            </div>
+                        </div><!-- End Donation Item -->
+                    @endforeach
+                </div>
             </div>
-        </section><!-- /Donations Section -->
+        </section><!-- /Donation Section -->
 
         <!-- Contact Section -->
         <section id="contact" class="contact section">
@@ -304,51 +301,13 @@
                 </div><!-- End Row -->
 
                 <div class="row gy-4 mt-1">
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="col-lg-12" data-aos="fade-up" data-aos-delay="300">
                         <!-- You can update the map link to Rumah Penyayang's location -->
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15930.013202817157!2d103.3837851!3d3.4700457!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cf5077646451bf%3A0xdd69afade6d0fa4a!2sRumah%20Penyayang%20Tun%20Abdul%20Razak!5e0!3m2!1sen!2smy!4v1732824146976!5m2!1sen!2smy"
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div><!-- End Google Maps -->
-
-                    <div class="col-lg-6">
-                        <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up"
-                            data-aos-delay="400">
-                            <div class="row gy-4">
-                                <div class="text-center">
-                                    <h3>Inquiries</h3>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control"
-                                        placeholder="Your Name" required="">
-                                </div>
-
-                                <div class="col-md-6 ">
-                                    <input type="email" class="form-control" name="email"
-                                        placeholder="Your Email" required="">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" name="subject" placeholder="Subject"
-                                        required="">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                                </div>
-
-                                <div class="col-md-12 text-center">
-                                    <div class="loading">Loading</div>
-                                    <div class="error-message"></div>
-                                    <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                                    <button type="submit">Send Message</button>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div><!-- End Contact Form -->
 
                 </div><!-- End Row -->
 
@@ -364,13 +323,7 @@
         <div class="container copyright text-center mt-4">
             <p>© <span>Copyright</span> <strong class="px-1 sitename">RPTAR Alumni</strong><span>All Rights
                     Reserved</span></p>
-            <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you've purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
+        </div>
         </div>
 
     </footer>

@@ -88,15 +88,13 @@
             </div>
         </div>
     @else
-        <div class="custom-container bg-white mx-4 px-5 py-3">
+        <div class="custom-container mx-4 px-5 py-3">
 
             <!-- Main Heading -->
             <div class="text-center mb-4">
-                <h2 class="fw-bold display-5" style="color: #ff6f61;">Latest News
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script>
-                </h2>
+                <h3 class="text-center" style="color: #eb3a2a;">Latest News <script>
+                    document.write(new Date().getFullYear())
+                </script></h3>
                 <p class="text-muted">Stay updated with the latest news and insights.</p>
             </div>
 
@@ -139,10 +137,10 @@
             </div>
         </div>
         <!-- News Section with Carousel -->
-        <div class="custom-container bg-white mx-4 px-5 mt-3 py-2">
+        <div class="custom-container mx-4 px-5 mt-3 py-2">
             <div class="text-center mb-4 mt-2">
-                <h2 class="fw-bold display-5" style="color: #ff6f61;">News Section</h2>
-                <p class="text-muted">Stay updated with the latest news and insights.</p>
+                <h3 class="text-center" style="color: #eb3a2a;">News Section</h3>
+                <p class="text-muted">Read the news and stories with us.</p>
             </div>
             <div class="position-relative">
                 <div id="newsCarousel" class="carousel slide" data-ride="carousel">
@@ -182,7 +180,7 @@
                 </div>
             </div>
 
-            <!-- List of Links to Older News -->
+            {{-- <!-- List of Links to Older News -->
             <div class="mt-5">
                 <h3 class="fw-bold" style="color: #ff6f61;">Archived News</h3>
                 <ul class="list-unstyled">
@@ -194,7 +192,7 @@
                         </li>
                     @endforeach
                 </ul>
-            </div>
+            </div> --}}
         </div>
 
 
