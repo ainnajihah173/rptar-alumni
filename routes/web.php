@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\InquiriesController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -67,7 +66,7 @@ Route::middleware('auth')->group(function () {
 
 
     //Manage Communications
-
+    Route::get('/communication', [MessageController::class, 'index'])->name('message.index');
 
 });
 

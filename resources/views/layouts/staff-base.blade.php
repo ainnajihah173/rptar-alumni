@@ -118,8 +118,8 @@
 
         @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
-            <li class="nav-item">
-                <a class="nav-link" href="">
+            <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('message.index')}}">
                     <i class="fas fa-fw fa-comment"></i>
                     <span>Communications</span></a>
             </li>

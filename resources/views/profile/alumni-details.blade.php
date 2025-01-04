@@ -2,9 +2,9 @@
 
 @section('content')
     <!-- Back Button -->
-    <div class="mb-4">
-        <a href="{{ route('profile.index') }}" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left me-2"></i> Back to Alumni Profile List
+    <div class="mb-3">
+        <a href="{{ route('profile.index') }}" class="text-decoration-none text-dark">
+            <i class="fas fa-arrow-left"></i> Back to Alumni List
         </a>
     </div>
 
