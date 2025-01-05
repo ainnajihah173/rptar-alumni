@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     //Profile
     Route::resource('profile', ProfileController::class);
     Route::put('/profile/{id}/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
-
+    
     //Dashboard 
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 
@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
     //Manage News
     Route::resource('news', NewsController::class);
+    // Route::get('/news/export', [NewsController::class, 'export'])->name('news.export');
     //Route::put('/news/{id}', [NewsController::class, 'update'])->name('news.update');
 
     //Manage Events

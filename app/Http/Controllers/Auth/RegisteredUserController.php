@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -32,9 +32,26 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => ['required', 'string', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8) // Minimum length of 8 characters
+                    ->letters() // Must contain at least one letter
+                    ->mixedCase() // Must contain both uppercase and lowercase letters
+                    ->numbers() // Must contain at least one number
+                    ->symbols() // Must contain at least one special character
+            ],
+            [
+                'password.required' => 'The password field is required.',
+                'password.confirmed' => 'The password confirmation does not match.',
+                'password.min' => 'The password must be at least 8 characters.',
+                'password.letters' => 'The password must contain at least one letter.',
+                'password.mixedCase' => 'The password must contain both uppercase and lowercase letters.',
+                'password.numbers' => 'The password must contain at least one number.',
+                'password.symbols' => 'The password must contain at least one special character.',
+            ]
         ]);
 
         $user = User::create([
@@ -46,13 +63,14 @@ class RegisteredUserController extends Controller
 
         Profile::create([
             'user_id' => $user->id,
-
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
-
-        return redirect()->route('dashboard');
+        
+        // Redirect to the profile edit page after registration
+        return redirect()->route('profile.edit', $user->id)->with('warning', 'Please complete your profile before proceeding.');
+        // return redirect()->route('dashboard');
     }
 }

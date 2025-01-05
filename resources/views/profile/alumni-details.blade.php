@@ -13,7 +13,7 @@
         <div class="card-body p-4">
             <div class="row">
                 <!-- Profile Card (Left Side) -->
-                <div class="col-lg-4 text-center" >
+                <div class="col-lg-4 text-center">
                     <div class="mb-4">
                         <!-- Profile Image -->
                         <img src="{{ $profile->profile_pic ? asset('storage/' . $profile->profile_pic) : asset('assets/images/default-avatar.png') }}"
@@ -27,16 +27,16 @@
                         @endif
                         <!-- Social Media Links -->
                         <div class="d-flex justify-content-center mt-3">
-                            <a href="{{$profile->linkedin ?? 'https://www.linkedin.com/'}}"
+                            <a href="{{ $profile->linkedin ?? 'https://www.linkedin.com/' }}"
                                 class="btn btn-outline-primary btn-circle mx-2" target="_blank">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
-                            <a href="{{$profile->facebook ?? 'https://www.facebook.com/'}}" class="btn btn-outline-primary btn-circle mx-2"
-                                target="_blank">
+                            <a href="{{ $profile->facebook ?? 'https://www.facebook.com/' }}"
+                                class="btn btn-outline-primary btn-circle mx-2" target="_blank">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
-                            <a href="{{$profile->instagram ?? 'https://www.instagram.com/'}}" class="btn btn-outline-danger btn-circle mx-2"
-                                target="_blank">
+                            <a href="{{ $profile->instagram ?? 'https://www.instagram.com/' }}"
+                                class="btn btn-outline-danger btn-circle mx-2" target="_blank">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </div>
@@ -79,22 +79,22 @@
                                 </div>
                             @endif
                             @if ($profile->date_of_birth)
-                            <div class="mb-3">
-                                <p class="mb-1"><strong>Date of Birth:</strong></p>
-                                <p class="text-muted">{{ $profile->date_of_birth }}</p>
-                            </div>
-                        @endif
+                                <div class="mb-3">
+                                    <p class="mb-1"><strong>Date of Birth:</strong></p>
+                                    <p class="text-muted">{{ $profile->date_of_birth }}</p>
+                                </div>
+                            @endif
                         </div>
                         <!-- Right Column -->
 
 
                         <div class="col-md-6">
                             @if ($profile->gender)
-                            <div class="mb-3">
-                                <p class="mb-1"><strong>Gender:</strong></p>
-                                <p class="text-muted">{{ ucfirst($profile->gender) }}</p>
-                            </div>
-                        @endif
+                                <div class="mb-3">
+                                    <p class="mb-1"><strong>Gender:</strong></p>
+                                    <p class="text-muted">{{ ucfirst($profile->gender) }}</p>
+                                </div>
+                            @endif
                             @if ($profile->address)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Address:</strong></p>

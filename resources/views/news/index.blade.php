@@ -2,22 +2,59 @@
 @section('content')
     <!-- Page Heading -->
     @if (auth()->user()->role === 'staff')
+        <div class="row mb-4">
+            <!-- User Statistics Card -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-left-info">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="text-gray-900 font-weight-bold">Total News</h6>
+                            <h2>{{ $totalNews }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-left-danger">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="text-gray-900 font-weight-bold">Published News</h6>
+                            <h2>{{ $publishedNews }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-left-warning">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="text-gray-900 font-weight-bold">Draft News</h6>
+                            <h2>{{ $draftNews }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-dark">News Content</h6>
-                <a href="{{ route('news.create') }}" class="btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Create News
-                </a>
+                <div>
+                    <a href="{{ route('news.create') }}" class="btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-plus fa-sm text-white-50"></i> Create News
+                    </a>
+                    {{-- <a href="{{ route('news.export') }}" class="btn btn-sm btn-success shadow-sm ml-2">
+                        <i class="fas fa-file-excel fa-sm text-white-50"></i> Export to Excel
+                    </a> --}}
+                </div>
             </div>
             <!-- Check if there is any news -->
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Title News</th>
-                                <th>Slug</th>
                                 <th>Content News</th>
                                 <th>Author Name</th>
                                 <th>Date Published</th>
@@ -30,10 +67,10 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{!! Str::limit($news->title, 20) !!}</td>
-                                    <td>{{ $news->slug }}</td>
-                                    <td>{!! Str::limit($news->content, 100) !!}</td>
-                                    <td>{{ $news->users->name }}</td>
-                                    <td>{{ $news->published_date ? date('d-m-Y', strtotime($news->published_date)) : 'N/A' }}</td>
+                                    <td>{!! Str::limit($news->content, 50) !!}</td>
+                                    <td>{{ $news->users->profile->full_name }}</td>
+                                    <td>{{ $news->published_date ? \Carbon\Carbon::parse($news->published_date)->format('d F Y') : 'N/A' }}
+                                    </td>
                                     <td>
                                         @if ($news->is_active == 1)
                                             <span class="badge bg-success text-white">Published</span>
@@ -42,45 +79,62 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <!-- Edit Page-->
+                                        <!-- Show Page-->
                                         <a href="{{ route('news.show', $news->id) }}">
                                             <i class="fas fa-eye text-dark mr-2"></i></a>
                                         <!-- Edit Page-->
                                         @if ($news->is_active == 0)
                                             <a href="{{ route('news.edit', $news->id) }}">
                                                 <i class="fas fa-edit mr-2"></i></a>
+
+                                            <!-- Delete Page-->
+                                            <a href="" class="action-icon-danger" data-toggle="modal"
+                                                data-target="#bs-danger-modal-sm"> <i
+                                                    class="fas fa-trash text-danger"></i></a>
                                         @endif
-                                        <!-- Delete Page-->
-                                        <a href="" class="action-icon-danger" data-toggle="modal"
-                                            data-target="#bs-danger-modal-sm"> <i class="fas fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>
-                                <!-- Delete modal -->
-                                <div class="modal fade" id="bs-danger-modal-sm" tabindex="-1" role="dialog"
-                                    aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="font-14" id="mySmallModalLabel">Delete News</h4>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">×</button>
+
+                                 <!-- Delete Modal -->
+                                 <div class="modal fade" id="bs-danger-modal-sm" tabindex="-1"
+                                    role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content border-0 rounded-lg shadow">
+                                            <!-- Close Button -->
+                                            <button type="button" class="close position-absolute text-dark"
+                                                data-dismiss="modal" aria-label="Close"
+                                                style="top: 15px; right: 15px; font-size: 1.5rem;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <!-- Centered Warning Icon -->
+                                            <div class="text-center pt-4">
+                                                <div class="rounded-circle bg-danger d-inline-flex align-items-center justify-content-center"
+                                                    style="width: 60px; height: 60px;">
+                                                    <i class="fas fa-exclamation-triangle text-white"
+                                                        style="font-size: 30px;"></i>
+                                                </div>
                                             </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure want to delete this news?</p>
-                                            </div><!-- /.modal-body -->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-light btn-sm"
-                                                    data-dismiss="modal">No</button>
-                                                <form method="POST" action="{{ route('news.destroy', $news->id) }}">
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center pt-3 pb-0">
+                                                <h5 class="font-weight-bold mb-3">Delete News</h5>
+                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?
+                                                </p>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center py-3 border-0">
+                                                <button type="button" class="btn btn-secondary px-4"
+                                                    data-dismiss="modal">No, Keep it</button>
+                                                <form method="POST" action="{{ route('news.destroy', $news->id) }}"
+                                                    class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Yes,
-                                                        delete</button>
+                                                    <button type="submit" class="btn btn-danger px-4">Yes,
+                                                        Delete!</button>
                                                 </form>
                                             </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal-dialog -->
-                                </div><!-- /.modal -->
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>
@@ -92,9 +146,11 @@
 
             <!-- Main Heading -->
             <div class="text-center mb-4">
-                <h3 class="text-center" style="color: #eb3a2a;">Latest News <script>
-                    document.write(new Date().getFullYear())
-                </script></h3>
+                <h3 class="text-center" style="color: #eb3a2a;">Latest News
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                </h3>
                 <p class="text-muted">Stay updated with the latest news and insights.</p>
             </div>
 
@@ -107,10 +163,11 @@
                                 alt="{{ $news->first()->title }}" style="height: 525px; object-fit: cover;">
                             <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark-gradient p-4">
                                 <h2 class="card-title fw-bold text-white mb-2">{{ $news->first()->title }}</h2>
-                                <p class="text-white-50 small mb-1">By {{ $news->first()->users->name }} |
-                                    {{ $news->first()->created_at->format('M d, Y') }}</p>
+                                <p class="text-white-50 small mb-1">By {{ $news->first()->users->profile->full_name }} |
+                                    {{ $news->first()->created_at->format('d M Y') }}</p>
                                 <p class="card-text text-white-50">{!! Str::limit($news->first()->content, 150) !!}</p>
-                                <a href="{{ route('news.show', $news->first()->slug) }}" class="btn btn-danger btn-sm">Read
+                                <a href="{{ route('news.show', $news->first()->id) }}"
+                                    class="btn btn-danger btn-sm align-self-start">Read
                                     More...</a>
                             </div>
                         </div>
@@ -125,10 +182,10 @@
                                 alt="{{ $item->title }}" style="height: 80px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title fw-bold mb-2">{{ $item->title }}</h5>
-                                <p class="text-muted small mb-1">By {{ $item->users->name }} |
-                                    {{ $item->created_at->format('M d, Y') }}</p>
+                                <p class="text-muted small mb-1">By {{ $item->users->profile->full_name }} |
+                                    {{ $item->created_at->format('d M Y') }}</p>
                                 <p class="card-text text-muted small">{!! Str::limit($item->content, 80) !!}</p>
-                                <a href="{{ route('news.show', $item->slug) }}" class="btn btn-outline-primary btn-sm">Read
+                                <a href="{{ route('news.show', $item->id) }}" class="btn btn-danger btn-sm">Read
                                     More...</a>
                             </div>
                         </div>
@@ -155,11 +212,12 @@
                                                     alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
                                                 <div class="card-body">
                                                     <h5 class="card-title fw-bold">{!! Str::limit($item->title, 30) !!}</h5>
-                                                    <p class="text-muted small mb-1">By {{ $item->users->name }} |
-                                                        {{ $item->created_at->format('M d, Y') }}</p>
+                                                    <p class="text-muted small mb-1">By
+                                                        {{ $item->users->profile->full_name }} |
+                                                        {{ $item->created_at->format('d M Y') }}</p>
                                                     <p class="card-text text-muted">{!! Str::limit($item->content, 100) !!}</p>
-                                                    <a href="{{ route('news.show', $item->slug) }}"
-                                                        class="btn btn-outline-primary btn-sm">Read More...</a>
+                                                    <a href="{{ route('news.show', $item->id) }}"
+                                                        class="btn btn-danger btn-sm">Read More...</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -235,7 +293,7 @@
                 border-color: #f8f9fa;
             }
 
-            .btn-outline-primary {
+            -primary {
                 border-width: 2px;
             }
 

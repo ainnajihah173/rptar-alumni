@@ -20,28 +20,28 @@
                 <div class="row justify-content-center align-items-center g-2">
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="example-readonly">News Title</label>
+                            <label for="example-readonly">News Title<span class="text-danger">*</span></label>
                             <input type="text" id="example-readonly" class="form-control" name="title" required
                                 placeholder="News Headline">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="example-readonly">Slug</label>
+                            <label for="example-readonly">News Slug<span class="text-danger">*</span></label>
                             <input type="text" id="example-readonly" class="form-control" name="slug" required
                                 placeholder="eg: news-headline">
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="example-readonly">Author</label>
+                            <label for="example-readonly">News Author</label>
                             <input type="text" class="form-control" placeholder="{{ $users->name }}" readonly>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="status">Status</label>
-                            <select name="is_active" id="status" class="form-control">
+                            <label for="status">News Status<span class="text-danger">*</span></label>
+                            <select name="is_active" id="status" class="form-control" required>
                                 <option selected disabled>Please Select...</option>
                                 <option value="0">Draft</option>
                                 <option value="1">Publish</option>
@@ -50,14 +50,14 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <label for="file">Upload File</label>
-                            <input type="file" name="image" id="image" class="form-control">
+                            <label for="file">Upload File<span class="text-danger">*</span></label>
+                            <input type="file" name="image" id="image" class="form-control" required>
                         </div>
                     </div>
                     <div class="col-lg-6"></div>
                     <div class="col-lg-12">
                         <div class="form-group mb-3">
-                            <label for="example-readonly">News Content</label>
+                            <label for="example-readonly">News Content<span class="text-danger">*</span></label>
                             <textarea class="form-control" id="editor" name="content"></textarea>
                         </div>
                     </div>

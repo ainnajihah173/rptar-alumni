@@ -41,7 +41,7 @@ class ProfileController extends Controller
         $user = User::findOrFail($id);
         $profile = $user->profile; // Assuming a one-to-one relationship between User and Profile
 
-        return view('profile.profile', compact('user', 'profile'));
+        return view('profile.update', compact('user', 'profile'));
     }
 
     public function update(Request $request, $id)
@@ -52,10 +52,10 @@ class ProfileController extends Controller
         $request->validate([
             'full_name' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
-            'date_of_birth' => 'required|date',
+            'date_of_birth' => 'nullable|date',
             'contact_number' => 'required|string|max:15',
-            'address' => 'required|string|max:255',
-            'bio' => 'nullable|string|max:1000',
+            'address' => 'nullable|string|max:255',
+            'bio' => 'required|string|max:1000',
             'job' => 'nullable|string|max:255',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',

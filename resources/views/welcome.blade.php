@@ -88,9 +88,9 @@
                     <h1 data-aos="fade-up">Welcome to <span class="text-danger">RPTAR Alumni</span></h1>
                     <p data-aos="fade-up" data-aos-delay="100">This is a alumni portal for Rumah Penyayang Tun Abdul
                         Razak<br></p>
-                    <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
-                        <a href="#about" class="btn-get-started bg-danger">Login Account</a>
-                    </div>
+                    {{-- <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
+                        <a href="{{ route('login') }}" class="btn-get-started bg-danger">Login Account</a>
+                    </div> --}}
                 </div>
             </div>
 
@@ -120,8 +120,8 @@
                             <li><i class="bi bi-check-circle"></i> <span>Engaging communities through outreach programs
                                     and sustainable initiatives.</span></li>
                         </ul>
-                        <a href="#" class="read-more"><span>Learn More About Us</span><i
-                                class="bi bi-arrow-right"></i></a>
+                        {{-- <a href="#" class="read-more"><span>Learn More About Us</span><i
+                                class="bi bi-arrow-right"></i></a> --}}
                     </div>
 
                     <!-- About Images -->

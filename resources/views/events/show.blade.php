@@ -105,7 +105,7 @@
                         @if ($participants->isEmpty())
                             <p class="text-muted">No participants registered yet.</p>
                         @else
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-striped table-responsive" id="dataTable">
                                 <thead class="bg-light">
                                     <tr>
                                         <th>#</th>

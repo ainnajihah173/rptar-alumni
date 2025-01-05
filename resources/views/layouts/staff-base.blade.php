@@ -20,8 +20,11 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('../assets/css/sb-admin-2.css') }}" rel="stylesheet">
 
-    <!-- Custom styles for this page -->
-    <link href="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <!-- DataTables CSS -->
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"> 
+    <!-- Buttons CSS -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"> 
 
     <!-- Blog Editor -->
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" />
@@ -257,7 +260,12 @@
                             {{ session()->get('success') }}
                         </div>
                     @endif
-
+                    @if (session()->has('warning'))
+                        <br>
+                        <div class="alert alert-warning">
+                            {{ session()->get('warning') }}
+                        </div>
+                    @endif
                     @if (session()->has('error'))
                         <br>
                         <div class="alert alert-danger">
@@ -336,7 +344,7 @@
     <script>
         setTimeout(function() {
             $('.alert').alert('close');
-        }, 3000); // 3000 milliseconds = 3 seconds
+        }, 5000); // 5000 milliseconds = 5 seconds
     </script>
 
     <!-- Bootstrap core JavaScript-->
@@ -351,18 +359,41 @@
     <script src="{{ asset('../assets/vendor/chart.js/Chart.min.js') }}"></script>
 
     <!-- Page level plugins -->
-    <script src="{{ asset('../assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    {{-- <script src="{{ asset('../assets/vendor/datatables/jquery.dataTables.min.js') }}"></script> --}}
+    <script src="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script> 
+
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"></script> --}}
 
 
-    <!-- Page level custom scripts -->
-    <!--<script src="{{ asset('../assets/js/demo/chart-area-demo.assets') }}"></script>
-    <script src="{{ asset('../assets/js/demo/chart-pie-demo.js') }}"></script>-->
-    <script src="{{ asset('../assets/js/demo/datatables-demo.js') }}"></script>
+     <!-- DataTables and Buttons JS -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script> 
 
     <!-- Text Editor -->
     <script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip', // Add buttons to the DOM
+                buttons: [
+                    'csv', 'excel', 'pdf' // Add the buttons you want
+                ]
+            });
+        });
+
         const {
             ClassicEditor,
             Essentials,

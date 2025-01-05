@@ -299,7 +299,7 @@
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center pt-3 pb-0">
                                                 <h5 class="font-weight-bold mb-3">Delete User</h5>
-                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure you?
+                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?
                                                 </p>
                                             </div>
                                             <!-- Modal Footer -->

@@ -6,6 +6,8 @@ use App\Models\News;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\NewsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NewsController extends Controller
 {
@@ -14,9 +16,16 @@ class NewsController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role === 'staff')
-            $news = News::paginate('10');
-        else
+        if (auth()->user()->role === 'staff') {
+            $totalNews = News::count();
+            $publishedNews = News::where('is_active', 1)->count();
+            $draftNews = News::where('is_active', 0)->count();
+            // Fetch news sorted by status (drafts first) and then by published date (newest first)
+            $news = News::orderBy('is_active') // Drafts first (is_active = 0)
+                ->orderByDesc('published_date') // Sort by date (newest first)
+                ->paginate(10);
+            return view('news.index', compact('news', 'totalNews', 'publishedNews', 'draftNews'));
+        } else
             $news = News::whereNotNull('published_date')->orderByDesc('published_date')->get();
         return view('news.index', compact('news'));
     }
@@ -41,7 +50,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:news,slug,',
             'is_active' => 'required|in:0,1', // 0 = Draft, 1 = Publish
-            'image' => 'nullable|mimes:jpg,jpeg,png|max:2048', // Optional image
+            'image' => 'required|mimes:jpg,jpeg,png|max:2048', // Optional image
             'content' => 'required|string',
         ]);
 
@@ -76,7 +85,12 @@ class NewsController extends Controller
     public function show($id)
     {
         $news = News::find($id);
-        return view('news.show', compact('news'));
+        $otherNews = News::where('id', '!=', $news->id) // Exclude the current news article
+                        ->whereNotNull('published_date') // Only include published news
+                        ->orderBy('published_date', 'desc') // Sort by published date (latest first)
+                        ->take(5) // Limit to 5 other news articles
+                        ->get();
+        return view('news.show', compact('news', 'otherNews'));
     }
 
     /**
@@ -146,4 +160,10 @@ class NewsController extends Controller
         return redirect()->route('news.index')
             ->with('success', "News Deleted Successfully!");
     }
+
+    
+//     public function export()
+//     {
+//         return Excel::download(new NewsExport, 'news.xlsx');
+//     }
 }

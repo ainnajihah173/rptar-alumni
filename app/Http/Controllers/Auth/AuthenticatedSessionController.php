@@ -29,7 +29,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // Get the authenticated user
+        $user = $request->user();
+
+        // Check if the profile is incomplete
+        if (!$user->profile->full_name) {
+            return redirect()->route('profile.edit', $user->id)->with('warning', 'Please complete your profile before proceeding.');
+        } else {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
     }
 
     /**

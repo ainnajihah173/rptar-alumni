@@ -63,7 +63,7 @@
                 <!-- Profile Picture -->
                 <div class="text-center mb-2">
                     <label for="profile_picture">
-                        <img src="{{ $profile && $profile->profile_pic ? asset('storage/' . $profile->profile_pic) : asset('assets/images/default-avatar.png') }}"
+                        <img src="{{ $profile->profile_pic ? asset('storage/' . $profile->profile_pic) : asset('assets/images/default-avatar.png') }}"
                             id="profile-preview" alt="Profile Picture" class="img-fluid rounded-circle rounded-img"
                             style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
                     </label>
@@ -100,9 +100,9 @@
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="date_of_birth">Date of Birth<span class="text-danger">*</span></label>
+                        <label for="date_of_birth">Date of Birth</label>
                         <input type="date" id="date_of_birth" class="form-control" name="date_of_birth"
-                            value="{{ $profile->date_of_birth ?? '' }}" required>
+                            value="{{ $profile->date_of_birth ?? '' }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="contact_number">Contact Number<span class="text-danger">*</span></label>
@@ -110,8 +110,8 @@
                             value="{{ $profile->contact_number ?? '' }}" required>
                     </div>
                     <div class="col-md-12 mb-3">
-                        <label for="address">Address<span class="text-danger">*</span></label>
-                        <textarea id="address" class="form-control" name="address" rows="3" required>{{ $profile->address ?? '' }}</textarea>
+                        <label for="address">Address</label>
+                        <textarea id="address" class="form-control" name="address" rows="3">{{ $profile->address ?? '' }}</textarea>
                     </div>
                     @if ($user->role === 'user')
                         <div class="col-md-12 mb-3">

@@ -15,7 +15,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -149,7 +149,7 @@
                 <div class="row gy-4">
                     @foreach ($events as $event)
                         @if ($event->is_active && \Carbon\Carbon::now()->lte($event->end_date) && $event->registered_count < $event->capacity)
-                            <div class="col-md-6 col-lg-4">
+                            <div class="col-md-6 col-lg-4 mt-3">
                                 <div class="card shadow-sm border-0 h-100">
                                     <img src="{{ asset('storage/' . $event->image_path) ?? asset('assets/images/default-event.jpg') }}"
                                         class="card-img-top" alt="{{ $event->name }}" style="height: 200px; object-fit: cover;">
@@ -307,7 +307,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>No.</th>

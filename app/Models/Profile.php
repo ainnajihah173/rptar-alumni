@@ -10,17 +10,17 @@ class Profile extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 
-        'full_name', 
-        'date_of_birth', 
-        'contact_number', 
-        'gender', 
-        'address', 
+        'user_id',
+        'full_name',
+        'date_of_birth',
+        'contact_number',
+        'gender',
+        'address',
         'job',
         'profile_pic',
-        'bio', 
-        'facebook', 
-        'instagram', 
+        'bio',
+        'facebook',
+        'instagram',
         'linkedin',
     ];
 
@@ -28,4 +28,9 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // public function isComplete()
+    // {
+    //     return $this->full_name && $this->contact_number && $this->gender && $this->bio; // Add required fields
+    // }
 }
