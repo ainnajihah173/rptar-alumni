@@ -18,7 +18,7 @@
                 <h5 class="font-weight-bold text-dark mb-3">Campaign Preview</h5>
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="{{ asset('storage/' . $campaigns->image_path) }}" alt="Campaign Image"
+                        <img src="{{ $campaigns->image_path ? asset('storage/' . $campaigns->image_path) : asset('assets/images/default-event.jpg') }}" alt="Campaign Image"
                             class="img-fluid rounded shadow-sm">
                     </div>
                     <div class="col-md-8">

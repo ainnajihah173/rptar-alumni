@@ -58,7 +58,7 @@
                     <div class="col-lg-12">
                         <div class="form-group mb-3">
                             <label for="example-readonly">News Content<span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="editor" name="content"></textarea>
+                            <textarea class="form-control" id="editor" name="content" rows="6"></textarea>
                         </div>
                     </div>
 

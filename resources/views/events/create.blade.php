@@ -57,13 +57,13 @@
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event Description<span class="text-danger">*</span></label>
-                                <textarea class="form-control" rows="3" name="description"></textarea>
+                                <textarea class="form-control" rows="3" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event Location<span class="text-danger">*</span></label>
-                                <textarea class="form-control" rows="3" name="location"></textarea>
+                                <textarea class="form-control" rows="3" name="location" required></textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -74,18 +74,17 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Event End Date</label>
-                                <input type="date" id="example-readonly" class="form-control" name="end_date">
+                                <label for="example-readonly">Event End Date<span class="text-danger">*</span></label>
+                                <input type="date" id="example-readonly" class="form-control" name="end_date" required>
                             </div>
                         </div>
-
                     </div>
                     <div class="text-center mt-2">
                         <button type="button" class="btn btn-primary next-btn">Next</button>
                     </div>
                 </div>
 
-                <!-- Step 2: Additional Details-->
+                <!-- Step 2: Additional Details -->
                 <div id="step-2" class="step-content d-none">
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
@@ -97,13 +96,15 @@
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event End Time<span class="text-danger">*</span></label>
-                                <input type="time" id="example-readonly" class="form-control" name="end_time">
+                                <input type="time" id="example-readonly" class="form-control" name="end_time"
+                                    required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Event Image</label>
-                                <input type="file" id="example-readonly" class="form-control" name="image_path">
+                                <label for="example-readonly">Event Image<span class="text-danger">*</span></label>
+                                <input type="file" id="example-readonly" class="custom-file" name="image_path"
+                                    required>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -120,31 +121,37 @@
                     </div>
                 </div>
 
-                <!-- Step 3 -->
+                <!-- Step 3: Organizer Details -->
                 <div id="step-3" class="step-content d-none">
-                    <div class="alert alert-warning" role="alert">
-                        <p>Please confirm all your details before submit the form.</p>
-                    </div>
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
+                            <!-- Organizer Name Dropdown -->
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Organizer Name</label>
-                                <input type="text" id="example-readonly" class="form-control" name="organizer_name"
-                                    required placeholder="Organizer Name">
+                                <label for="organizer" class="form-label">Organizer Name</label>
+                                <select id="organizer-select" name="organizer_id" class="form-control" required>
+                                    <option value="" disabled selected>Select Organizer</option>
+                                    @foreach ($organizers as $organizer)
+                                        <option value="{{ $organizer->id }}"
+                                            data-contact="{{ $organizer->organizer_contact ?? '' }}"
+                                            data-email="{{ $organizer->organizer_email ?? '' }}">
+                                            {{ $organizer->organizer_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Contact Number</label>
-                                <input type="text" id="example-readonly" class="form-control"
-                                    name="organizer_contact" required placeholder="Contact Number">
+                                <label for="organizer-contact">Contact Number<span class="text-danger">*</span></label>
+                                <input type="text" id="organizer-contact" class="form-control"
+                                    name="organizer_contact" required placeholder="Contact Number" readonly>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Email</label>
-                                <input type="email" id="example-readonly" class="form-control"
-                                    name="organizer_email" required placeholder="Email">
+                                <label for="organizer-email">Email<span class="text-danger">*</span></label>
+                                <input type="email" id="organizer-email" class="form-control" name="organizer_email"
+                                    required placeholder="Email" readonly>
                             </div>
                         </div>
                         <div class="col-lg-6"></div>
@@ -156,7 +163,27 @@
                 </div>
             </form>
         </div>
-
-
     </div>
+
+    <!-- JavaScript for Organizer Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const organizerSelect = document.getElementById('organizer-select');
+            const organizerContact = document.getElementById('organizer-contact');
+            const organizerEmail = document.getElementById('organizer-email');
+
+            if (organizerSelect) {
+                organizerSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        organizerContact.value = selectedOption.getAttribute('data-contact') || '';
+                        organizerEmail.value = selectedOption.getAttribute('data-email') || '';
+                    } else {
+                        organizerContact.value = '';
+                        organizerEmail.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

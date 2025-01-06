@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 use App\Models\Campaign;
+use App\Models\Donation;
+use App\Models\Inquiries;
+use App\Models\Message;
 use App\Models\User;
 use App\Models\Events;
 use App\Models\News;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -28,7 +32,121 @@ class UserController extends Controller
 
   public function dashboard()
   {
-    return view('dashboard');
+    // Get the authenticated user
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+      // Admin-specific logic (if needed)
+    } elseif ($user->role === 'staff') {
+      // Staff-specific logic (if needed)
+      // Get the authenticated user
+      $user = auth()->user();
+
+      // Fetch latest news (e.g., last 5 news articles)
+      $latestNews = News::orderBy('published_date', 'desc')->take(3)->get();
+
+      // Fetch upcoming events (e.g., events after today)
+      $upcomingEvents = Events::where('start_date', '>=', Carbon::now())
+        ->orderBy('start_date', 'asc')
+        ->take(4)
+        ->get();
+
+      // Fetch total donations
+      $donationSummary = Donation::sum('amount');
+
+      // Fetch recent inquiries (e.g., last 5 inquiries)
+      $recentInquiries = Inquiries::orderBy('created_at', 'desc')
+        ->take(3)
+        ->get();
+
+      // Fetch donation history for the chart (last 6 months)
+      $donationHistory = Donation::selectRaw('SUM(amount) as total, MONTH(created_at) as month')
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+      // Fetch event participation for the chart (last 6 months)
+      $eventParticipation = Events::selectRaw('COUNT(*) as total, MONTH(start_date) as month')
+        ->where('start_date', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+      // Pass data to the view
+      return view('dashboard', compact(
+        'user',
+        'latestNews',
+        'upcomingEvents',
+        'donationSummary',
+        'recentInquiries',
+        'donationHistory',
+        'eventParticipation',
+      ));
+
+    } else {
+      // Fetch latest news (e.g., last 3 news articles)
+      $latestNews = News::orderBy('published_date', 'desc')->take(3)->get();
+
+      // Fetch upcoming events that the user has registered for
+      $upcomingEvents = Events::where('start_date', '>=', Carbon::now())
+        ->orderBy('start_date', 'asc')
+        ->whereHas('participants', function ($query) use ($user) {
+          $query->where('user_id', $user->id); // Filter events where the user is a participant
+        })
+        ->get(); // Execute the query
+
+      // Format events for FullCalendar
+      // Format events for FullCalendar
+      $formattedEvents = $upcomingEvents->map(function ($event) {
+        return [
+          'title' => $event->name,
+          'start' => $event->start_date, // Start date
+          'end' => Carbon::parse($event->end_date)->addDay()->toDateString(), // Add 1 day for all-day events
+          'allDay' => true, // Mark as an all-day event
+          'url' => route('events.show', $event->id), // Link to event details
+        ];
+      });
+
+      // Fetch user's donation summary
+      $donationSummary = Donation::where('user_id', $user->id)->sum('amount');
+
+      // Fetch user's recent inquiries (e.g., last 5 inquiries)
+      $recentInquiries = Inquiries::where('user_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+      // Fetch donation history for the chart (last 6 months)
+      $donationHistory = Donation::where('user_id', $user->id)
+        ->selectRaw('SUM(amount) as total, MONTH(created_at) as month')
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+      // Fetch event participation for the chart (last 6 months)
+      $eventParticipation = Events::whereHas('participants', function ($query) use ($user) {
+        $query->where('user_id', $user->id);
+      })
+        ->selectRaw('COUNT(*) as total, MONTH(start_date) as month')
+        ->where('start_date', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+      // Pass data to the view
+      return view('dashboard', compact(
+        'user',
+        'latestNews',
+        'upcomingEvents',
+        'donationSummary',
+        'recentInquiries',
+        'donationHistory',
+        'eventParticipation',
+        'formattedEvents'
+      ));
+    }
   }
 
   public function index()

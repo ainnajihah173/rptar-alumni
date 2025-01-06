@@ -22,15 +22,17 @@
                         <div class="text-muted mb-3">
                             <p>
                                 <i class="fas fa-calendar-alt me-2"></i>
-                                {{ $events->start_date }}
-                                @if ($events->end_date)
-                                    - {{ $events->end_date }}
+                                @if ($events->start_date == $events->end_date)
+                                    {{ \Carbon\Carbon::parse($events->start_date)->format('d M Y') }}
+                                @else
+                                    {{ \Carbon\Carbon::parse($events->start_date)->format('d M Y') }} -
+                                    {{ \Carbon\Carbon::parse($events->end_date)->format('d M Y') }}
                                 @endif
                             </p>
                             <p>
                                 <i class="fas fa-clock me-2"></i>
-                                {{ date('H:i', strtotime($events->start_time)) }} -
-                                {{ $events->end_time ? date('H:i', strtotime($events->end_time)) : 'TBD' }}
+                                {{ date('h:i A', strtotime($events->start_time)) }} -
+                                {{ $events->end_time ? date('h:i A', strtotime($events->end_time)) : 'TBD' }}
                             </p>
                         </div>
                         <p class="mb-3">
@@ -80,10 +82,10 @@
                                 <span><strong>Event Status:</strong></span>
                                 @if ($events->status === 'approved')
                                     <span class="badge rounded-pill text-white bg-success p-2">Approved</span>
-                                    @elseif($events->status === 'rejected')
-                                        <span class="badge rounded-pill text-white bg-danger p-2">Rejected</span>
-                                        @else
-                                            <span class="badge rounded-pill text-white bg-warning p-2">Pending</span>
+                                @elseif($events->status === 'rejected')
+                                    <span class="badge rounded-pill text-white bg-danger p-2">Rejected</span>
+                                @else
+                                    <span class="badge rounded-pill text-white bg-warning p-2">Pending</span>
                                 @endif
 
 

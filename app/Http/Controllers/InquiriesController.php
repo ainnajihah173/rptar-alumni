@@ -15,33 +15,49 @@ class InquiriesController extends Controller
     public function index()
     {
         $user = auth()->user();
-    
+        $inquiries = collect(); // Initialize an empty collection
+
         if ($user->role === 'user') {
             // Get inquiries specific to the logged-in user
-            $inquiries = Inquiries::where('user_id', $user->id)->paginate(10);
-    
+            $inquiries = Inquiries::where('user_id', $user->id)
+                ->orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
+                ->paginate(10);
+
             $counts = [
-                'Total' => $inquiries->count(),
+                'Total' => $inquiries->total(),
                 'Pending' => $inquiries->where('status', 'Pending')->count(),
                 'In Progress' => $inquiries->where('status', 'In Progress')->count(),
                 'Resolved' => $inquiries->where('status', 'Resolved')->count(),
             ];
-        } else {
-            // Get all inquiries for staff or admin
-            $inquiries = Inquiries::paginate(10);
-    
+        } elseif ($user->role === 'staff') {
+            // Get inquiries assigned to the staff member
+            $inquiries = Inquiries::where('assign_id', $user->id)
+                ->orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
+                ->paginate(10);
+
             $counts = [
-                'Assign' => $inquiries->where('assign_id', auth()->user()->id)->count(),
-                'Total' => $inquiries->count(),
-                'Pending' => $inquiries->where('status', 'Pending')->count(),
-                'In Progress' => $inquiries->where('status', 'In Progress')->count(),
-                'Resolved' => $inquiries->where('status', 'Resolved')->count(),
+                'Total' => Inquiries::count(),
+                'Assign' => $inquiries->total(), // Total inquiries assigned to the staff
+                'In Progress' => Inquiries::where('assign_id', $user->id)->where('status', 'In Progress')->count(),
+                'Resolved' => Inquiries::where('assign_id', $user->id)->where('status', 'Resolved')->count(),
+            ];
+
+        } elseif ($user->role === 'admin') {
+            // Get all inquiries for admin
+            $inquiries = Inquiries::orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
+                ->paginate(10);
+
+            $counts = [
+                'Total' => $inquiries->total(),
+                'Pending' => Inquiries::where('status', 'Pending')->count(),
+                'In Progress' => Inquiries::where('status', 'In Progress')->count(),
+                'Resolved' => Inquiries::where('status', 'Resolved')->count(),
             ];
         }
-    
+
         return view('inquiries.index', compact('inquiries', 'counts'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -80,7 +96,7 @@ class InquiriesController extends Controller
         $inquiry->title = $request->title;
         $inquiry->description = $request->description;
         $inquiry->image_path = $imagePath;
-        
+
 
         // Save to the database
         $inquiry->save();
@@ -104,7 +120,8 @@ class InquiriesController extends Controller
     public function edit($id)
     {
         $inquiries = Inquiries::find($id);
-        return view('inquiries.update', compact('inquiries'));
+        $staff = User::where('role', 'staff')->get();
+        return view('inquiries.update', compact('inquiries', 'staff'));
     }
 
     /**
@@ -113,38 +130,47 @@ class InquiriesController extends Controller
     public function update(Request $request, $id)
     {
         $inquiry = Inquiries::findOrFail($id);
-    
-        $request->validate([
-            'category' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        ]);
-    
-        // Update inquiry fields
-        $inquiry->category = $request->category;
-        $inquiry->title = $request->title;
-        $inquiry->description = $request->description;
-    
-        // Handle file upload if a new file is provided
-        if ($request->hasFile('image_path')) {
-            // Delete the old file if exists
-            if ($inquiry->image_path) {
-                Storage::delete('public/' . $inquiry->image_path);
-            }
-            // Store the new file
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('inquiries_images', $imageName, 'public');
 
-            $inquiry->image = $imagePath; // Update the image path
+        if (auth()->user()->role === 'user') {
+            $request->validate([
+                'category' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+
+            // Update inquiry fields
+            $inquiry->category = $request->category;
+            $inquiry->title = $request->title;
+            $inquiry->description = $request->description;
+
+            // Handle file upload if a new file is provided
+            if ($request->hasFile('image_path')) {
+                // Delete the old file if exists
+                if ($inquiry->image_path) {
+                    Storage::delete('public/' . $inquiry->image_path);
+                }
+                // Store the new file
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('inquiries_images', $imageName, 'public');
+
+                $inquiry->image = $imagePath; // Update the image path
+            }
+        } elseif (auth()->user()->role === 'admin') {
+            $inquiry->assign_id = $request->assign_id;
+            $inquiry->status = 'In Progress';
+        } else {
+            $inquiry->resolved_date = $request->resolved_date;
+            $inquiry->solution = $request->solution;
+            $inquiry->status = 'Resolved';
         }
-    
+
         $inquiry->save();
-    
+
         return redirect()->route('inquiries.index')->with('success', 'Inquiry updated successfully!');
     }
-    
+
 
     /**
      * Remove the specified resource from storage.

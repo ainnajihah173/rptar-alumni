@@ -2,7 +2,6 @@
 @section('content')
     <!-- Page Heading -->
     <div class="row mb-4">
-        <!-- User Statistics Card -->
         <div class="col-md-3">
             <div class="card shadow-sm border-left-info">
                 <div class="card-body">
@@ -13,16 +12,31 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-left-danger">
-                <div class="card-body">
-                    <div class="text-center">
-                        <h6 class="text-gray-900 font-weight-bold">Pending</h6>
-                        <h2>{{ $counts['Pending'] }}</h2>
+        @if (auth()->user()->role !== 'staff')
+            <!-- User Statistics Card -->
+            <div class="col-md-3">
+                <div class="card shadow-sm border-left-danger">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="text-gray-900 font-weight-bold">Pending</h6>
+                            <h2>{{ $counts['Pending'] }}</h2>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @else
+            <!-- User Statistics Card -->
+            <div class="col-md-3">
+                <div class="card shadow-sm border-left-info">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="text-gray-900 font-weight-bold">Total Assign</h6>
+                            <h2>{{ $counts['Assign'] }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="col-md-3">
             <div class="card shadow-sm border-left-warning">
                 <div class="card-body">
@@ -56,7 +70,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -67,6 +81,7 @@
                             <th>Description</th>
                             <th>Category</th>
                             <th>Assign To</th>
+                            <th>Issued Date</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -76,7 +91,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 @if (auth()->user()->role !== 'user')
-                                    <td>{{ $inquiry->user->name }}</td>
+                                    <td>{{ $inquiry->user->profile->full_name }}</td>
                                 @endif
                                 <td>{{ $inquiry->title }}</td>
                                 <td>{!! Str::limit($inquiry->description, 20) !!}</td>
@@ -89,7 +104,10 @@
                                         Others
                                     @endif
                                 </td>
-                                <td>{{ $inquiry->assign_to ?? 'N/A' }}</td>
+                                <td>{{ $inquiry->assignedTo->profile->full_name ?? 'N/A' }}</td>
+
+                                <td>{{ $inquiry->created_at->format('d F Y') }}</td>
+
                                 <td>
                                     @if ($inquiry->status === 'Pending')
                                         <span class="badge bg-danger text-white">Pending</span>
@@ -109,6 +127,14 @@
                                             data-target="#deleteModal-{{ $inquiry->id }}">
                                             <i class="fas fa-trash text-danger"></i>
                                         </a>
+                                    @endif
+                                    @if (auth()->user()->role === 'admin' && $inquiry->status === 'Pending')
+                                        <a href="{{ route('inquiries.edit', $inquiry->id) }}">
+                                            <i class="fas fa-edit mr-2"></i></a>
+                                    @endif
+                                    @if (auth()->user()->role === 'staff' && $inquiry->status === 'In Progress')
+                                        <a href="{{ route('inquiries.edit', $inquiry->id) }}">
+                                            <i class="fas fa-edit mr-2"></i></a>
                                     @endif
                                 </td>
                             </tr>

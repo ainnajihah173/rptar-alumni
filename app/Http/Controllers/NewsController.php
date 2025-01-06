@@ -69,7 +69,7 @@ class NewsController extends Controller
         $news->user_id = auth()->user()->id; // Using the currently authenticated user
         $news->is_active = $request->input('is_active');
         $news->published_date = $news->is_active === '1' ? now() : null;
-        $news->content = strip_tags($request->input('content'), '<a><strong><em><i>');
+        $news->content = $request->input('content');
         $news->views = 0;
         $news->image = $imagePath; // Save the path to the image
         $news->save();

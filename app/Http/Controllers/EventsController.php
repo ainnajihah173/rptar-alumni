@@ -7,24 +7,49 @@ use App\Models\Events;
 use App\Models\EventOrganizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class EventsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        if (auth()->user()->role === 'user') {
-            $events = Events::where('is_active', true)
-                ->where('end_date', '>=', now()) // Ensure the event hasn't ended
-                ->whereRaw('capacity > registered_count') // Ensure the event is not full
-                ->paginate(6); // 6 events per page
-        } else {
-            $events = Events::paginate(10);
+        // Get the current date and time
+        $now = Carbon::now();
+
+        // Find events that have passed their end date and are still active
+        $inactiveEvents = Events::where('end_date', '<', $now)
+            ->where('is_active', true)
+            ->get();
+
+        // Update the status of these events to inactive
+        foreach ($inactiveEvents as $event) {
+            $event->update(['is_active' => false]);
         }
 
-        return view('events.index', compact('events'));
+        // Fetch events based on the user's role
+        $user = auth()->user();
+
+        if ($user->role === 'user') {
+            // Section 1: All active, not full, and future events
+            $events = Events::where('is_active', true)
+                ->where('end_date', '>=', $now) // Ensure the event hasn't ended
+                ->whereRaw('capacity > registered_count') // Ensure the event is not full
+                ->paginate(6); // 6 events per page
+
+            // Section 2: Events that the user has registered for
+            $registeredEvents = Events::whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id); // Filter events where the user is a participant
+            })
+                ->paginate(6); // 6 events per page
+
+            return view('events.index', compact('events', 'registeredEvents'));
+        } else {
+            // For admins/staff: Show all events, sorted by status
+            $events = Events::orderByRaw("FIELD(status, 'pending', 'rejected', 'approved')") // Sort by status
+                ->paginate(10); // 10 events per page
+            return view('events.index', compact('events'));
+        }
     }
 
     /**
@@ -32,7 +57,10 @@ class EventsController extends Controller
      */
     public function create()
     {
-        return view('events.create');
+        // Fetch all organizers from the organizer table
+        $organizers = EventOrganizer::all();
+        // Pass the organizers to the view
+        return view('events.create', compact('organizers'));
     }
 
     /**
@@ -48,9 +76,9 @@ class EventsController extends Controller
             'end_time' => 'required',
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
-            'organizer_name' => 'required|string|max:255',
-            'organizer_contact' => 'required|string|max:20',
-            'organizer_email' => 'required|email|max:255',
+            // 'organizer_name' => 'required|string|max:255',
+            // 'organizer_contact' => 'required|string|max:20',
+            // 'organizer_email' => 'required|email|max:255',
             'image_path' => 'nullable|image|max:2048',
         ]);
 
@@ -61,11 +89,8 @@ class EventsController extends Controller
             $imagePath = $image->storeAs('event_images', $imageName, 'public'); // Stored in 'storage/app/public/event_images'
         }
 
-        $organizer = EventOrganizer::create([
-            'organizer_name' => $request->organizer_name,
-            'organizer_contact' => $request->organizer_contact,
-            'organizer_email' => $request->organizer_email,
-        ]);
+        // Fetch the organizer details
+        $organizer = EventOrganizer::find($request->organizer_id);
 
         Events::create([
             'organizer_id' => $organizer->id,
@@ -103,7 +128,8 @@ class EventsController extends Controller
     public function edit($id)
     {
         $events = Events::find($id);
-        return view('events.update', compact('events'));
+        $organizers = EventOrganizer::all();
+        return view('events.update', compact('events', 'organizers'));
     }
 
     /**
@@ -116,14 +142,13 @@ class EventsController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'start_date' => 'required|date|after:today',
+            'end_date' => 'nullable|date|after_or_equal:start_date', // Validate end_date if provided
             'start_time' => 'required',
             'end_time' => 'required',
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
-            'organizer_name' => 'required|string|max:255',
-            'organizer_contact' => 'required|string|max:20',
-            'organizer_email' => 'required|email|max:255',
             'image_path' => 'nullable|image|max:2048',
+            'organizer_id' => 'required|exists:event_organizers,id', // Validate organizer_id
         ]);
 
         // Find the event by ID
@@ -143,27 +168,29 @@ class EventsController extends Controller
             $event->image_path = $imagePath; // Update the event image path
         }
 
-        // Update event organizer
-        $organizer = EventOrganizer::findOrFail($event->organizer_id);
-        $organizer->update([
-            'organizer_name' => $request->organizer_name,
-            'organizer_contact' => $request->organizer_contact,
-            'organizer_email' => $request->organizer_email,
-        ]);
-
         // Update event details
         $event->update([
+            'organizer_id' => $request->organizer_id, // Use organizer_id from the request
             'name' => $request->name,
             'description' => $request->description,
             'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
+            'end_date' => $request->end_date, // Update end_date if provided
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'location' => $request->location,
             'capacity' => $request->capacity,
-            'status' => 'pending', // Default to the current status
+            'status' => 'Pending', // Keep the existing status
             'is_active' => $request->has('is_active') ? (bool) $request->is_active : $event->is_active,
         ]);
+
+        // Optionally, update the organizer details if needed
+        if ($request->has('organizer_contact') || $request->has('organizer_email')) {
+            $organizer = EventOrganizer::findOrFail($request->organizer_id);
+            $organizer->update([
+                'organizer_contact' => $request->organizer_contact,
+                'organizer_email' => $request->organizer_email,
+            ]);
+        }
 
         return redirect()->route('events.index')->with('success', 'Event updated successfully!');
     }
@@ -236,6 +263,22 @@ class EventsController extends Controller
         $event->increment('registered_count');
 
         return redirect()->back()->with('success', 'You have successfully registered for the event.');
+    }
+
+    public function addOrganizer(Request $request)
+    {
+
+        $organizer = EventOrganizer::create([
+            'organizer_name' => $request->organizer_name,
+            'organizer_contact' => $request->organizer_contact,
+            'organizer_email' => $request->organizer_email,
+        ]);
+
+        // Associate the organizer with the event
+        $organizer->save();
+
+        // Redirect back with a success message
+        return redirect()->route('events.index')->with('success', 'Organizer added successfully!');
     }
 
 

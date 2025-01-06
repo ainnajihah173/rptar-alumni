@@ -37,7 +37,7 @@
 
                     <!-- News Content -->
                     <div class="news-content text-justify">
-                        {!! $news->content !!}
+                        {!! nl2br(e($news->content)) !!}
                     </div>
                 </div> <!-- End Card Body -->
             </div> <!-- End Card -->

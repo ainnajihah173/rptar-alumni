@@ -1,115 +1,193 @@
 @extends('layouts.staff-base')
+
 @section('content')
-    <h3 class="text-center" style="color: #eb3a2a;">Messages</h3>
-    <p class="text-center text-muted">Send the message and stay connected.</p>
-    <div class="container bg-white p-3" style="max-width: 1200px; height: 430px;">
-        <div class="row h-100">
-            <!-- User List Section -->
-            <div class="col-md-4 d-flex flex-column border-right pr-3" style="overflow-y: auto;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="font-weight-bold">Messages</h5>
-                </div>
-                <!-- Search Bar -->
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search users...">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- User List -->
-                <ul class="list-group list-group-flush user-list">
-                    <li class="list-group-item d-flex align-items-center">
-                        <img src="{{ asset('assets/images/default-avatar.png') }}" alt="User Avatar"
-                            class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-                        <div>
-                            <h6 class="mb-0">John Doe</h6>
-                            <small class="bg-danger text-white px-2 py-1 rounded">Online</small>
-                        </div>
+    <div class="container-fluid">
+        <h3 class="text-center" style="color: #eb3a2a;">Messages</h3>
+        <p class="text-center text-muted">Send the message and stay connected.</p>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 col-12 mb-3">
+                <button class="btn btn-danger btn-block mb-3" data-toggle="modal" data-target="#newMessageModal">New
+                    Message</button>
+                <!-- Delete Selected Button -->
+                {{-- <button id="deleteSelected" class="btn btn-danger btn-block mb-3" data-toggle="modal"
+                    data-target="#deleteConfirmationModal" disabled>
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button> --}}
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Inbox
+                        <span class="badge badge-danger badge-pill">{{$count}}</span>
                     </li>
-                    <li class="list-group-item d-flex align-items-center">
-                        <img src="{{ asset('assets/images/default-avatar.png') }}" alt="User Avatar"
-                            class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-                        <div>
-                            <h6 class="mb-0">Jane Smith</h6>
-                            <small class="bg-danger text-white px-2 py-1 rounded">Offline</small>
-                        </div>
-                    </li>
-                    <!-- Add more users as needed -->
                 </ul>
             </div>
 
-            <!-- Message Platform Section -->
-            <div class="col-md-8 d-flex flex-column">
-                <!-- Chat Header -->
-                <div class="d-flex align-items-center mb-3">
-                    <img src="{{ asset('assets/images/default-avatar.png') }}" alt="User Avatar" class="rounded-circle mr-3"
-                        style="width: 50px; height: 50px;">
-                    <div>
-                        <h5 class="mb-0">John Doe</h5>
-                        <small class="text-muted">Last seen 2 minutes ago</small>
-                    </div>
-                </div>
+            <!-- Main Content -->
+            <div class="col-md-10 col-12">
+                <!-- Message List Table -->
+                <div class="table-responsive">
+                    <table id="data" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Sender</th>
+                                <th>Receiver</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($messages as $message)
+                                <tr data-message-id="{{ $message->id }}" style="cursor: pointer;">
+                                    <td><input type="checkbox" class="select-checkbox" name="selected_ids[]"
+                                            value="{{ $message->id }}"></td>
+                                    <td>{{ $message->sender->profile->full_name }}</td>
+                                    <td>{{ $message->receiver->profile->full_name }}</td>
+                                    <td>{{ $message->subject }}</td>
+                                    <td>{{ $message->message }}</td>
+                                    <td>{{ $message->created_at->format('h:i A') }}</td>
+                                    <td>
+                                        <!-- View Conversation Icon -->
+                                        @if ($message->sender_id !== auth()->user()->id)
+                                            <a href="{{ route('message.conversation', $message->id) }}"
+                                                class="action-icon-primary mr-2" title="View Conversation">
+                                                <i class="fas fa-reply text-primary"></i>
+                                            </a>
+                                        @endif
+                                        <!-- Reply Icon (only if the logged-in user is not the sender) -->
+                                        {{-- @if ($message->sender_id !== auth()->user()->id)
+                                            <a href="" class="action-icon-primary mr-2" data-toggle="modal"
+                                                data-target="#replyModal{{ $message->id }}" title="Reply">
+                                                <i class="fas fa-reply text-success"></i>
+                                            </a>
+                                        @endif --}}
 
-                <!-- Chat Messages -->
-                <div class="chat-box border rounded p-3 mb-3 flex-grow-1"
-                    style="overflow-y: auto; background-color: #f9f9f9;">
-                    <div class="message mb-3">
-                        <div class="d-flex">
-                            <img src="{{ asset('assets/images/default-avatar.png') }}" alt="User Avatar"
-                                class="rounded-circle mr-2" style="width: 40px; height: 40px;">
-                            <div class="bg-primary text-white rounded p-2">
-                                <p class="mb-0">Hello! How can I help you today?</p>
-                            </div>
-                        </div>
-                        <small class="text-muted ml-5">10:30 AM</small>
-                    </div>
-                    <div class="message mb-3 text-right">
-                        <div class="d-flex justify-content-end">
-                            <div class="bg-secondary text-white rounded p-2">
-                                <p class="mb-0">I have a question about my order.</p>
-                            </div>
-                            <img src="{{ asset('assets/images/default-avatar.png') }}" alt="User Avatar"
-                                class="rounded-circle ml-2" style="width: 40px; height: 40px;">
-                        </div>
-                        <small class="text-muted mr-5">10:31 AM</small>
-                    </div>
-                    <!-- Add more messages as needed -->
-                </div>
+                                        <!-- Delete Icon -->
+                                        <a href="" class="action-icon-danger" data-toggle="modal"
+                                            data-target="#delete{{ $message->id }}" title="Delete">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
 
-                <!-- Message Input -->
-                <form class="d-flex">
-                    <input type="text" class="form-control mr-2" placeholder="Type a message...">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="delete{{ $message->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content border-0 rounded-lg shadow">
+                                            <!-- Close Button -->
+                                            <button type="button" class="close position-absolute text-dark"
+                                                data-dismiss="modal" aria-label="Close"
+                                                style="top: 15px; right: 15px; font-size: 1.5rem;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <!-- Centered Warning Icon -->
+                                            <div class="text-center pt-4">
+                                                <div class="rounded-circle bg-danger d-inline-flex align-items-center justify-content-center"
+                                                    style="width: 60px; height: 60px;">
+                                                    <i class="fas fa-exclamation-triangle text-white"
+                                                        style="font-size: 30px;"></i>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center pt-3 pb-0">
+                                                <h5 class="font-weight-bold mb-3">Delete All Conversation</h5>
+                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?</p>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center py-3 border-0">
+                                                <button type="button" class="btn btn-secondary px-4"
+                                                    data-dismiss="modal">No, Keep it</button>
+                                                <form method="POST" action="{{ route('message.destroy', $message->id) }}"
+                                                    class="d-inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger px-4">Yes, Delete!</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compose New Message Modal -->
+    <div class="modal fade" id="newMessageModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-envelope"></i> New Message
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form action="{{ route('message.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input name="sender_id" type="email" class="form-control" value="{{ auth()->user()->email }}"
+                                readonly>
+                        </div>
+                        <div class="form-group">
+                            <select name="receiver_id" id="receiver_id" class="form-control" required>
+                                <option value="">Select Recipient</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->profile->full_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input name="subject" type="text" class="form-control" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" class="form-control" placeholder="Message" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-envelope"></i> Send Message
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <style>
-        .user-list .list-group-item {
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .user-list .list-group-item:hover {
-            background-color: #f1f1f1;
-        }
-
-        .chat-box::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .chat-box::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-            border-radius: 10px;
-        }
-
-        .chat-box::-webkit-scrollbar-thumb:hover {
-            background-color: #aaa;
-        }
-    </style>
+    <!-- Delete Confirmation Modal -->
+    {{-- <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
+        aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">
+                        <i class="fas fa-trash"></i> Delete Messages
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('message.delete') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-body">
+                        Are you sure you want to delete the selected messages?
+                        <!-- Hidden input to store selected message IDs -->
+                        <input type="hidden" name="selected_ids" id="selected_ids">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> --}}
 @endsection

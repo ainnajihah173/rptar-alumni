@@ -34,6 +34,14 @@
                     </div>
                 </div>
 
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="email">Contact Number</label>
+                        <input type="text" id="email" class="form-control" name="email"
+                            value="{{ $inquiries->user->profile->contact_number }}" readonly>
+                    </div>
+                </div>
+
                 <!-- Category Field -->
                 <div class="col-lg-6">
                     <div class="form-group mb-3">
@@ -58,7 +66,7 @@
                     <div class="form-group mb-3">
                         <label for="title">Issued Date</label>
                         <input type="text" id="title" class="form-control"
-                            value="{{ $inquiries->created_at->format('d-m-Y') }}" readonly>
+                            value="{{ $inquiries->created_at->format('d F Y') }}" readonly>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -71,7 +79,7 @@
                     <div class="form-group mb-3">
                         <label for="title">Assign To</label>
                         <input type="text" id="title" class="form-control"
-                            value="{{ $inquiries->assignedTo->name ?? 'N/A' }}" readonly>
+                            value="{{ $inquiries->assignedTo->profile->full_name ?? 'N/A' }}" readonly>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -84,7 +92,22 @@
                     <div class="form-group mb-3">
                         <label for="title">Resolved Date</label>
                         <input type="text" id="title" class="form-control"
-                            value="{{ $inquiries->resolved_date ?? 'N/A' }}" readonly>
+                            value="{{ $inquiries->resolved_date ? \Carbon\Carbon::parse($inquiries->resolved_date)->format('d F Y') : 'N/A' }}"
+                            readonly>
+                    </div>
+                </div>
+                <!-- File Upload Field -->
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="file">Image</label>
+                        @if ($inquiries->image_path)
+                            <div class="mt-2">
+                                <p><a href="{{ Storage::url($inquiries->image_path) }}" target="_blank"
+                                        class="text-primary">View Current File</a></p>
+                            </div>
+                        @else
+                            <p>No Image Provided</p>
+                        @endif
                     </div>
                 </div>
                 <!-- Description Field -->
@@ -101,25 +124,6 @@
                     </div>
                 </div>
 
-                <!-- File Upload Field -->
-                <div class="col-lg-12">
-                    <div class="form-group mb-3">
-                        <label for="file">Image</label>
-                        @if ($inquiries->image_path)
-                            <!-- Check if there's an existing image -->
-                            <div class="">
-                                <img src="{{ asset('storage/' . $inquiries->image_path) }}" alt="Inquiries Image"
-                                    class="img-thumbnail" width="150">
-                            </div>
-                            <div class="mt-2">
-                                <p><a href="{{ Storage::url($inquiries->image_path) }}"
-                                    target="_blank" class="text-primary">View Current File</a></p>
-                            </div>
-                        @else
-                        <p>No Image Provided</p>
-                        @endif
-                    </div>
-                </div>
             </div>
         </div>
     </div>

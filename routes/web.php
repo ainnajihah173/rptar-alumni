@@ -61,9 +61,10 @@ Route::middleware('auth')->group(function () {
     //Manage Events
     Route::resource('events', EventsController::class);
     //Route::put('/events/{id}', [EventsController::class, 'update'])->name('events.update');
-    Route::get('/events/{id}/approve', [EventsController::class, 'approve'])->name('events.approve');
-    Route::get('/events/{id}/reject', [EventsController::class, 'reject'])->name('events.reject');
+    Route::put('/events/{id}/approve', [EventsController::class, 'approve'])->name('events.approve');
+    Route::put('/events/{id}/reject', [EventsController::class, 'reject'])->name('events.reject');
     Route::post('/events/register/{id}', [EventsController::class, 'register'])->name('events.register');
+    Route::post('/events/add-organizer', [EventsController::class, 'addOrganizer'])->name('events.addOrganizer');
 
     //Manage Inquiries
     Route::resource('inquiries', InquiriesController::class);
@@ -72,8 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('donations', DonationController::class);
 
     //Manage Communications
-    Route::get('/communication', [MessageController::class, 'index'])->name('message.index');
-
+    Route::resource('message', MessageController::class);
+    // Route::get('/communication', [MessageController::class, 'index'])->name('message.index');
+    // Route::delete('/messages/delete', [MessageController::class, 'delete'])->name('message.delete');
+    Route::get('/messages/new-count', [MessageController::class, 'getNewMessageCount']);
+    Route::get('/message/conversation/{id}', [MessageController::class, 'conversation'])->name('message.conversation');
 });
 
 

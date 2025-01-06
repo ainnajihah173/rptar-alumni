@@ -59,13 +59,13 @@
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event Description<span class="text-danger">*</span></label>
-                                <textarea class="form-control" rows="3" name="description"> {{ $events->description }}</textarea>
+                                <textarea class="form-control" rows="3" name="description">{{ $events->description }}</textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event Location<span class="text-danger">*</span></label>
-                                <textarea class="form-control" rows="3" name="location"> {{ $events->location }}</textarea>
+                                <textarea class="form-control" rows="3" name="location">{{ $events->location }}</textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -82,15 +82,13 @@
                                     value="{{ old('end_date', $events->end_date ? date('Y-m-d', strtotime($events->end_date)) : '') }}">
                             </div>
                         </div>
-
-
                     </div>
                     <div class="text-center mt-2">
                         <button type="button" class="btn btn-primary next-btn">Next</button>
                     </div>
                 </div>
 
-                <!-- Step 2: Additional Details-->
+                <!-- Step 2: Additional Details -->
                 <div id="step-2" class="step-content d-none">
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
@@ -107,7 +105,6 @@
                                     value="{{ old('end_time', $events->end_time ? date('H:i', strtotime($events->end_time)) : '') }}">
                             </div>
                         </div>
-
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="example-readonly">Event Image</label>
@@ -123,13 +120,13 @@
                         </div>
                         <div class="col-lg-6">
                             @if ($events->image_path)
-                                    <!-- Check if there's an existing image -->
-                                    <div class="mt-2">
-                                        <p>Current Image:</p>
-                                        <img src="{{ asset('storage/' . $events->image_path) }}" alt="Events Image"
-                                            class="img-thumbnail" width="150">
-                                    </div>
-                                @endif
+                                <!-- Check if there's an existing image -->
+                                <div class="mt-2">
+                                    <p>Current Image:</p>
+                                    <img src="{{ asset('storage/' . $events->image_path) }}" alt="Events Image"
+                                        class="img-thumbnail" width="150">
+                                </div>
+                            @endif
                         </div>
                         <div class="col-lg-6"></div>
                     </div>
@@ -139,33 +136,39 @@
                     </div>
                 </div>
 
-                <!-- Step 3 -->
+                <!-- Step 3: Organizer Details -->
                 <div id="step-3" class="step-content d-none">
-                    <div class="alert alert-warning" role="alert">
-                        <p>Please confirm all your details before submit the form.</p>
-                    </div>
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Organizer Name</label>
-                                <input type="text" id="example-readonly" class="form-control" name="organizer_name"
-                                    required placeholder="Organizer Name"
-                                    value="{{ $events->organizers->organizer_name }}">
+                                <label for="organizer-select">Organizer Name<span class="text-danger">*</span></label>
+                                <select id="organizer-select" name="organizer_id" class="form-control" required>
+                                    <option value="" disabled selected>Select Organizer</option>
+                                    @foreach ($organizers as $organizer)
+                                        <option value="{{ $organizer->id }}"
+                                            data-contact="{{ $organizer->organizer_contact }}"
+                                            data-email="{{ $organizer->organizer_email }}"
+                                            {{ $events->organizer_id == $organizer->id ? 'selected' : '' }}>
+                                            {{ $organizer->organizer_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Contact Number</label>
-                                <input type="text" id="example-readonly" class="form-control"
-                                    name="organizer_contact" required placeholder="Contact Number"
+                                <label for="organizer-contact">Contact Number<span class="text-danger">*</span></label>
+                                <input type="text" id="organizer-contact" class="form-control"
+                                    name="organizer_contact" required placeholder="Contact Number" readonly
                                     value="{{ $events->organizers->organizer_contact }}">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Email</label>
-                                <input type="email" id="example-readonly" class="form-control" name="organizer_email"
-                                    required placeholder="Email" value="{{ $events->organizers->organizer_email }}">
+                                <label for="organizer-email">Email<span class="text-danger">*</span></label>
+                                <input type="email" id="organizer-email" class="form-control" name="organizer_email"
+                                    required placeholder="Email" readonly
+                                    value="{{ $events->organizers->organizer_email }}">
                             </div>
                         </div>
                         <div class="col-lg-6"></div>
@@ -177,7 +180,27 @@
                 </div>
             </form>
         </div>
-
-
     </div>
+
+    <!-- JavaScript for Organizer Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const organizerSelect = document.getElementById('organizer-select');
+            const organizerContact = document.getElementById('organizer-contact');
+            const organizerEmail = document.getElementById('organizer-email');
+
+            if (organizerSelect) {
+                organizerSelect.addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        organizerContact.value = selectedOption.getAttribute('data-contact') || '';
+                        organizerEmail.value = selectedOption.getAttribute('data-email') || '';
+                    } else {
+                        organizerContact.value = '';
+                        organizerEmail.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

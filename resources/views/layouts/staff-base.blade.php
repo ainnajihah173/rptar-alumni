@@ -21,13 +21,26 @@
     <link href="{{ asset('../assets/css/sb-admin-2.css') }}" rel="stylesheet">
 
     <!-- DataTables CSS -->
-     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <!-- Buttons CSS -->
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"> 
+        href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
     <!-- Blog Editor -->
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" />
+
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- jQuery and jQuery UI JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 
     <style>
         .step-icon {
@@ -126,7 +139,7 @@
                 <span>Donations</span></a>
         </li>
 
-        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
+        @if (auth()->user()->role === 'user')
             <!-- Nav Item - News -->
             <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('message.index') }}">
@@ -211,15 +224,17 @@
                         </li>-->
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-comment fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                        </li>
-
+                        @if (auth()->user()->role === 'user')
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="fas fa-comment fa-fw"></i>
+                                    <!-- Counter - Messages -->
+                                    <span class="badge badge-danger badge-counter">{{ $inboxCount }}</span>
+                                </a>
+                            </li>
+                        @endif
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -344,7 +359,7 @@
     <script>
         setTimeout(function() {
             $('.alert').alert('close');
-        }, 5000); // 5000 milliseconds = 5 seconds
+        }, 4000); // 5000 milliseconds = 4 seconds
     </script>
 
     <!-- Bootstrap core JavaScript-->
@@ -360,30 +375,19 @@
 
     <!-- Page level plugins -->
     {{-- <script src="{{ asset('../assets/vendor/datatables/jquery.dataTables.min.js') }}"></script> --}}
-    <script src="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script> 
+    {{-- <script src="{{ asset('../assets/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script> --}}
 
-    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"></script> --}}
-
-
-     <!-- DataTables and Buttons JS -->
+    <!-- DataTables and Buttons JS -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script> 
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 
     <!-- Text Editor -->
     <script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
+
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable({
@@ -392,28 +396,100 @@
                     'csv', 'excel', 'pdf' // Add the buttons you want
                 ]
             });
+
+            $('#data').DataTable({
+                lengthChange: false, // Disable length change dropdown
+            });
         });
 
-        const {
-            ClassicEditor,
-            Essentials,
-            Bold,
-            Italic,
-            Font,
-            Paragraph
-        } = CKEDITOR;
-
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                plugins: [Essentials, Bold, Italic, Font, Paragraph],
-                toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-                ]
-            })
-            .catch(error => {
-                console.error('Error initializing CKEditor:', error);
+        $(document).ready(function() {
+            // Select All Checkbox
+            $('#selectAll').on('click', function() {
+                const isChecked = $(this).prop('checked');
+                $('.select-checkbox').prop('checked', isChecked);
+                toggleDeleteButton();
             });
+
+            // Individual Checkbox Click
+            $('#data tbody').on('click', '.select-checkbox', function() {
+                if (!$(this).prop('checked')) {
+                    $('#selectAll').prop('checked', false);
+                }
+                toggleDeleteButton();
+            });
+
+            // Toggle Delete Button State
+            function toggleDeleteButton() {
+                const anyChecked = $('.select-checkbox:checked').length > 0;
+                $('#deleteSelected').prop('disabled', !anyChecked);
+            }
+
+            // Handle Delete Confirmation Modal
+            $('#deleteSelected').on('click', function() {
+                const selectedIds = $('.select-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+
+                // Set the selected IDs in the hidden input field
+                $('#selected_ids').val(selectedIds.join(','));
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageBadge = document.querySelector('#messagesDropdown .badge-counter');
+            const inboxBadge = document.querySelector('.sidebar .badge-danger'); // Inbox badge in the sidebar
+            let lastChecked = new Date().toISOString(); // Initialize with the current time
+
+            // Function to fetch new message count
+            function fetchNewMessageCount() {
+                fetch(`/messages/new-count?last_checked=${lastChecked}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.count > 0) {
+                            // Update the notification badge in staff-base
+                            if (messageBadge) {
+                                messageBadge.textContent = data.count; // Set the total count
+                            }
+
+                            // Update the inbox badge in the index page
+                            if (inboxBadge) {
+                                inboxBadge.textContent = data.count; // Set the total count
+                            }
+
+                            // Update the last checked time
+                            lastChecked = new Date().toISOString();
+                        }
+                    })
+                    .catch(error => console.error('Error fetching new message count:', error));
+            }
+
+            // Fetch the initial count when the page loads
+            fetchNewMessageCount();
+
+            // Poll the server every 10 seconds
+            setInterval(fetchNewMessageCount, 10000); // Adjust the interval as needed
+        });
+
+        // const {
+        //     ClassicEditor,
+        //     Essentials,
+        //     Bold,
+        //     Italic,
+        //     Font,
+        //     Paragraph
+        // } = CKEDITOR;
+
+        // ClassicEditor
+        //     .create(document.querySelector('#editor'), {
+        //         plugins: [Essentials, Bold, Italic, Font, Paragraph],
+        //         toolbar: [
+        //             'undo', 'redo', '|', 'bold', 'italic', '|',
+        //             'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+        //         ]
+        //     })
+        //     .catch(error => {
+        //         console.error('Error initializing CKEditor:', error);
+        //     });
     </script>
 
     <!-- JavaScript for Multi-Step Form -->
@@ -450,6 +526,7 @@
             progressBar.style.width = `${progressPercentage}%`;
         }
     </script>
+
 
 
 

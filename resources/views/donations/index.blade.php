@@ -120,8 +120,9 @@
                         @foreach ($campaigns as $donation)
                             <div class="col-md-6 col-lg-4">
                                 <div class="card shadow-sm border-0 h-100">
-                                    <img src="{{ asset('storage/' . $donation->image_path) }}" class="card-img-top"
-                                        alt="{{ $donation->title }}" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ $donation->image_path ? asset('storage/' . $donation->image_path) : asset('assets/images/default-event.jpg') }}"
+                                        class="card-img-top" alt="{{ $donation->title }}"
+                                        style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
                                         <h5 class="card-title text-dark">{{ $donation->title }}</h5>
                                         <p class="card-text text-muted">

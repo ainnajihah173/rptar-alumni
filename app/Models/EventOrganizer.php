@@ -14,4 +14,6 @@ class EventOrganizer extends Model
         'organizer_contact',
         'organizer_email',
     ];
+
+    
 }

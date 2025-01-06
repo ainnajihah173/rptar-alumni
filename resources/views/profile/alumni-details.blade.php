@@ -28,15 +28,15 @@
                         <!-- Social Media Links -->
                         <div class="d-flex justify-content-center mt-3">
                             <a href="{{ $profile->linkedin ?? 'https://www.linkedin.com/' }}"
-                                class="btn btn-outline-primary btn-circle mx-2" target="_blank">
+                                class="btn btn-info btn-circle mx-2" target="_blank">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                             <a href="{{ $profile->facebook ?? 'https://www.facebook.com/' }}"
-                                class="btn btn-outline-primary btn-circle mx-2" target="_blank">
+                                class="btn btn-primary btn-circle mx-2" target="_blank">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                             <a href="{{ $profile->instagram ?? 'https://www.instagram.com/' }}"
-                                class="btn btn-outline-danger btn-circle mx-2" target="_blank">
+                                class="btn btn-danger btn-circle mx-2" target="_blank">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </div>
@@ -63,25 +63,25 @@
                             @if ($profile->full_name)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Full Name:</strong></p>
-                                    <p class="text-muted">{{ $profile->full_name }}</p>
+                                    <p class="text-muted">{{ $profile->full_name ?? 'N/A' }}</p>
                                 </div>
                             @endif
                             @if ($profile->user->email)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Email:</strong></p>
-                                    <p class="text-muted">{{ $profile->user->email }}</p>
+                                    <p class="text-muted">{{ $profile->user->email ?? 'N/A' }}</p>
                                 </div>
                             @endif
                             @if ($profile->contact_number)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Phone:</strong></p>
-                                    <p class="text-muted">{{ $profile->contact_number }}</p>
+                                    <p class="text-muted">{{ $profile->contact_number ?? 'N/A' }}</p>
                                 </div>
                             @endif
                             @if ($profile->date_of_birth)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Date of Birth:</strong></p>
-                                    <p class="text-muted">{{ $profile->date_of_birth }}</p>
+                                    <p class="text-muted">{{ $profile->date_of_birth ? \Carbon\Carbon::parse($profile->date_of_birth)->format('d F Y') : 'N/A' }}</p>
                                 </div>
                             @endif
                         </div>
@@ -92,19 +92,19 @@
                             @if ($profile->gender)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Gender:</strong></p>
-                                    <p class="text-muted">{{ ucfirst($profile->gender) }}</p>
+                                    <p class="text-muted">{{ ucfirst($profile->gender) ?? 'N/A' }}</p>
                                 </div>
                             @endif
                             @if ($profile->address)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Address:</strong></p>
-                                    <p class="text-muted">{{ $profile->address }}</p>
+                                    <p class="text-muted">{{ $profile->address ?? 'N/A' }}</p>
                                 </div>
                             @endif
                             @if ($profile->job)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong>Job Title:</strong></p>
-                                    <p class="text-muted">{{ $profile->job }}</p>
+                                    <p class="text-muted">{{ $profile->job ?? 'N/A' }}</p>
                                 </div>
                             @endif
                         </div>

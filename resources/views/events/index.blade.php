@@ -6,9 +6,15 @@
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-dark">Events Content</h6>
                 @if (auth()->user()->role === 'staff')
-                    <a href="{{ route('events.create') }}" class="btn btn-sm btn-primary shadow-sm">
-                        <i class="fas fa-plus fa-sm text-white-50"></i> Create Events
-                    </a>
+                    <div class="d-flex">
+                        <a href="{{ route('events.create') }}" class="btn btn-sm btn-primary shadow-sm me-2 mr-3">
+                            <i class="fas fa-plus fa-sm text-white-50"></i> Create Events
+                        </a>
+                        <a href="#" class="btn btn-sm btn-info shadow-sm" data-toggle="modal"
+                            data-target="#addOrganizerModal">
+                            <i class="fas fa-plus fa-sm text-dark-50"></i> Add Organizer
+                        </a>
+                    </div>
                 @endif
             </div>
             <!-- Check if there is any news -->
@@ -22,7 +28,9 @@
                                 <th>Event Name</th>
                                 <th>Event Description</th>
                                 <th>Event Details</th> <!-- Date, Time, Location --->
-                                <th>Organizer Details</th>
+                                @if (auth()->user()->role === 'admin')
+                                    <th>Organizer Details</th>
+                                @endif
                                 <th>Event Active</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -32,19 +40,46 @@
                             @foreach ($events as $events)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $events->name }}</td>
-                                    <td>{{ $events->description }}</td>
-                                    <td><i class="fas fa-calendar-alt"> </i> : {{ $events->start_date }} @if ($events->end_date)
-                                            to {{ $events->end_date }}
-                                        @endif <br>
-                                        <i class="fas fa-clock"> </i> : {{ date('H:i', strtotime($events->start_time)) }} -
-                                        {{ date('H:i', strtotime($events->end_time)) }}<br>
-                                        <i class="fas fa-map-marker-alt"> </i> : {{ $events->location }}
-                                    </td>
+                                    <td>{!! Str::limit($events->name, 15) !!}</td>
+                                    <td>{!! Str::limit($events->description, 30) !!}</td>
                                     <td>
-                                        Organized By : {{ $events->organizers->organizer_name }}<br>
-                                        Email : {{ $events->organizers->organizer_email }}
+                                        <div class="d-flex flex-column">
+                                            <!-- Date Range -->
+                                            <div class="mb-2">
+                                                <span class="text-muted">
+                                                    <i class="fas fa-calendar-alt me-1"></i>
+                                                    @if ($events->start_date == $events->end_date)
+                                                        {{ \Carbon\Carbon::parse($events->start_date)->format('d M Y') }}
+                                                    @else
+                                                        {{ \Carbon\Carbon::parse($events->start_date)->format('d M Y') }} -
+                                                        {{ \Carbon\Carbon::parse($events->end_date)->format('d M Y') }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            <!-- Time Range -->
+                                            <div class="mb-2">
+                                                <span class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    {{ date('h:i A', strtotime($events->start_time)) }} -
+                                                    {{ $events->end_time ? date('h:i A', strtotime($events->end_time)) : 'TBD' }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Location -->
+                                            <div>
+                                                <span class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                                    {{ $events->location }}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </td>
+                                    @if (auth()->user()->role === 'admin')
+                                        <td>
+                                            Organized By : {{ $events->organizers->organizer_name }}<br>
+                                            Email : {{ $events->organizers->organizer_email }}
+                                        </td>
+                                    @endif
                                     <td>{{ $events->is_active ? 'Active' : 'Inactive' }}</td>
                                     <td>
                                         @if ($events->status === 'pending')
@@ -58,10 +93,14 @@
                                     <td>
                                         <!-- Approve Reject -->
                                         @if (auth()->user()->role === 'admin' && $events->status === 'pending')
-                                            <a href="{{ route('events.approve', $events->id) }}">
-                                                <i class="fas fa-check-circle text-success mr-2"></i></a>
-                                            <a href="{{ route('events.reject', $events->id) }}">
-                                                <i class="fas fa-times-circle text-danger mr-2"></i></a>
+                                            <a href="#" class="action-icon-success" data-toggle="modal"
+                                                data-target="#approveModal{{ $events->id }}">
+                                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                            </a>
+                                            <a href="#" class="action-icon-danger" data-toggle="modal"
+                                                data-target="#rejectModal{{ $events->id }}">
+                                                <i class="fas fa-times-circle text-danger mr-2"></i>
+                                            </a>
                                         @endif
                                         <!-- Show Page-->
                                         <a href="{{ route('events.show', $events->id) }}">
@@ -73,14 +112,14 @@
 
                                             <!-- Delete Page -->
                                             <a href="#" class="action-icon-danger" data-toggle="modal"
-                                                data-target="#delete-modal">
+                                                data-target="#delete-modal{{ $events->id }}">
                                                 <i class="fas fa-trash text-danger"></i>
                                             </a>
                                         @endif
                                     </td>
                                 </tr>
                                 <!-- Delete Modal -->
-                                <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog"
+                                <div class="modal fade" id="delete-modal{{ $events->id }}" tabindex="-1" role="dialog"
                                     aria-labelledby="deleteModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -113,263 +152,394 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Approve Modal -->
+                                <div class="modal fade" id="approveModal{{ $events->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="approveModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-success text-white">
+                                                <h5 class="modal-title" id="approveModalLabel">
+                                                    <i class="fas fa-check-circle"></i> Approve Event
+                                                </h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center">
+                                                <p class="mb-0">Are you sure you want to approve this event?</p>
+                                                <small class="text-muted">This action cannot be undone.</small>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <form method="POST" action="{{ route('events.approve', $events->id) }}"
+                                                    id="approveForm" class="d-inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Yes, Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Reject Modal -->
+                                <div class="modal fade" id="rejectModal{{ $events->id }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="rejectModalLabel">
+                                                    <i class="fas fa-times-circle"></i> Reject Event
+                                                </h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center">
+                                                <p class="mb-0">Are you sure you want to reject this event?</p>
+                                                <small class="text-muted">This action cannot be undone.</small>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <form method="POST" action="{{ route('events.reject', $events->id) }}"
+                                                    id="rejectForm" class="d-inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-danger">Yes, Reject</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+
+        <!-- Add Organizer Modal -->
+        <div class="modal fade" id="addOrganizerModal" tabindex="-1" role="dialog"
+            aria-labelledby="addOrganizerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="addOrganizerModalLabel">
+                            <i class="fas fa-plus"></i> Add Organizer
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <form action="{{ route('events.addOrganizer') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="organizer_name">Organizer Name<span class="text-danger">*</span></label>
+                                <input type="text" id="organizer_name" name="organizer_name" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="organizer_contact">Contact Number<span class="text-danger">*</span></label>
+                                <input type="text" id="organizer_contact" name="organizer_contact"
+                                    class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="organizer_email">Email<span class="text-danger">*</span></label>
+                                <input type="email" id="organizer_email" name="organizer_email" class="form-control"
+                                    required>
+                            </div>
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     @else
-    <div class="container-fluid">
-        <h3 class="text-center" style="color: #eb3a2a;">Events</h3>
-        <p class="text-center text-muted">Join our events and stay connected.</p>
-    
-        <!-- Nav Tabs -->
-        <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="event-list-tab" data-bs-toggle="tab"
-                    data-bs-target="#event-list" type="button" role="tab" aria-controls="event-list"
-                    aria-selected="true">
-                    Event List
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="user-events-tab" data-bs-toggle="tab" data-bs-target="#user-events"
-                    type="button" role="tab" aria-controls="user-events" aria-selected="false">
-                    My Events
-                </button>
-            </li>
-        </ul>
-    
-        <!-- Tab Content -->
-        <div class="tab-content" id="eventTabsContent">
-            <!-- Event List Tab -->
-            <div class="tab-pane fade show active" id="event-list" role="tabpanel"
-                aria-labelledby="event-list-tab">
-                <div class="row gy-4">
-                    @foreach ($events as $event)
-                        @if ($event->is_active && \Carbon\Carbon::now()->lte($event->end_date) && $event->registered_count < $event->capacity)
-                            <div class="col-md-6 col-lg-4 mt-3">
-                                <div class="card shadow-sm border-0 h-100">
-                                    <img src="{{ asset('storage/' . $event->image_path) ?? asset('assets/images/default-event.jpg') }}"
-                                        class="card-img-top" alt="{{ $event->name }}" style="height: 200px; object-fit: cover;">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-danger">{{ $event->name }}</h5>
-                                        <p class="card-text text-muted">
-                                            {{ Str::limit($event->description, 100, '...') }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-calendar"></i>
-                                            {{ \Carbon\Carbon::parse($event->start_date)->format('d F Y') }}
-                                            - {{ \Carbon\Carbon::parse($event->end_date)->format('d F Y') }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-clock"></i>
-                                            {{ \Carbon\Carbon::parse($event->start_time)->format('h:i A') }}
-                                            - {{ \Carbon\Carbon::parse($event->end_time)->format('h:i A') }}
-                                        </p>
-                                        <p class="mb-3">
-                                            <i class="fas fa-map-marker-alt"></i> {{ $event->location }}
-                                        </p>
-                                        <p class="mb-3">
-                                            <strong>Available Slots:</strong> {{ $event->capacity - $event->registered_count }}
-                                        </p>
-                                        @if ($event->participants->contains('user_id', auth()->id()))
-                                            <a class="btn btn-secondary btn-block w-100 mt-2" disabled>
-                                                Already Registered
-                                            </a>
-                                        @else
-                                            <a href="" class="btn btn-danger btn-block w-100 mt-2" data-toggle="modal"
-                                                data-target="#eventModal{{ $event->id }}">
-                                                Register Now
-                                            </a>
-                                        @endif
+        <div class="container-fluid">
+            <h3 class="text-center" style="color: #eb3a2a;">Events</h3>
+            <p class="text-center text-muted">Join our events and stay connected.</p>
+
+            <!-- Nav Tabs -->
+            <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="event-list-tab" data-bs-toggle="tab"
+                        data-bs-target="#event-list" type="button" role="tab" aria-controls="event-list"
+                        aria-selected="true">
+                        Event List
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="user-events-tab" data-bs-toggle="tab" data-bs-target="#user-events"
+                        type="button" role="tab" aria-controls="user-events" aria-selected="false">
+                        My Events
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="eventTabsContent">
+                <!-- Event List Tab -->
+                <div class="tab-pane fade show active" id="event-list" role="tabpanel" aria-labelledby="event-list-tab">
+                    <div class="row gy-4">
+                        @foreach ($events as $event)
+                            @if ($event->is_active && \Carbon\Carbon::now()->lte($event->end_date) && $event->registered_count < $event->capacity)
+                                <div class="col-md-6 col-lg-4 mt-3">
+                                    <div class="card shadow-sm border-0 h-100">
+                                        <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/default-event.jpg') }}"
+                                            class="card-img-top" alt="{{ $event->name }}"
+                                            style="height: 200px; object-fit: cover;">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-danger">{{ $event->name }}</h5>
+                                            <p class="card-text text-muted">
+                                                {{ Str::limit($event->description, 100, '...') }}
+                                            </p>
+                                            <p class="mb-1">
+                                                <i class="fas fa-calendar"></i>
+                                                @if ($event->start_date == $event->end_date)
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                                @else
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
+                                                    {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
+                                                @endif
+                                            </p>
+                                            <p class="mb-1">
+                                                <i class="fas fa-clock"></i>
+                                                {{ date('h:i A', strtotime($event->start_time)) }} -
+                                                {{ $event->end_time ? date('h:i A', strtotime($event->end_time)) : 'TBD' }}
+                                            </p>
+                                            <p class="mb-3">
+                                                <i class="fas fa-map-marker-alt"></i> {{ $event->location }}
+                                            </p>
+                                            <p class="mb-3">
+                                                <strong>Available Slots:</strong>
+                                                {{ $event->capacity - $event->registered_count }}
+                                            </p>
+                                            @if ($event->participants->contains('user_id', auth()->id()))
+                                                <a class="btn btn-secondary btn-block w-100 mt-2" disabled>
+                                                    Already Registered
+                                                </a>
+                                            @else
+                                                <a href="" class="btn btn-danger btn-block w-100 mt-2"
+                                                    data-toggle="modal" data-target="#eventModal{{ $event->id }}">
+                                                    Register Now
+                                                </a>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <!-- Modal -->
-                            <div class="modal fade" id="eventModal{{ $event->id }}" tabindex="-1" role="dialog"
-                                aria-labelledby="eventModalLabel{{ $event->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <!-- Modal Header -->
-                                        <div class="modal-header bg-danger text-white">
-                                            <h5 class="modal-title font-weight-bold" id="eventModalLabel{{ $event->id }}">
-                                                {{ $event->name }}</h5>
-                                            <button type="button" class="close text-white" data-dismiss="modal"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-    
-                                        <!-- Modal Body -->
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <!-- Event Image -->
-                                                <div class="col-md-5">
-                                                    <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/default-event.jpg') }}"
-                                                        alt="Event Image" class="img-fluid rounded-lg shadow-sm mb-3">
-                                                </div>
-    
-                                                <!-- Event Details -->
-                                                <div class="col-md-7">
-                                                    <div class="event-details">
-                                                        <p class="mb-3">
-                                                            <strong>Organizer:</strong>
-                                                            <span class="text-muted">{{ $event->organizers->organizer_name }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Contact:</strong>
-                                                            <span class="text-muted">{{ $event->organizers->organizer_contact }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Email:</strong>
-                                                            <span class="text-muted">{{ $event->organizers->organizer_email }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Date:</strong>
-                                                            <span class="text-muted">
-                                                                {{ \Carbon\Carbon::parse($event->start_date)->format('F d, Y') }} -
-                                                                {{ \Carbon\Carbon::parse($event->end_date)->format('F d, Y') }}
-                                                            </span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Time:</strong>
-                                                            <span class="text-muted">
-                                                                {{ \Carbon\Carbon::parse($event->start_time)->format('h:i A') }} -
-                                                                {{ \Carbon\Carbon::parse($event->end_time)->format('h:i A') }}
-                                                            </span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Location:</strong>
-                                                            <span class="text-muted">{{ $event->location }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Description:</strong>
-                                                            <span class="text-muted">{{ $event->description }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Total Capacity:</strong>
-                                                            <span class="text-muted">{{ $event->capacity }}</span>
-                                                        </p>
-                                                        <p class="mb-3">
-                                                            <strong>Available Slots:</strong>
-                                                            <span class="text-muted">{{ $event->capacity - $event->registered_count }}</span>
-                                                        </p>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="eventModal{{ $event->id }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="eventModalLabel{{ $event->id }}"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title font-weight-bold"
+                                                    id="eventModalLabel{{ $event->id }}">
+                                                    {{ $event->name }}</h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <!-- Event Image -->
+                                                    <div class="col-md-5">
+                                                        <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/default-event.jpg') }}"
+                                                            alt="Event Image" class="img-fluid rounded-lg shadow-sm mb-3">
+                                                    </div>
+
+                                                    <!-- Event Details -->
+                                                    <div class="col-md-7">
+                                                        <div class="event-details">
+                                                            <p class="mb-3">
+                                                                <strong>Organizer:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $event->organizers->organizer_name }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Contact:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $event->organizers->organizer_contact }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Email:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $event->organizers->organizer_email }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Date:</strong>
+                                                                <span class="text-muted">
+                                                                    @if ($event->start_date == $event->end_date)
+                                                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                                                    @else
+                                                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                                                        -
+                                                                        {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
+                                                                    @endif
+                                                                </span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Time:</strong>
+                                                                <span class="text-muted">
+                                                                    {{ date('h:i A', strtotime($event->start_time)) }} -
+                                                                    {{ $event->end_time ? date('h:i A', strtotime($event->end_time)) : 'TBD' }}
+                                                                </span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Location:</strong>
+                                                                <span class="text-muted">{{ $event->location }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Description:</strong>
+                                                                <span class="text-muted">{{ $event->description }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Total Capacity:</strong>
+                                                                <span class="text-muted">{{ $event->capacity }}</span>
+                                                            </p>
+                                                            <p class="mb-3">
+                                                                <strong>Available Slots:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $event->capacity - $event->registered_count }}</span>
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-    
-                                        <!-- Modal Footer -->
-                                        <div class="modal-footer d-flex justify-content-between">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-dismiss="modal">Close</button>
-                                            <form action="{{ route('events.register', $event->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger btn-lg">
-                                                    <i class="fas fa-check-circle"></i> Confirm Registration
-                                                </button>
-                                            </form>
+
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer d-flex justify-content-between">
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                                <form action="{{ route('events.register', $event->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger btn-lg">
+                                                        <i class="fas fa-check-circle"></i> Confirm Registration
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-    
-                <!-- Pagination Section -->
-                <nav aria-label="Page navigation" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item {{ $events->onFirstPage() ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ $events->previousPageUrl() }}" tabindex="-1"
-                                aria-disabled="true">Previous</a>
-                        </li>
-                        @for ($i = 1; $i <= $events->lastPage(); $i++)
-                            <li class="page-item {{ $events->currentPage() === $i ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $events->url($i) }}">{{ $i }}</a>
-                            </li>
-                        @endfor
-                        <li class="page-item {{ $events->hasMorePages() ? '' : 'disabled' }}">
-                            <a class="page-link" href="{{ $events->nextPageUrl() }}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-    
-            <!-- User Events Tab -->
-            <div class="tab-pane fade" id="user-events" role="tabpanel" aria-labelledby="user-events-tab">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 font-weight-bold text-dark">List of My Events</h6>
+                            @endif
+                        @endforeach
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Event Title</th>
-                                        <th>Date</th>
-                                        <th>Location</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($events as $userEvent)
+
+                    <!-- Pagination Section -->
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item {{ $events->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $events->previousPageUrl() }}" tabindex="-1"
+                                    aria-disabled="true">Previous</a>
+                            </li>
+                            @for ($i = 1; $i <= $events->lastPage(); $i++)
+                                <li class="page-item {{ $events->currentPage() === $i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $events->url($i) }}">{{ $i }}</a>
+                                </li>
+                            @endfor
+                            <li class="page-item {{ $events->hasMorePages() ? '' : 'disabled' }}">
+                                <a class="page-link" href="{{ $events->nextPageUrl() }}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- User Events Tab -->
+                <div class="tab-pane fade" id="user-events" role="tabpanel" aria-labelledby="user-events-tab">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-dark">List of My Events</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $userEvent->name }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($userEvent->start_date)->format('F d, Y') }}</td>
-                                            <td>{{ $userEvent->location }}</td>
-                                            <td>
-                                                @if ($userEvent->is_active)
-                                                    <span class="badge bg-success text-white">Active</span>
-                                                @else
-                                                    <span class="badge bg-warning text-white">Inactive</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('events.show', $userEvent->id) }}" class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-eye"></i> View
-                                                </a>
-                                            </td>
+                                            <th>No.</th>
+                                            <th>Event Title</th>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($registeredEvents as $userEvent)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $userEvent->name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($userEvent->start_date)->format('F d, Y') }}
+                                                </td>
+                                                <td>{{ $userEvent->location }}</td>
+                                                <td>
+                                                    @if ($userEvent->is_active)
+                                                        <span class="badge bg-success text-white">Active</span>
+                                                    @else
+                                                        <span class="badge bg-warning text-white">Inactive</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <!-- Show Page-->
+                                                    <a href="{{ route('events.show', $userEvent->id) }}">
+                                                        <i class="fas fa-eye text-dark mr-2"></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <style>
-        .card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-    
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-    
-        .nav-tabs .nav-link {
-            font-weight: 500;
-            color: #6c757d;
-            border: none;
-        }
-    
-    
-        .pagination .page-item.active .page-link {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: white;
-        }
+
+        <style>
+            .card {
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-tabs .nav-link {
+                font-weight: 500;
+                color: #6c757d;
+                border: none;
+            }
+
+
+            .pagination .page-item.active .page-link {
+                background-color: #dc3545;
+                border-color: #dc3545;
+                color: white;
+            }
 
             /*Modal*/
             /* Custom Modal Styling */
@@ -426,7 +596,7 @@
             }
 
             .btn-danger:hover {
-               background-color: #c82333;
+                background-color: #c82333;
             }
 
             .btn-outline-secondary {
@@ -438,12 +608,13 @@
             .btn-outline-secondary:hover {
                 background-color: #6c757d;
                 color: #fff;
-            } 
+            }
 
             .img-fluid.rounded-lg {
                 border-radius: 10px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
+
             .nav-tabs .nav-link {
                 font-weight: 500;
                 color: #6c757d;
@@ -454,9 +625,9 @@
                 color: #dc3545;
                 border-bottom: 2px solid #dc3545;
             }
-    </style>
-    
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </style>
+
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @endif
 @endsection

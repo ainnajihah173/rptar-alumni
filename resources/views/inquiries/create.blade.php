@@ -64,7 +64,7 @@
                 <!-- end row-->
                 <div class="text-center mt-2">
                     <button type="button" onclick="history.back()" class="btn btn-light mr-3">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-danger">Save</button>
                 </div>
             </form>
         </div>

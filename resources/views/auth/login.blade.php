@@ -63,7 +63,7 @@
                                                 <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary btn-user btn-block" type="submit">Sign in</button>
+                                        <button class="btn btn-danger btn-user btn-block" type="submit">Sign in</button>
                                         <hr>
                                     </form>
                                     <div class="text-center">

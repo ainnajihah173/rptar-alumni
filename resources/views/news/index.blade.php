@@ -183,7 +183,7 @@
                             <div class="card-body">
                                 <h5 class="card-title fw-bold mb-2">{{ $item->title }}</h5>
                                 <p class="text-muted small mb-1">By {{ $item->users->profile->full_name }} |
-                                    {{ $item->created_at->format('d M Y') }}</p>
+                                    {{ $item->published_date ? \Carbon\Carbon::parse($item->published_date)->format('d F Y') : 'N/A' }}</p>
                                 <p class="card-text text-muted small">{!! Str::limit($item->content, 80) !!}</p>
                                 <a href="{{ route('news.show', $item->id) }}" class="btn btn-danger btn-sm">Read
                                     More...</a>
@@ -214,7 +214,7 @@
                                                     <h5 class="card-title fw-bold">{!! Str::limit($item->title, 30) !!}</h5>
                                                     <p class="text-muted small mb-1">By
                                                         {{ $item->users->profile->full_name }} |
-                                                        {{ $item->created_at->format('d M Y') }}</p>
+                                                        {{ $item->published_date ? \Carbon\Carbon::parse($item->published_date)->format('d F Y') : 'N/A' }}</p>
                                                     <p class="card-text text-muted">{!! Str::limit($item->content, 100) !!}</p>
                                                     <a href="{{ route('news.show', $item->id) }}"
                                                         class="btn btn-danger btn-sm">Read More...</a>
