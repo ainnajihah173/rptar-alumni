@@ -100,7 +100,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Name</th>
+                                <th>username</th>
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>Action</th>
@@ -159,7 +159,7 @@
                                                     <div class="form-row">
                                                         <!-- User Name -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userName" class="font-weight-bold">Name<span
+                                                            <label for="userName" class="font-weight-bold">Username<span
                                                                     class="text-danger">*</span></label>
                                                             <input type="text" id="userName" class="form-control"
                                                                 name="name" placeholder="John Smith" required>

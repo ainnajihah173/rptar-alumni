@@ -55,7 +55,7 @@ class ProfileController extends Controller
             'date_of_birth' => 'nullable|date',
             'contact_number' => 'required|string|max:15',
             'address' => 'nullable|string|max:255',
-            'bio' => 'required|string|max:1000',
+            'bio' => 'nullable|string|max:1000',
             'job' => 'nullable|string|max:255',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',

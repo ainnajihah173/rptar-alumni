@@ -71,11 +71,15 @@ Route::middleware('auth')->group(function () {
 
     //Manage Donations
     Route::resource('donations', DonationController::class);
+    Route::put('/donation/{id}/approve', [DonationController::class, 'approve'])->name('donations.approve');
+    Route::put('/donation/{id}/reject', [DonationController::class, 'reject'])->name('donations.reject');
+    Route::get('/donations/{id}/receipt', [DonationController::class, 'generateReceipt'])->name('donations.receipt');
 
     //Manage Communications
     Route::resource('message', MessageController::class);
     // Route::get('/communication', [MessageController::class, 'index'])->name('message.index');
     // Route::delete('/messages/delete', [MessageController::class, 'delete'])->name('message.delete');
+
     Route::get('/messages/new-count', [MessageController::class, 'getNewMessageCount']);
     Route::get('/message/conversation/{id}', [MessageController::class, 'conversation'])->name('message.conversation');
 });

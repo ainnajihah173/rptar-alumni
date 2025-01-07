@@ -127,7 +127,8 @@
                                             <div class="flex-grow-1">
                                                 <h6>{{ $news->title }}</h6>
                                                 <p class="mb-1">{{ Str::limit($news->content, 100) }}</p>
-                                                <small>Posted on {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
+                                                <small>Posted on
+                                                    {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
                                             </div>
                                         </a>
                                     @endforeach
@@ -203,6 +204,311 @@
         </style>
     @elseif(auth()->user()->role === 'admin')
         <!-- Admin-specific content can go here -->
+        <div class="container-fluid">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <h3 class="text-gray-800">Welcome back, {{ $admin->name }}!</h3>
+                                    <p class="text-gray-600 mb-0">Here’s an overview of your system.</p>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-shield fa-2x text-gray-300"></i> <!-- Admin Icon -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Section -->
+            <div class="row mb-4">
+                <!-- Total Users Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Total Users
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ $totalUsers }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-gray-300"></i> <!-- Users Icon -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Events Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Total Events
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ $totalEvents }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar-alt fa-2x text-gray-300"></i> <!-- Events Icon -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Donations Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Total Donations
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ $totalDonations }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-donate fa-2x text-gray-300"></i> <!-- Donations Icon -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Inquiries Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                        Total Inquiries
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ $totalInquiries }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-question-circle fa-2x text-gray-300"></i> <!-- Inquiries Icon -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row mb-4">
+                <!-- Donation Trend Chart -->
+                <div class="col-xl-6 col-md-12 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-primary">Donation Trends</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="donationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Role Distribution Chart -->
+                <div class="col-xl-6 col-md-12 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-success">User Role Distribution</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="userRoleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="row mb-4">
+                <!-- Recent Users -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-info">Recent Users</h6>
+                        </div>
+                        <div class="card-body">
+                            @if ($recentUsers->isEmpty())
+                                <p>No recent users.</p>
+                            @else
+                                <div class="list-group">
+                                    @foreach ($recentUsers as $user)
+                                        <div class="list-group-item">
+                                            <h6>{{ $user->name }}</h6>
+                                            <small>Joined on
+                                                {{ \Carbon\Carbon::parse($user->created_at)->format('d M Y') }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-success">Upcoming Events</h6>
+                        </div>
+                        <div class="card-body">
+                            @if ($upcomingEvents->isEmpty())
+                                <p>No upcoming events.</p>
+                            @else
+                                <div class="list-group">
+                                    @foreach ($upcomingEvents as $event)
+                                        <div class="list-group-item">
+                                            <h6>{{ $event->name }}</h6>
+                                            <small>Date: @if ($event->start_date == $event->end_date)
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                                @else
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
+                                                    {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
+                                                @endif
+                                            </small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Donations -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-warning">Recent Donations</h6>
+                        </div>
+                        <div class="card-body">
+                            @if ($recentDonations->isEmpty())
+                                <p>No recent donations.</p>
+                            @else
+                                <div class="list-group">
+                                    @foreach ($recentDonations as $donation)
+                                        <div class="list-group-item">
+                                            <h6>RM {{ number_format($donation->amount, 2) }}</h6>
+                                            <small>Donated on
+                                                {{ \Carbon\Carbon::parse($donation->created_at)->format('d F Y') }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Inquiries -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="m-0 font-weight-bold text-danger">Recent Inquiries</h6>
+                        </div>
+                        <div class="card-body">
+                            @if ($recentInquiries->isEmpty())
+                                <p>No recent inquiries.</p>
+                            @else
+                                <div class="list-group">
+                                    @foreach ($recentInquiries as $inquiry)
+                                        <div class="list-group-item">
+                                            <h6>{{ $inquiry->title }}</h6>
+                                            <small>Submitted on
+                                                {{ \Carbon\Carbon::parse($inquiry->created_at)->format('d F Y') }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Chart.js Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Donation Trend Chart
+            const donationCtx = document.getElementById('donationChart').getContext('2d');
+            const donationChart = new Chart(donationCtx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($donationHistory->pluck('month')) !!},
+                    datasets: [{
+                        label: 'Donations (RM)',
+                        data: {!! json_encode($donationHistory->pluck('total')) !!},
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // User Registration Chart
+            document.addEventListener('DOMContentLoaded', function() {
+                const userRoleCtx = document.getElementById('userRoleChart').getContext('2d');
+                const userRoleChart = new Chart(userRoleCtx, {
+                    type: 'bar', // You can also use 'pie' or 'doughnut' for a different style
+                    data: {
+                        labels: ['Admin', 'Staff', 'User'], // Labels for each category
+                        datasets: [{
+                            label: 'Total Users',
+                            data: [
+                                {{ $adminCount = $userCounts['admin'] ?? 0 }}, // Admin count
+                                {{ $staffCount = $userCounts['staff'] ?? 0 }}, // Staff count
+                                {{ $userCount = $userCounts['user'] ?? 0 }} // User count
+                            ],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)', // Red for admin
+                                'rgba(54, 162, 235, 0.8)', // Blue for staff
+                                'rgba(75, 192, 192, 0.8)' // Green for user
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
     @else
         <div class="container-fluid">
             <!-- Welcome Section -->
@@ -334,23 +640,22 @@
                                             class="list-group-item list-group-item-action d-flex align-items-start">
                                             <!-- News Image -->
                                             @if ($news->image)
-                                                <img src="{{ asset('storage/' . $news->image) }}" 
-                                                     alt="{{ $news->title }}" 
-                                                     class="img-thumbnail me-3 mr-2" 
-                                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/' . $news->image) }}"
+                                                    alt="{{ $news->title }}" class="img-thumbnail me-3 mr-2"
+                                                    style="width: 80px; height: 80px; object-fit: cover;">
                                             @else
                                                 <!-- Placeholder image if no image is available -->
-                                                <img src="https://via.placeholder.com/80" 
-                                                     alt="Placeholder" 
-                                                     class="img-thumbnail me-3 mr-2" 
-                                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                                <img src="https://via.placeholder.com/80" alt="Placeholder"
+                                                    class="img-thumbnail me-3 mr-2"
+                                                    style="width: 80px; height: 80px; object-fit: cover;">
                                             @endif
-                
+
                                             <!-- News Content -->
                                             <div class="flex-grow-1">
                                                 <h6>{{ $news->title }}</h6>
                                                 <p class="mb-1">{{ Str::limit($news->content, 100) }}</p>
-                                                <small>Posted on {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
+                                                <small>Posted on
+                                                    {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
                                             </div>
                                         </a>
                                     @endforeach
@@ -375,28 +680,27 @@
                                             class="list-group-item list-group-item-action d-flex align-items-start">
                                             <!-- Event Image -->
                                             @if ($event->image_path)
-                                                <img src="{{ asset('storage/' . $event->image_path) }}" 
-                                                     alt="{{ $event->name }}" 
-                                                     class="img-thumbnail me-3 mr-2" 
-                                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/' . $event->image_path) }}"
+                                                    alt="{{ $event->name }}" class="img-thumbnail me-3 mr-2"
+                                                    style="width: 80px; height: 80px; object-fit: cover;">
                                             @else
                                                 <!-- Placeholder image if no image is available -->
-                                                <img src="https://via.placeholder.com/80" 
-                                                     alt="Placeholder" 
-                                                     class="img-thumbnail me-3 mr-2" 
-                                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                                <img src="https://via.placeholder.com/80" alt="Placeholder"
+                                                    class="img-thumbnail me-3 mr-2"
+                                                    style="width: 80px; height: 80px; object-fit: cover;">
                                             @endif
-                
+
                                             <!-- Event Content -->
                                             <div class="flex-grow-1">
                                                 <h6>{{ $event->name }}</h6>
                                                 <p class="mb-1">{{ $event->description }}</p>
                                                 <small>Date: @if ($event->start_date == $event->end_date)
-                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
-                                                @else
-                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
-                                                    {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
-                                                @endif</small>
+                                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                                    @else
+                                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
+                                                        {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
+                                                    @endif
+                                                </small>
                                             </div>
                                         </a>
                                     @endforeach
@@ -419,7 +723,7 @@
                                 <div class="list-group">
                                     @foreach ($recentInquiries as $inquiry)
                                         <div class="list-group-item">
-                                            <h6>{{ $inquiry->subject }}</h6>
+                                            <h6>{{ $inquiry->title }}</h6>
                                             <p class="mb-1">{{ Str::limit($inquiry->message, 100) }}</p>
                                             <small>Submitted on {{ $inquiry->created_at }}</small>
                                         </div>

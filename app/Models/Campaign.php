@@ -25,7 +25,7 @@ class Campaign extends Model
     {
         return $this->hasMany(Donation::class);
     }
-    public function users()
+    public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }

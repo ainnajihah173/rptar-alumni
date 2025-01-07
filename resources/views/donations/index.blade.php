@@ -5,14 +5,16 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-dark">List of Campaigns</h6>
-                <a href="{{ route('donations.create') }}" class="btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Create Campaign
-                </a>
+                @if (auth()->user()->role === 'staff')
+                    <a href="{{ route('donations.create') }}" class="btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-plus fa-sm text-white-50"></i> Create Campaign
+                    </a>
+                @endif
             </div>
             <!-- Check if there are any campaigns -->
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -20,6 +22,7 @@
                                 <th>Target Amount</th>
                                 <th>Current Amount</th>
                                 <th>Created By</th>
+                                <th>Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -31,58 +34,158 @@
                                     <td>{!! Str::limit($campaign->title, 20) !!}</td>
                                     <td>RM {{ number_format($campaign->target_amount, 2) }}</td>
                                     <td>RM {{ number_format($campaign->current_amount, 2) }}</td>
-                                    <td>{{ $campaign->users->profile->full_name }}</td>
+                                    <td>{{ $campaign->createdBy->profile->full_name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($campaign->start_date)->format('d/m/Y') }} -
+                                        {{ \Carbon\Carbon::parse($campaign->end_date)->format('d/m/Y') }}</td>
                                     <td>
                                         @if ($campaign->status == 'active')
-                                            <span class="badge bg-success text-white">Active</span>
-                                        @elseif ($campaign->status == 'completed')
-                                            <span class="badge bg-info text-white">Completed</span>
-                                        @else
-                                            <span class="badge bg-warning text-white">Pending</span>
+                                            <span class="badge bg-primary text-white">Active</span>
+                                        @elseif ($campaign->status == 'closed')
+                                            <span class="badge bg-success text-white">Closed</span>
+                                        @elseif ($campaign->status == 'rejected')
+                                            <span class="badge bg-danger text-white">Rejected</span>
+                                        @elseif($campaign->status == 'pending')
+                                            <span class="badge bg-secondary text-white">Pending</span>
                                         @endif
                                     </td>
                                     <td>
+
                                         <!-- View Campaign-->
-                                        <a href="">
+                                        <a href="{{ route('donations.show', $campaign->id) }}">
                                             <i class="fas fa-eye text-dark mr-2"></i></a>
+                                        <!-- Approve Reject -->
+                                        @if (auth()->user()->role === 'admin' && $campaign->status === 'pending')
+                                            <a href="#" class="action-icon-success" data-toggle="modal"
+                                                data-target="#approveModal{{ $campaign->id }}">
+                                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                            </a>
+                                            <a href="#" class="action-icon-danger" data-toggle="modal"
+                                                data-target="#rejectModal{{ $campaign->id }}">
+                                                <i class="fas fa-times-circle text-danger mr-2"></i>
+                                            </a>
+                                        @endif
                                         <!-- Edit Campaign-->
-                                        @if ($campaign->status !== 'completed' && $campaign->status !== 'active')
-                                            <a href="">
+                                        @if (auth()->user()->role === 'staff' &&
+                                                in_array($campaign->status, ['pending', 'rejected']) &&
+                                                $campaign->created_by === auth()->user()->id)
+                                            <a href="{{ route('donations.edit', $campaign->id) }}">
                                                 <i class="fas fa-edit mr-2"></i></a>
 
                                             <!-- Delete Campaign-->
                                             <a href="" class="action-icon-danger" data-toggle="modal"
-                                                data-target="#bs-danger-modal-sm-{{ $campaign->id }}">
+                                                data-target="#delete-modal{{ $campaign->id }}">
                                                 <i class="fas fa-trash text-danger"></i></a>
                                         @endif
+
                                     </td>
                                 </tr>
-                                <!-- Delete modal -->
-                                <div class="modal fade" id="bs-danger-modal-sm-{{ $campaign->id }}" tabindex="-1"
-                                    role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm modal-dialog-centered">
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="delete-modal{{ $campaign->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="font-14" id="mySmallModalLabel">Delete Campaign</h4>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">×</button>
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel"><i
+                                                        class="fas fa-exclamation-triangle"></i> Delete Campaign</h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure you want to delete this campaign?</p>
-                                            </div><!-- /.modal-body -->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-light btn-sm"
-                                                    data-dismiss="modal">No</button>
-                                                <form method="POST" action="">
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center">
+                                                <p class="mb-0">Are you sure you want to delete this campaign?</p>
+                                                <small class="text-muted">This action cannot be undone.</small>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <form method="POST"
+                                                    action="{{ route('donations.destroy', $campaign->id) }}"
+                                                    class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">Yes,
-                                                        delete</button>
+                                                        Delete</button>
                                                 </form>
                                             </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal-dialog -->
-                                </div><!-- /.modal -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Approve Modal -->
+                                <div class="modal fade" id="approveModal{{ $campaign->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="approveModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-success text-white">
+                                                <h5 class="modal-title" id="approveModalLabel">
+                                                    <i class="fas fa-check-circle"></i> Approve Campaign
+                                                </h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center">
+                                                <p class="mb-0">Are you sure you want to approve this event?</p>
+                                                <small class="text-muted">This action cannot be undone.</small>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <form method="POST"
+                                                    action="{{ route('donations.approve', $campaign->id) }}"
+                                                    id="approveForm" class="d-inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-success">Yes, Approve</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Reject Modal -->
+                                <div class="modal fade" id="rejectModal{{ $campaign->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="rejectModalLabel">
+                                                    <i class="fas fa-times-circle"></i> Reject Event
+                                                </h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body text-center">
+                                                <p class="mb-0">Are you sure you want to reject this campaign?</p>
+                                                <small class="text-muted">This action cannot be undone.</small>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cancel</button>
+                                                <form method="POST"
+                                                    action="{{ route('donations.reject', $campaign->id) }}"
+                                                    id="rejectForm" class="d-inline-block">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-danger">Yes, Reject</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>
@@ -104,8 +207,9 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="user-donations-tab" data-bs-toggle="tab" data-bs-target="#user-donations"
-                        type="button" role="tab" aria-controls="user-donations" aria-selected="false">
+                    <button class="nav-link" id="user-donations-tab" data-bs-toggle="tab"
+                        data-bs-target="#user-donations" type="button" role="tab" aria-controls="user-donations"
+                        aria-selected="false">
                         My Donations
                     </button>
                 </li>
@@ -117,22 +221,31 @@
                 <div class="tab-pane fade show active" id="donation-list" role="tabpanel"
                     aria-labelledby="donation-list-tab">
                     <div class="row gy-4">
-                        @foreach ($campaigns as $donation)
+                        @foreach ($activeCampaigns as $campaign)
                             <div class="col-md-6 col-lg-4">
                                 <div class="card shadow-sm border-0 h-100">
-                                    <img src="{{ $donation->image_path ? asset('storage/' . $donation->image_path) : asset('assets/images/default-event.jpg') }}"
-                                        class="card-img-top" alt="{{ $donation->title }}"
+                                    <img src="{{ $campaign->image_path ? asset('storage/' . $campaign->image_path) : asset('assets/images/default-event.jpg') }}"
+                                        class="card-img-top" alt="{{ $campaign->title }}"
                                         style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
-                                        <h5 class="card-title text-dark">{{ $donation->title }}</h5>
+                                        <h5 class="card-title text-dark">{{ $campaign->title }}</h5>
                                         <p class="card-text text-muted">
-                                            {{ Str::limit($donation->description, 100, '...') }}
+                                            {{ Str::limit($campaign->description, 100, '...') }}
+                                        </p>
+                                        <!-- Date Range -->
+                                        @php
+                                            $startDate = \Carbon\Carbon::parse($campaign->start_date);
+                                            $endDate = \Carbon\Carbon::parse($campaign->end_date);
+                                        @endphp
+                                        <p class="mb-2">
+                                            <strong>Date:</strong> {{ $startDate->format('d M Y') }} -
+                                            {{ $endDate->format('d M Y') }}
                                         </p>
                                         <div class="progress mb-3" style="height: 20px;">
                                             @php
                                                 $progress =
-                                                    $donation->target_amount > 0
-                                                        ? ($donation->current_amount / $donation->target_amount) * 100
+                                                    $campaign->target_amount > 0
+                                                        ? ($campaign->current_amount / $campaign->target_amount) * 100
                                                         : 0;
                                             @endphp
                                             <div class="progress-bar bg-success" role="progressbar"
@@ -142,12 +255,13 @@
                                             </div>
                                         </div>
                                         <p class="mb-1">
-                                            <strong>Raised:</strong> RM {{ number_format($donation->current_amount, 2) }}
+                                            <strong>Raised:</strong> RM {{ number_format($campaign->current_amount, 2) }}
                                         </p>
                                         <p>
-                                            <strong>Goal:</strong> RM {{ number_format($donation->target_amount, 2) }}
+                                            <strong>Target Amount:</strong> RM
+                                            {{ number_format($campaign->target_amount, 2) }}
                                         </p>
-                                        <a href="{{ route('donations.edit', $donation->id) }}"
+                                        <a href="{{ route('donations.edit', $campaign->id) }}"
                                             class="btn btn-danger btn-block w-100">
                                             Make Donation
                                         </a>
@@ -159,17 +273,17 @@
                     <!-- Pagination Section -->
                     <nav aria-label="Page navigation" class="mt-4">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item {{ $campaigns->onFirstPage() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $campaigns->previousPageUrl() }}" tabindex="-1"
+                            <li class="page-item {{ $activeCampaigns->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $activeCampaigns->previousPageUrl() }}" tabindex="-1"
                                     aria-disabled="true">Previous</a>
                             </li>
-                            @for ($i = 1; $i <= $campaigns->lastPage(); $i++)
-                                <li class="page-item {{ $campaigns->currentPage() === $i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $campaigns->url($i) }}">{{ $i }}</a>
+                            @for ($i = 1; $i <= $activeCampaigns->lastPage(); $i++)
+                                <li class="page-item {{ $activeCampaigns->currentPage() === $i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $activeCampaigns->url($i) }}">{{ $i }}</a>
                                 </li>
                             @endfor
-                            <li class="page-item {{ $campaigns->hasMorePages() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $campaigns->nextPageUrl() }}">Next</a>
+                            <li class="page-item {{ $activeCampaigns->hasMorePages() ? '' : 'disabled' }}">
+                                <a class="page-link" href="{{ $activeCampaigns->nextPageUrl() }}">Next</a>
                             </li>
                         </ul>
                     </nav>
@@ -177,87 +291,43 @@
 
                 <!-- User Donations Tab -->
                 <div class="tab-pane fade" id="user-donations" role="tabpanel" aria-labelledby="user-donations-tab">
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-dark">List of My Donation</h6>
+                            <h6 class="m-0 font-weight-bold text-dark">List of My Donations</h6>
                         </div>
-                        <!-- Check if there are any campaigns -->
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
                                             <th>Campaign Title</th>
-                                            <th>Target Amount</th>
-                                            <th>Current Amount</th>
-                                            <th>Created By</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($campaigns as $campaign)
+                                        @foreach ($userDonations as $donation)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{!! Str::limit($campaign->title, 20) !!}</td>
-                                                <td>RM {{ number_format($campaign->target_amount, 2) }}</td>
-                                                <td>RM {{ number_format($campaign->current_amount, 2) }}</td>
-                                                <td>{{ $campaign->users->profile->full_name }}</td>
+                                                <td>{{ $donation->campaign->title }}</td>
+                                                <td>RM {{ number_format($donation->amount, 2) }}</td>
+                                                <td>{{ $donation->created_at->format('d/m/Y') }}</td>
                                                 <td>
-                                                    @if ($campaign->status == 'active')
-                                                        <span class="badge bg-success text-white">Active</span>
-                                                    @elseif ($campaign->status == 'completed')
-                                                        <span class="badge bg-info text-white">Completed</span>
+                                                    @if ($donation->payment_status == 'successful')
+                                                        <span class="badge bg-success text-white">Successful</span>
                                                     @else
                                                         <span class="badge bg-warning text-white">Pending</span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     <!-- View Campaign-->
-                                                    <a href="">
-                                                        <i class="fas fa-eye text-dark mr-2"></i></a>
-                                                    <!-- Edit Campaign-->
-                                                    @if ($campaign->status !== 'completed' && $campaign->status !== 'active')
-                                                        <a href="">
-                                                            <i class="fas fa-edit mr-2"></i></a>
-
-                                                        <!-- Delete Campaign-->
-                                                        <a href="" class="action-icon-danger" data-toggle="modal"
-                                                            data-target="#bs-danger-modal-sm-{{ $campaign->id }}">
-                                                            <i class="fas fa-trash text-danger"></i></a>
-                                                    @endif
+                                                    <a href="{{ route('donations.receipt', $donation->id) }}">
+                                                        <i class="fas fa-download text-dark mr-2"></i></a>
                                                 </td>
                                             </tr>
-                                            <!-- Delete modal -->
-                                            <div class="modal fade" id="bs-danger-modal-sm-{{ $campaign->id }}"
-                                                tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog modal-sm modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="font-14" id="mySmallModalLabel">Delete Campaign
-                                                            </h4>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×</button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure you want to delete this campaign?</p>
-                                                        </div><!-- /.modal-body -->
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-light btn-sm"
-                                                                data-dismiss="modal">No</button>
-                                                            <form method="POST" action="">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm">Yes,
-                                                                    delete</button>
-                                                            </form>
-                                                        </div>
-                                                    </div><!-- /.modal-content -->
-                                                </div><!-- /.modal-dialog -->
-                                            </div><!-- /.modal -->
                                         @endforeach
                                     </tbody>
                                 </table>

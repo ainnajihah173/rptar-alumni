@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('current_amount', 10, 2)->default(0.00); // Funds raised
             $table->date('start_date');
             $table->date('end_date')->nullable(); // If the campaign has an expiry
-            $table->enum('status', ['active', 'completed', 'pending'])->default('pending');
+            $table->enum('status', ['active', 'closed', 'pending', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

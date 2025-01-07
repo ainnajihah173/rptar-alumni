@@ -106,7 +106,7 @@
                                         <a href="{{ route('events.show', $events->id) }}">
                                             <i class="fas fa-eye text-dark mr-2"></i></a>
                                         <!-- Edit Page-->
-                                        @if (auth()->user()->role === 'staff' && in_array($events->status, ['pending', 'rejected']))
+                                        @if (auth()->user()->role === 'staff' && in_array($events->status, ['pending', 'rejected']) && $events->created_by === auth()->user()->id)
                                             <a href="{{ route('events.edit', $events->id) }}">
                                                 <i class="fas fa-edit mr-2"></i></a>
 

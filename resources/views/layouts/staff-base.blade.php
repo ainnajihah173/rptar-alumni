@@ -436,6 +436,10 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+        const userRole = "{{ auth()->user()->role }}"; // Get the user's role
+
+        // Only run this script for users
+        if (userRole === 'user') {
             const messageBadge = document.querySelector('#messagesDropdown .badge-counter');
             const inboxBadge = document.querySelector('.sidebar .badge-danger'); // Inbox badge in the sidebar
             let lastChecked = new Date().toISOString(); // Initialize with the current time
@@ -467,7 +471,8 @@
             fetchNewMessageCount();
 
             // Poll the server every 10 seconds
-            setInterval(fetchNewMessageCount, 10000); // Adjust the interval as needed
+            setInterval(fetchNewMessageCount, 2000); // Adjust the interval as needed
+        }
         });
 
         // const {

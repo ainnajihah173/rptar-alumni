@@ -210,14 +210,14 @@ class EventsController extends Controller
         }
 
         // Delete the image from storage
-        if ($event->image_path && file_exists(public_path('events_image/' . $event->image_path))) {
-            unlink(public_path('events_image/' . $event->image_path));
+        if ($event->image_path && Storage::exists('public/' . $event->image_path)) {
+            Storage::delete('public/' . $event->image_path);
         }
 
-        // Delete associated EventOrganizer if it exists
-        if ($event->organizers) {
-            $event->organizers->delete();
-        }
+        // // Delete associated EventOrganizer if it exists
+        // if ($event->organizers) {
+        //     $event->organizers->delete();
+        // }
 
         // Delete the event
         $event->delete();

@@ -20,40 +20,40 @@
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Donation Title</label>
+                                <label for="example-readonly">Donation Title<span class="text-danger">*</span></label>
                                 <input type="text" id="example-readonly" class="form-control" name="title" required
                                     placeholder="Donation Title">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Target Amount</label>
+                                <label for="example-readonly">Target Amount<span class="text-danger">*</span></label>
                                 <input type="number" id="example-readonly" class="form-control" name="target_amount"
                                     required placeholder="0" min="1">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Start Date</label>
+                                <label for="example-readonly">Start Date<span class="text-danger">*</span></label>
                                 <input type="date" id="example-readonly" class="form-control" name="start_date" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">End Date (Optional)</label>
-                                <input type="date" id="example-readonly" class="form-control" name="end_date">
+                                <label for="example-readonly">End Date<span class="text-danger">*</span></label>
+                                <input type="date" id="example-readonly" class="form-control" name="end_date" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="example-readonly">Description</label>
+                                <label for="example-readonly">Description<span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="file">Upload File (Optional)</label>
-                                <input type="file" name="image_path" id="image" class="custom-file">
+                                <label for="file">Upload File<span class="text-danger">*</span></label>
+                                <input type="file" name="image_path" id="image" class="custom-file" required>
                             </div>
                         </div>
 
@@ -61,7 +61,9 @@
                     <!-- end row-->
                     <div class="text-center mt-2">
                         <button type="button" onclick="history.back()" class="btn btn-light mr-3">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn {{ Auth::user()->role === 'staff' ? 'btn-primary' : 'btn-info' }}">
+                            Save
+                        </button>
                     </div>
                 </form>
             </div>

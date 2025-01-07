@@ -22,7 +22,7 @@ class UserController extends Controller
     $events = Events::where('is_active', true)->orderBy('start_date', 'asc')->take(3)->get();
     $news = News::orderBy('published_date', 'desc')->take(4)->get();
     $donations = Campaign::where('status', 'active') // ENUM value
-      ->orderBy('created_at', 'desc')
+      ->orderBy('start_date', 'desc')
       ->take(1)
       ->get();
 
@@ -37,11 +37,79 @@ class UserController extends Controller
 
     if ($user->role === 'admin') {
       // Admin-specific logic (if needed)
+
+      // Get the authenticated admin
+      $admin = auth()->user();
+      // Fetch total users
+      $totalUsers = User::count();
+
+      // Fetch total events
+      $totalEvents = Events::count();
+
+      // Fetch total donations
+      $totalDonations = Donation::count();
+
+      // Fetch total inquiries
+      $totalInquiries = Inquiries::count();
+
+      // Fetch donation history for the chart (last 6 months)
+      $donationHistory = Donation::selectRaw('SUM(amount) as total, MONTH(created_at) as month')
+        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+      // Fetch total users by role
+      $userCounts = User::selectRaw('role, COUNT(*) as total')
+        ->groupBy('role')
+        ->get()
+        ->pluck('total', 'role');
+
+      // Fetch inquiry status for the chart
+      $inquiryStatus = Inquiries::selectRaw('status, COUNT(*) as total')
+        ->groupBy('status')
+        ->get();
+
+      // Fetch recent users (e.g., last 5 users)
+      $recentUsers = User::orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+      // Fetch upcoming events (e.g., next 5 events)
+      $upcomingEvents = Events::where('start_date', '>=', Carbon::now())
+        ->orderBy('start_date', 'asc')
+        ->take(5)
+        ->get();
+
+      // Fetch recent donations (e.g., last 5 donations)
+      $recentDonations = Donation::orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+      // Fetch recent inquiries (e.g., last 5 inquiries)
+      $recentInquiries = Inquiries::orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+      // Pass data to the view
+      return view('dashboard', compact(
+        'admin',
+        'totalUsers',
+        'totalEvents',
+        'totalDonations',
+        'totalInquiries',
+        'donationHistory',
+        'userCounts',
+        'inquiryStatus',
+        'recentUsers',
+        'upcomingEvents',
+        'recentDonations',
+        'recentInquiries'
+      ));
+
+
     } elseif ($user->role === 'staff') {
       // Staff-specific logic (if needed)
-      // Get the authenticated user
-      $user = auth()->user();
-
       // Fetch latest news (e.g., last 5 news articles)
       $latestNews = News::orderBy('published_date', 'desc')->take(3)->get();
 
@@ -151,7 +219,7 @@ class UserController extends Controller
 
   public function index()
   {
-    $users = User::paginate(10);
+    $users = User::all();
     return view('user.index', compact('users'));
   }
 
