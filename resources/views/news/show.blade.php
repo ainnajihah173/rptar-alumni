@@ -43,6 +43,7 @@
             </div> <!-- End Card -->
         </div> <!-- End Column -->
 
+        @if(auth()->user()->role === 'user')
         <!-- Other News Section -->
         <div class="col-lg-4">
             <div class="card shadow-sm border-0 rounded">
@@ -67,6 +68,7 @@
             </div> <!-- End Card -->
         </div> <!-- End Column -->
     </div> <!-- End Row -->
+    @endif
 @endsection
 
 <!-- Custom Styles -->
