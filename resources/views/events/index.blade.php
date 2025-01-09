@@ -4,15 +4,15 @@
     @if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin')
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-dark">Events Content</h6>
+                <h6 class="m-0 font-weight-bold text-dark">Kandungan Acara</h6>
                 @if (auth()->user()->role === 'staff')
                     <div class="d-flex">
                         <a href="{{ route('events.create') }}" class="btn btn-sm btn-primary shadow-sm me-2 mr-3">
-                            <i class="fas fa-plus fa-sm text-white-50"></i> Create Events
+                            <i class="fas fa-plus fa-sm text-white-50"></i> Cipta Acara
                         </a>
                         <a href="#" class="btn btn-sm btn-info shadow-sm" data-toggle="modal"
                             data-target="#addOrganizerModal">
-                            <i class="fas fa-plus fa-sm text-dark-50"></i> Add Organizer
+                            <i class="fas fa-plus fa-sm text-dark-50"></i> Tambah Penganjur
                         </a>
                     </div>
                 @endif
@@ -25,15 +25,15 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Event Name</th>
-                                <th>Event Description</th>
-                                <th>Event Details</th> <!-- Date, Time, Location --->
+                                <th>Nama Acara</th>
+                                <th>Penerangan Acara</th>
+                                <th>Butiran Acara</th> <!-- Tarikh, Masa, Lokasi --->
                                 @if (auth()->user()->role === 'admin')
-                                    <th>Organizer Details</th>
+                                    <th>Butiran Penganjur</th>
                                 @endif
-                                <th>Event Active</th>
+                                <th>Aktif Acara</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,18 +76,18 @@
                                     </td>
                                     @if (auth()->user()->role === 'admin')
                                         <td>
-                                            Organized By : {{ $events->organizers->organizer_name }}<br>
-                                            Email : {{ $events->organizers->organizer_email }}
+                                            Dianjurkan Oleh : {{ $events->organizers->organizer_name }}<br>
+                                            Emel : {{ $events->organizers->organizer_email }}
                                         </td>
                                     @endif
-                                    <td>{{ $events->is_active ? 'Active' : 'Inactive' }}</td>
+                                    <td>{{ $events->is_active ? 'Aktif' : 'Tidak Aktif' }}</td>
                                     <td>
                                         @if ($events->status === 'pending')
-                                            <span class="badge bg-warning text-white">Pending</span>
+                                            <span class="badge bg-warning text-white">Dalam Proses</span>
                                         @elseif($events->status === 'approved')
-                                            <span class="badge bg-success text-white">Approved</span>
+                                            <span class="badge bg-success text-white">Diluluskan</span>
                                         @else
-                                            <span class="badge bg-danger text-white">Rejected</span>
+                                            <span class="badge bg-danger text-white">Ditolak</span>
                                         @endif
                                     </td>
                                     <td>
@@ -126,7 +126,7 @@
                                             <!-- Modal Header -->
                                             <div class="modal-header bg-danger text-white">
                                                 <h5 class="modal-title" id="deleteModalLabel"><i
-                                                        class="fas fa-exclamation-triangle"></i> Delete Event</h5>
+                                                        class="fas fa-exclamation-triangle"></i> Padam Acara</h5>
                                                 <button type="button" class="close text-white" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -134,19 +134,19 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center">
-                                                <p class="mb-0">Are you sure you want to delete this event?</p>
-                                                <small class="text-muted">This action cannot be undone.</small>
+                                                <p class="mb-0">Adakah anda pasti mahu memadam acara ini?</p>
+                                                <small class="text-muted">Tindakan ini tidak boleh dibatalkan.</small>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center">
                                                 <button type="button" class="btn btn-secondary btn-sm"
-                                                    data-dismiss="modal">Cancel</button>
+                                                    data-dismiss="modal">Batal</button>
                                                 <form method="POST" action="{{ route('events.destroy', $events->id) }}"
                                                     class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Yes,
-                                                        Delete</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">Ya,
+                                                        Padam</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -161,7 +161,7 @@
                                             <!-- Modal Header -->
                                             <div class="modal-header bg-success text-white">
                                                 <h5 class="modal-title" id="approveModalLabel">
-                                                    <i class="fas fa-check-circle"></i> Approve Event
+                                                    <i class="fas fa-check-circle"></i> Luluskan Acara
                                                 </h5>
                                                 <button type="button" class="close text-white" data-dismiss="modal"
                                                     aria-label="Close">
@@ -170,18 +170,18 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center">
-                                                <p class="mb-0">Are you sure you want to approve this event?</p>
-                                                <small class="text-muted">This action cannot be undone.</small>
+                                                <p class="mb-0">Adakah anda pasti mahu meluluskan acara ini?</p>
+                                                <small class="text-muted">Tindakan ini tidak boleh dibatalkan.</small>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center">
                                                 <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Cancel</button>
+                                                    data-dismiss="modal">Batal</button>
                                                 <form method="POST" action="{{ route('events.approve', $events->id) }}"
                                                     id="approveForm" class="d-inline-block">
                                                     @csrf
                                                     @method('PUT')
-                                                    <button type="submit" class="btn btn-success">Yes, Approve</button>
+                                                    <button type="submit" class="btn btn-success">Ya, Luluskan</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -196,7 +196,7 @@
                                             <!-- Modal Header -->
                                             <div class="modal-header bg-danger text-white">
                                                 <h5 class="modal-title" id="rejectModalLabel">
-                                                    <i class="fas fa-times-circle"></i> Reject Event
+                                                    <i class="fas fa-times-circle"></i> Tolak Acara
                                                 </h5>
                                                 <button type="button" class="close text-white" data-dismiss="modal"
                                                     aria-label="Close">
@@ -205,18 +205,18 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center">
-                                                <p class="mb-0">Are you sure you want to reject this event?</p>
-                                                <small class="text-muted">This action cannot be undone.</small>
+                                                <p class="mb-0">Adakah anda pasti mahu menolak acara ini?</p>
+                                                <small class="text-muted">Tindakan ini tidak boleh dibatalkan.</small>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center">
                                                 <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Cancel</button>
+                                                    data-dismiss="modal">Batal</button>
                                                 <form method="POST" action="{{ route('events.reject', $events->id) }}"
                                                     id="rejectForm" class="d-inline-block">
                                                     @csrf
                                                     @method('PUT')
-                                                    <button type="submit" class="btn btn-danger">Yes, Reject</button>
+                                                    <button type="submit" class="btn btn-danger">Ya, Tolak</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -237,7 +237,7 @@
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="addOrganizerModalLabel">
-                            <i class="fas fa-plus"></i> Add Organizer
+                            <i class="fas fa-plus"></i> Tambah Penganjur
                         </h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -248,24 +248,24 @@
                         <form action="{{ route('events.addOrganizer') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label for="organizer_name">Organizer Name<span class="text-danger">*</span></label>
+                                <label for="organizer_name">Nama Penganjur<span class="text-danger">*</span></label>
                                 <input type="text" id="organizer_name" name="organizer_name" class="form-control"
                                     required>
                             </div>
                             <div class="form-group">
-                                <label for="organizer_contact">Contact Number<span class="text-danger">*</span></label>
+                                <label for="organizer_contact">Nombor Telefon<span class="text-danger">*</span></label>
                                 <input type="text" id="organizer_contact" name="organizer_contact"
                                     class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="organizer_email">Email<span class="text-danger">*</span></label>
+                                <label for="organizer_email">Emel<span class="text-danger">*</span></label>
                                 <input type="email" id="organizer_email" name="organizer_email" class="form-control"
                                     required>
                             </div>
                             <!-- Modal Footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </form>
                     </div>
@@ -274,8 +274,8 @@
         </div>
     @else
         <div class="container-fluid">
-            <h3 class="text-center" style="color: #eb3a2a;">Events</h3>
-            <p class="text-center text-muted">Join our events and stay connected.</p>
+            <h3 class="text-center" style="color: #eb3a2a;">Acara</h3>
+            <p class="text-center text-muted">Sertai acara kami dan kekal berhubung.</p>
 
             <!-- Nav Tabs -->
             <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist">
@@ -283,13 +283,13 @@
                     <button class="nav-link active" id="event-list-tab" data-bs-toggle="tab"
                         data-bs-target="#event-list" type="button" role="tab" aria-controls="event-list"
                         aria-selected="true">
-                        Event List
+                        Senarai Acara
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="user-events-tab" data-bs-toggle="tab" data-bs-target="#user-events"
                         type="button" role="tab" aria-controls="user-events" aria-selected="false">
-                        My Events
+                        Acara Saya
                     </button>
                 </li>
             </ul>
@@ -329,17 +329,17 @@
                                                 <i class="fas fa-map-marker-alt"></i> {{ $event->location }}
                                             </p>
                                             <p class="mb-3">
-                                                <strong>Available Slots:</strong>
+                                                <strong>Slot Tersedia:</strong>
                                                 {{ $event->capacity - $event->registered_count }}
                                             </p>
                                             @if ($event->participants->contains('user_id', auth()->id()))
                                                 <a class="btn btn-secondary btn-block w-100 mt-2" disabled>
-                                                    Already Registered
+                                                    Sudah Daftar
                                                 </a>
                                             @else
                                                 <a href="" class="btn btn-danger btn-block w-100 mt-2"
                                                     data-toggle="modal" data-target="#eventModal{{ $event->id }}">
-                                                    Register Now
+                                                    Daftar Sekarang
                                                 </a>
                                             @endif
                                         </div>
@@ -369,29 +369,29 @@
                                                     <!-- Event Image -->
                                                     <div class="col-md-5">
                                                         <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/default-event.jpg') }}"
-                                                            alt="Event Image" class="img-fluid rounded-lg shadow-sm mb-3">
+                                                            alt="Gambar Acara" class="img-fluid rounded-lg shadow-sm mb-3">
                                                     </div>
 
                                                     <!-- Event Details -->
                                                     <div class="col-md-7">
                                                         <div class="event-details">
                                                             <p class="mb-3">
-                                                                <strong>Organizer:</strong>
+                                                                <strong>Penganjur:</strong>
                                                                 <span
                                                                     class="text-muted">{{ $event->organizers->organizer_name }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Contact:</strong>
+                                                                <strong>Hubungan:</strong>
                                                                 <span
                                                                     class="text-muted">{{ $event->organizers->organizer_contact }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Email:</strong>
+                                                                <strong>Emel:</strong>
                                                                 <span
                                                                     class="text-muted">{{ $event->organizers->organizer_email }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Date:</strong>
+                                                                <strong>Tarikh:</strong>
                                                                 <span class="text-muted">
                                                                     @if ($event->start_date == $event->end_date)
                                                                         {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
@@ -403,26 +403,26 @@
                                                                 </span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Time:</strong>
+                                                                <strong>Masa:</strong>
                                                                 <span class="text-muted">
                                                                     {{ date('h:i A', strtotime($event->start_time)) }} -
                                                                     {{ $event->end_time ? date('h:i A', strtotime($event->end_time)) : 'TBD' }}
                                                                 </span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Location:</strong>
+                                                                <strong>Lokasi:</strong>
                                                                 <span class="text-muted">{{ $event->location }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Description:</strong>
+                                                                <strong>Penerangan:</strong>
                                                                 <span class="text-muted">{{ $event->description }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Total Capacity:</strong>
+                                                                <strong>Kapasiti:</strong>
                                                                 <span class="text-muted">{{ $event->capacity }}</span>
                                                             </p>
                                                             <p class="mb-3">
-                                                                <strong>Available Slots:</strong>
+                                                                <strong>Slot Tersedia:</strong>
                                                                 <span
                                                                     class="text-muted">{{ $event->capacity - $event->registered_count }}</span>
                                                             </p>
@@ -434,11 +434,11 @@
                                             <!-- Modal Footer -->
                                             <div class="modal-footer d-flex justify-content-between">
                                                 <button type="button" class="btn btn-outline-secondary"
-                                                    data-dismiss="modal">Close</button>
+                                                    data-dismiss="modal">Tutup</button>
                                                 <form action="{{ route('events.register', $event->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger btn-lg">
-                                                        <i class="fas fa-check-circle"></i> Confirm Registration
+                                                        <i class="fas fa-check-circle"></i> Sahkan Pendaftaran
                                                     </button>
                                                 </form>
                                             </div>
@@ -454,7 +454,7 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item {{ $events->onFirstPage() ? 'disabled' : '' }}">
                                 <a class="page-link" href="{{ $events->previousPageUrl() }}" tabindex="-1"
-                                    aria-disabled="true">Previous</a>
+                                    aria-disabled="true">Sebelumnya</a>
                             </li>
                             @for ($i = 1; $i <= $events->lastPage(); $i++)
                                 <li class="page-item {{ $events->currentPage() === $i ? 'active' : '' }}">
@@ -462,7 +462,7 @@
                                 </li>
                             @endfor
                             <li class="page-item {{ $events->hasMorePages() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $events->nextPageUrl() }}">Next</a>
+                                <a class="page-link" href="{{ $events->nextPageUrl() }}">Seterusnya</a>
                             </li>
                         </ul>
                     </nav>
@@ -472,7 +472,7 @@
                 <div class="tab-pane fade" id="user-events" role="tabpanel" aria-labelledby="user-events-tab">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-dark">List of My Events</h6>
+                            <h6 class="m-0 font-weight-bold text-dark">Senarai Acara Saya</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -480,11 +480,11 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Event Title</th>
-                                            <th>Date</th>
-                                            <th>Location</th>
+                                            <th>Tajuk Acara</th>
+                                            <th>Tarikh</th>
+                                            <th>Lokasi</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Tindakan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -497,9 +497,9 @@
                                                 <td>{{ $userEvent->location }}</td>
                                                 <td>
                                                     @if ($userEvent->is_active)
-                                                        <span class="badge bg-success text-white">Active</span>
+                                                        <span class="badge bg-success text-white">Aktif</span>
                                                     @else
-                                                        <span class="badge bg-warning text-white">Inactive</span>
+                                                        <span class="badge bg-warning text-white">Tidak Aktif</span>
                                                     @endif
                                                 </td>
                                                 <td>

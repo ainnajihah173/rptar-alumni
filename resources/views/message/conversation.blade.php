@@ -4,12 +4,12 @@
     <!-- Page Heading -->
     <div class="mb-3">
         <a href="{{ route('message.index') }}" class="text-decoration-none text-dark">
-            <i class="fas fa-arrow-left"></i> Back to Message
+            <i class="fas fa-arrow-left"></i> Kembali ke Mesej
         </a>
     </div>
     <div class="container-fluid">
-        <h3 class="text-center" style="color: #eb3a2a;">Conversation</h3>
-        <p class="text-center text-muted">View the full conversation.</p>
+        <h3 class="text-center" style="color: #eb3a2a;">Perbualan</h3>
+        <p class="text-center text-muted">Lihat perbualan penuh.</p>
 
         <div class="row">
             <div class="col-md-8 offset-md-2">
@@ -39,17 +39,17 @@
 
                             <!-- Reply Textarea -->
                             <div class="input-group">
-                                <textarea name="message" id="reply-textarea" class="form-control" placeholder="Type your reply..." rows="1" required></textarea>
+                                <textarea name="message" id="reply-textarea" class="form-control" placeholder="Taip balasan anda..." rows="1" required></textarea>
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-danger">
-                                        <i class="fas fa-paper-plane"></i> Send
+                                        <i class="fas fa-paper-plane"></i> Hantar
                                     </button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 @else
-                    <p class="text-center text-muted">You have already replied to this message.</p>
+                    <p class="text-center text-muted">Anda telah membalas mesej ini.</p>
                 @endif
             </div>
         </div>
@@ -176,11 +176,11 @@
 
                             // Hide the reply form and show a success message
                             $('#reply-form-container').hide();
-                            $('#chat-container').append('<p class="text-center text-muted">Reply sent successfully.</p>');
+                            $('#chat-container').append('<p class="text-center text-muted">Balasan berjaya dihantar.</p>');
                         }
                     },
                     error: function(xhr) {
-                        alert('An error occurred while sending the reply.');
+                        alert('Ralat berlaku semasa menghantar balasan.');
                         // Re-enable the submit button in case of an error
                         $('#reply-form button[type="submit"]').prop('disabled', false);
                     },

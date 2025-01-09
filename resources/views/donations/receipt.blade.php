@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Receipt</title>
+    <title>Resit Derma</title>
     <style>
         /* General Styles */
         body {
@@ -97,31 +97,31 @@
         <!-- Header with Company Logo -->
         <div class="header">
             <img src="{{ public_path('assets/images/logoo.jpg') }}" alt="Company Logo" class="mb-3">
-            <h1>Donation Receipt</h1>
-            <p>Official Receipt for Your Generous Contribution</p>
+            <h1>Resit Derma</h1>
+            <p>Resit Rasmi untuk Sumbangan Anda</p>
         </div>
 
         <!-- Donation Details -->
         <div class="details">
-            <p><strong>Receipt Number:</strong> {{ $donation->receipt_number ?? 'N/A' }}</p>
-            <p><strong>Donor Name:</strong> {{ $donation->users->profile->full_name }}</p>
-            <p><strong>Donation Amount:</strong> RM {{ number_format($donation->amount, 2) }}</p>
-            <p><strong>Campaign:</strong> {{ $donation->campaign->title }}</p>
-            <p><strong>Donation Date:</strong> {{ $donation->created_at->format('d M Y') }}</p>
-            <p><strong>Payment Status:</strong> {{ ucfirst($donation->payment_status) }}</p>
+            <p><strong>Nombor Resit:</strong> {{ $donation->receipt_number ?? 'N/A' }}</p>
+            <p><strong>Nama Penderma:</strong> {{ $donation->users->profile->full_name }}</p>
+            <p><strong>Jumlah Derma:</strong> RM {{ number_format($donation->amount, 2) }}</p>
+            <p><strong>Kempen:</strong> {{ $donation->campaign->title }}</p>
+            <p><strong>Tarikh Derma:</strong> {{ $donation->created_at->format('d M Y') }}</p>
+            <p><strong>Status Pembayaran:</strong> {{ ucfirst($donation->payment_status) }}</p>
         </div>
 
         <!-- Thank You Section -->
         <div class="thank-you">
-            <h2>Thank You for Your Support!</h2>
-            <p>Your generous donation will make a significant impact on our cause. We deeply appreciate your contribution and commitment to making a difference.</p>
-            <p>Together, we can achieve great things!</p>
+            <h2>Terima Kasih atas Sokongan Anda!</h2>
+            <p>Sumbangan anda yang murah hati akan memberi impak yang besar kepada misi kami. Kami sangat menghargai sumbangan dan komitmen anda untuk membuat perubahan.</p>
+            <p>Bersama-sama, kita boleh mencapai kejayaan!</p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <p>This is an official receipt for your donation. Please keep it for your records.</p>
-            <p>For any inquiries, please contact us at <strong>support@example.com</strong>.</p>
+            <p>Ini adalah resit rasmi untuk derma anda. Sila simpan untuk rujukan anda.</p>
+            <p>Untuk sebarang pertanyaan, sila hubungi kami di <strong>support@example.com</strong>.</p>
         </div>
     </div>
 </body>

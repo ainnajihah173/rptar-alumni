@@ -4,7 +4,7 @@
     <!-- Back Button -->
     <div class="mb-4 ml-3">
         <a href="{{ route('news.index') }}" class="text-decoration-none text-dark">
-            <i class="fas fa-arrow-left"></i> Back to News List
+            <i class="fas fa-arrow-left"></i> Kembali ke Berita
         </a>
     </div>
 
@@ -20,18 +20,18 @@
 
                     <!-- News Author and Date -->
                     <p class="text-muted mb-4">
-                        By <strong>{{ $news->users->profile->full_name }}</strong> |
-                        <em>{{ $news->published_date ? date('d M Y', strtotime($news->published_date)) : 'Draft' }}</em>
+                        Oleh <strong>{{ $news->users->profile->full_name }}</strong> |
+                        <em>{{ $news->published_date ? date('d M Y', strtotime($news->published_date)) : 'Draf' }}</em>
                     </p>
 
                     <!-- News Image -->
                     <div class="news-image-container mb-4">
                         @if ($news->image)
                             <img src="{{ asset('storage/' . $news->image) }}" class="img-fluid rounded shadow-sm w-100"
-                                alt="News Image" style="height: 400px; object-fit: cover;">
+                                alt="Gambar Berita" style="height: 400px; object-fit: cover;">
                         @else
                             <img src="https://via.placeholder.com/1200x600" class="img-fluid rounded shadow-sm w-100"
-                                alt="No Image Available" style="height: 400px; object-fit: cover;">
+                                alt="Tiada Gambar" style="height: 400px; object-fit: cover;">
                         @endif
                     </div>
 
@@ -48,7 +48,7 @@
         <div class="col-lg-4">
             <div class="card shadow-sm border-0 rounded">
                 <div class="card-body">
-                    <h4 class="font-weight-bold text-dark mb-4">Other News</h4>
+                    <h4 class="font-weight-bold text-dark mb-4">Berita Lain</h4>
                     <ul class="list-unstyled">
                         @foreach ($otherNews as $other)
                             <li class="mb-3">
@@ -56,7 +56,7 @@
                                     {{ Str::limit($other->title, 50) }}
                                 </a>
                                 <p class="text-muted small mb-0">
-                                    {{ $other->published_date ? date('d M Y', strtotime($other->published_date)) : 'Draft' }}
+                                    {{ $other->published_date ? date('d M Y', strtotime($other->published_date)) : 'Draf' }}
                                 </p>
                             </li>
                             @if (!$loop->last)

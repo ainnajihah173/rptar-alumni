@@ -4,10 +4,10 @@
     <div class="container-fluid">
         @php
             $roles = [
-                'Total Users' => $users->count(),
+                'Jumlah Pengguna' => $users->count(),
                 'Admin' => $users->where('role', 'admin')->count(),
                 'Staff' => $users->where('role', 'staff')->count(),
-                'User' => $users->where('role', 'user')->count(),
+                'Pengguna' => $users->where('role', 'user')->count(),
             ];
             $colors = ['primary', 'success', 'info', 'secondary'];
         @endphp
@@ -17,7 +17,7 @@
                 <div class="card shadow-sm border-left-primary">
                     <div class="card-body">
                         <div class="text-center">
-                            <h6 class="text-gray-900 font-weight-bold">Total Users</h6>
+                            <h6 class="text-gray-900 font-weight-bold">Jumlah Pengguna</h6>
                             <h2>{{ $users->count() }}</h2>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                 <div class="card shadow-sm border-left-danger">
                     <div class="card-body">
                         <div class="text-center">
-                            <h6 class="text-gray-900 font-weight-bold">User</h6>
+                            <h6 class="text-gray-900 font-weight-bold">Pengguna</h6>
                             <h2>{{ $users->where('role', 'user')->count() }}</h2>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                     <!-- Modal Header -->
                     <div class="modal-header bg-success text-white">
                         <h5 class="modal-title" id="successModalLabel">
-                            <i class="fas fa-check-circle"></i> Account Created Successfully
+                            <i class="fas fa-check-circle"></i> Akaun Berjaya Dicipta
                         </h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -71,14 +71,13 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p class="text-muted mt-2">Please note this password is only visible once. You can change it after
-                            logging in.</p>
+                        <p class="text-muted mt-2">Sila ambil perhatian bahawa kata laluan ini hanya boleh dilihat sekali sahaja. Anda boleh menukarnya selepas log masuk.</p>
                         <hr>
                         <p>{!! session('modal') !!}</p>
                     </div>
                     <!-- Modal Footer -->
                     <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-success" data-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -87,9 +86,9 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-dark">Manage Users</h6>
+                <h6 class="m-0 font-weight-bold text-dark">Urus Pengguna</h6>
                 <a href="" class="btn btn-sm btn-info shadow-sm" data-toggle="modal" data-target="#create-modal">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Create Users
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Cipta Pengguna
                 </a>
             </div>
             <!-- Check if there is any news -->
@@ -100,10 +99,10 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Action</th>
+                                <th>Nama Pengguna</th>
+                                <th>Emel</th>
+                                <th>Peranan</th>
+                                <th>Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,9 +147,8 @@
                                             <!-- Modal Header -->
                                             <div
                                                 class="modal-header border-0 text-center pt-4 d-flex flex-column align-items-center">
-                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">Create
-                                                    New
-                                                    User</h4>
+                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">Cipta
+                                                    Pengguna Baharu</h4>
                                             </div>
                                             <!-- Modal Body -->
                                             <form method="POST" action="{{ route('user.store') }}">
@@ -159,7 +157,7 @@
                                                     <div class="form-row">
                                                         <!-- User Name -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userName" class="font-weight-bold">Username<span
+                                                            <label for="userName" class="font-weight-bold">Nama Pengguna<span
                                                                     class="text-danger">*</span></label>
                                                             <input type="text" id="userName" class="form-control"
                                                                 name="name" placeholder="John Smith" required>
@@ -168,7 +166,7 @@
                                                     <div class="form-row">
                                                         <!-- Email -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userEmail" class="font-weight-bold">Email<span
+                                                            <label for="userEmail" class="font-weight-bold">Emel<span
                                                                     class="text-danger">*</span></label>
                                                             <input type="email" id="userEmail" class="form-control"
                                                                 name="email" placeholder="example@gmail.com" required>
@@ -177,11 +175,11 @@
                                                     <div class="form-row">
                                                         <!-- Role -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userRole" class="font-weight-bold">Role<span
+                                                            <label for="userRole" class="font-weight-bold">Peranan<span
                                                                     class="text-danger">*</span></label>
                                                             <select name="role" id="userRole" class="form-control"
                                                                 required>
-                                                                <option selected disabled>Please Select...</option>
+                                                                <option selected disabled>Sila Pilih...</option>
                                                                 <option value="admin">Admin</option>
                                                                 <option value="staff">Staff</option>
                                                             </select>
@@ -191,18 +189,18 @@
                                                         <!-- Password -->
                                                         <div class="form-group col-md-12">
                                                             <label for="userPassword"
-                                                                class="font-weight-bold">Password<span
+                                                                class="font-weight-bold">Kata Laluan<span
                                                                     class="text-danger">*</span></label>
                                                             <input type="password" id="userPassword" class="form-control"
-                                                                name="password" placeholder="Enter Password" required>
+                                                                name="password" placeholder="Masukkan Kata Laluan" required>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <!-- Modal Footer -->
                                                 <div class="modal-footer border-0 d-flex justify-content-center py-3">
                                                     <button type="button" class="btn btn-secondary px-4 mr-4"
-                                                        data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-info px-4">Save</button>
+                                                        data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-info px-4">Simpan</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -222,9 +220,8 @@
                                             <!-- Modal Header -->
                                             <div
                                                 class="modal-header border-0 text-center pt-4 d-flex flex-column align-items-center">
-                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">Update
-                                                    New
-                                                    User</h4>
+                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">Kemaskini
+                                                    Pengguna</h4>
                                             </div>
                                             <!-- Modal Body -->
                                             <form method="POST" action="{{ route('user.update', $users->id) }}">
@@ -233,7 +230,7 @@
                                                     <div class="form-row">
                                                         <!-- User Name -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userName" class="font-weight-bold">Name</label>
+                                                            <label for="userName" class="font-weight-bold">Nama</label>
                                                             <input type="text" id="userName" class="form-control"
                                                                 name="name" placeholder="John Smith" required
                                                                 value="{{ $users->name }}">
@@ -242,7 +239,7 @@
                                                     <div class="form-row">
                                                         <!-- Email -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userEmail" class="font-weight-bold">Email</label>
+                                                            <label for="userEmail" class="font-weight-bold">Emel</label>
                                                             <input type="email" id="userEmail" class="form-control"
                                                                 name="email" placeholder="example@gmail.com" required
                                                                 value="{{ $users->email }}">
@@ -251,10 +248,10 @@
                                                     <div class="form-row">
                                                         <!-- Role -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userRole" class="font-weight-bold">Role</label>
+                                                            <label for="userRole" class="font-weight-bold">Peranan</label>
                                                             <select name="role" id="userRole" class="form-control"
                                                                 required>
-                                                                <option disabled>Please Select...</option>
+                                                                <option disabled>Sila Pilih...</option>
                                                                 <option value="admin"
                                                                     {{ $users->role == 'admin' ? 'selected' : '' }}>Admin
                                                                 </option>
@@ -269,8 +266,8 @@
                                                 <!-- Modal Footer -->
                                                 <div class="modal-footer border-0 d-flex justify-content-center py-3">
                                                     <button type="button" class="btn btn-secondary px-4 mr-4"
-                                                        data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-info px-4">Save</button>
+                                                        data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-info px-4">Simpan</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -298,20 +295,20 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center pt-3 pb-0">
-                                                <h5 class="font-weight-bold mb-3">Delete User</h5>
-                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?
+                                                <h5 class="font-weight-bold mb-3">Padam Pengguna</h5>
+                                                <p class="text-muted mb-3">Tindakan ini tidak boleh dibatalkan. Adakah anda pasti?
                                                 </p>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center py-3 border-0">
                                                 <button type="button" class="btn btn-secondary px-4"
-                                                    data-dismiss="modal">No, Keep it</button>
+                                                    data-dismiss="modal">Tidak, Simpan</button>
                                                 <form method="POST" action="{{ route('user.destroy', $users->id) }}"
                                                     class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger px-4">Yes,
-                                                        Delete!</button>
+                                                    <button type="submit" class="btn btn-danger px-4">Ya,
+                                                        Padam!</button>
                                                 </form>
                                             </div>
                                         </div>

@@ -8,7 +8,7 @@
                 <div class="card shadow-sm border-left-info">
                     <div class="card-body">
                         <div class="text-center">
-                            <h6 class="text-gray-900 font-weight-bold">Total News</h6>
+                            <h6 class="text-gray-900 font-weight-bold">Jumlah Berita</h6>
                             <h2>{{ $totalNews }}</h2>
                         </div>
                     </div>
@@ -18,7 +18,7 @@
                 <div class="card shadow-sm border-left-danger">
                     <div class="card-body">
                         <div class="text-center">
-                            <h6 class="text-gray-900 font-weight-bold">Published News</h6>
+                            <h6 class="text-gray-900 font-weight-bold">Berita Diterbitkan</h6>
                             <h2>{{ $publishedNews }}</h2>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                 <div class="card shadow-sm border-left-warning">
                     <div class="card-body">
                         <div class="text-center">
-                            <h6 class="text-gray-900 font-weight-bold">Draft News</h6>
+                            <h6 class="text-gray-900 font-weight-bold">Berita Draf</h6>
                             <h2>{{ $draftNews }}</h2>
                         </div>
                     </div>
@@ -37,13 +37,13 @@
         </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-dark">News Content</h6>
+                <h6 class="m-0 font-weight-bold text-dark">Kandungan Berita</h6>
                 <div>
                     <a href="{{ route('news.create') }}" class="btn btn-sm btn-primary shadow-sm">
-                        <i class="fas fa-plus fa-sm text-white-50"></i> Create News
+                        <i class="fas fa-plus fa-sm text-white-50"></i> Cipta Berita
                     </a>
                     {{-- <a href="{{ route('news.export') }}" class="btn btn-sm btn-success shadow-sm ml-2">
-                        <i class="fas fa-file-excel fa-sm text-white-50"></i> Export to Excel
+                        <i class="fas fa-file-excel fa-sm text-white-50"></i> Eksport ke Excel
                     </a> --}}
                 </div>
             </div>
@@ -54,12 +54,12 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Title News</th>
-                                <th>Content News</th>
-                                <th>Author Name</th>
-                                <th>Date Published</th>
+                                <th>Tajuk Berita</th>
+                                <th>Kandungan Berita</th>
+                                <th>Nama Penulis</th>
+                                <th>Tarikh Diterbitkan</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,9 +73,9 @@
                                     </td>
                                     <td>
                                         @if ($news->is_active == 1)
-                                            <span class="badge bg-success text-white">Published</span>
+                                            <span class="badge bg-success text-white">Diterbitkan</span>
                                         @else
-                                            <span class="badge bg-warning text-white">Draft</span>
+                                            <span class="badge bg-warning text-white">Draf</span>
                                         @endif
                                     </td>
                                     <td>
@@ -116,20 +116,20 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center pt-3 pb-0">
-                                                <h5 class="font-weight-bold mb-3">Delete News</h5>
-                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?
+                                                <h5 class="font-weight-bold mb-3">Padam Berita</h5>
+                                                <p class="text-muted mb-3">Tindakan ini tidak boleh dibatalkan. Adakah anda pasti?
                                                 </p>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center py-3 border-0">
                                                 <button type="button" class="btn btn-secondary px-4"
-                                                    data-dismiss="modal">No, Keep it</button>
+                                                    data-dismiss="modal">Tidak, Simpan</button>
                                                 <form method="POST" action="{{ route('news.destroy', $news->id) }}"
                                                     class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger px-4">Yes,
-                                                        Delete!</button>
+                                                    <button type="submit" class="btn btn-danger px-4">Ya,
+                                                        Padam!</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -146,12 +146,12 @@
 
             <!-- Main Heading -->
             <div class="text-center mb-4">
-                <h3 class="text-center" style="color: #eb3a2a;">Latest News
+                <h3 class="text-center" style="color: #eb3a2a;">Berita Terkini
                     <script>
                         document.write(new Date().getFullYear())
                     </script>
                 </h3>
-                <p class="text-muted">Stay updated with the latest news and insights.</p>
+                <p class="text-muted">Kekal terkini dengan berita dan maklumat terkini.</p>
             </div>
 
             <!-- Featured News Section -->
@@ -163,12 +163,12 @@
                                 alt="{{ $news->first()->title }}" style="height: 525px; object-fit: cover;">
                             <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark-gradient p-4">
                                 <h2 class="card-title fw-bold text-white mb-2">{{ $news->first()->title }}</h2>
-                                <p class="text-white-50 small mb-1">By {{ $news->first()->users->profile->full_name }} |
+                                <p class="text-white-50 small mb-1">Oleh {{ $news->first()->users->profile->full_name }} |
                                     {{ $news->first()->created_at->format('d M Y') }}</p>
                                 <p class="card-text text-white-50">{!! Str::limit($news->first()->content, 150) !!}</p>
                                 <a href="{{ route('news.show', $news->first()->id) }}"
-                                    class="btn btn-danger btn-sm align-self-start">Read
-                                    More...</a>
+                                    class="btn btn-danger btn-sm align-self-start">Baca
+                                    Lagi...</a>
                             </div>
                         </div>
                     </div>
@@ -182,11 +182,11 @@
                                 alt="{{ $item->title }}" style="height: 80px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title fw-bold mb-2">{{ $item->title }}</h5>
-                                <p class="text-muted small mb-1">By {{ $item->users->profile->full_name }} |
+                                <p class="text-muted small mb-1">Oleh {{ $item->users->profile->full_name }} |
                                     {{ $item->published_date ? \Carbon\Carbon::parse($item->published_date)->format('d F Y') : 'N/A' }}</p>
                                 <p class="card-text text-muted small">{!! Str::limit($item->content, 80) !!}</p>
-                                <a href="{{ route('news.show', $item->id) }}" class="btn btn-danger btn-sm">Read
-                                    More...</a>
+                                <a href="{{ route('news.show', $item->id) }}" class="btn btn-danger btn-sm">Baca
+                                    Lagi...</a>
                             </div>
                         </div>
                     @endforeach
@@ -196,8 +196,8 @@
         <!-- News Section with Carousel -->
         <div class="custom-container mx-4 px-5 mt-3 py-2">
             <div class="text-center mb-4 mt-2">
-                <h3 class="text-center" style="color: #eb3a2a;">News Section</h3>
-                <p class="text-muted">Read the news and stories with us.</p>
+                <h3 class="text-center" style="color: #eb3a2a;">Bahagian Berita</h3>
+                <p class="text-muted">Baca berita dan kisah bersama kami.</p>
             </div>
             <div class="position-relative">
                 <div id="newsCarousel" class="carousel slide" data-ride="carousel">
@@ -212,12 +212,12 @@
                                                     alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
                                                 <div class="card-body">
                                                     <h5 class="card-title fw-bold">{!! Str::limit($item->title, 30) !!}</h5>
-                                                    <p class="text-muted small mb-1">By
+                                                    <p class="text-muted small mb-1">Oleh
                                                         {{ $item->users->profile->full_name }} |
                                                         {{ $item->published_date ? \Carbon\Carbon::parse($item->published_date)->format('d F Y') : 'N/A' }}</p>
                                                     <p class="card-text text-muted">{!! Str::limit($item->content, 100) !!}</p>
                                                     <a href="{{ route('news.show', $item->id) }}"
-                                                        class="btn btn-danger btn-sm">Read More...</a>
+                                                        class="btn btn-danger btn-sm">Baca Lagi...</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -229,18 +229,18 @@
                     <!-- Updated Carousel Controls -->
                     <a class="carousel-control-prev" href="#newsCarousel" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
+                        <span class="sr-only">Sebelumnya</span>
                     </a>
                     <a class="carousel-control-next" href="#newsCarousel" role="button" data-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
+                        <span class="sr-only">Seterusnya</span>
                     </a>
                 </div>
             </div>
 
             {{-- <!-- List of Links to Older News -->
             <div class="mt-5">
-                <h3 class="fw-bold" style="color: #ff6f61;">Archived News</h3>
+                <h3 class="fw-bold" style="color: #ff6f61;">Berita Arkib</h3>
                 <ul class="list-unstyled">
                     @foreach ($news->where('created_at', '<', now()->subYear()) as $archivedNews)
                         <li>

@@ -34,51 +34,51 @@
                                         <img src="assets/images/RP.png" alt="Logo">
                                     </div>
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Register Now!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Daftar Sekarang</h1>
                                     </div>
                                     <form method="POST" action="{{ route('register') }}" class="user">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user @error('name') is-invalid @enderror" id="name" placeholder="Username*" name="name" value="{{ old('name') }}" required>
                                             @error('name')
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="invalid-feedback ml-2" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user @error('email') is-invalid @enderror" id="exampleInputEmail" placeholder="Email Address*" name="email" value="{{ old('email') }}" required>
+                                            <input type="email" class="form-control form-control-user @error('email') is-invalid @enderror" id="exampleInputEmail" placeholder="Emel*" name="email" value="{{ old('email') }}" required>
                                             @error('email')
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="invalid-feedback ml-2" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" id="Password" placeholder="Password*" name="password" required>
-                                            <small class="text-muted ml-2">* Minimum 8 characters, at least one uppercase letter, number, and special character.</small>
+                                            <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" id="Password" placeholder="Kata Laluan*" name="password" required>
+                                            <small class="text-muted ml-2">* Minimum 8 aksara, sekurang-kurangnya satu huruf besar, nombor, dan aksara khas.</small>
                                             @error('password')
-                                                <span class="invalid-feedback" role="alert">
+                                                <span class="invalid-feedback ml-2" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" id="Confirm_Password" placeholder="Confirm Password*" name="password_confirmation" required>
+                                            <input type="password" class="form-control form-control-user" id="Confirm_Password" placeholder="Sahkan Kata Laluan*" name="password_confirmation" required>
                                         </div>
                                         <div class="form-group mt-3">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="form-check-input" id="terms" required>
                                                 <label class="form-check-label" for="terms">
-                                                    I agree all statements in <a href="#" style="text-decoration: none">Terms of Service</a>
+                                                    Saya bersetuju dengan semua pernyataan dalam <a href="#" style="text-decoration: none">Terma & Syarat </a>
                                                 </label>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary btn-user btn-block" type="submit">Register</button>
+                                        <button class="btn btn-danger btn-user btn-block" type="submit">Daftar</button>
                                         <hr>
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="{{ route('login') }}">Already have an Account?</a>
+                                        <a class="small" href="{{ route('login') }}">Sudah mempunyai Akaun?</a>
                                     </div>
                                 </div>
                             </div>

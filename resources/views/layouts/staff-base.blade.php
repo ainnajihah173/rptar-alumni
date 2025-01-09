@@ -83,7 +83,7 @@
         <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('dashboard') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Dashboard</span></a>
+                <span>Halaman Utama</span></a>
         </li>
 
         <!-- Divider -->
@@ -91,7 +91,7 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
-            Manage
+            Pilihan
         </div>
 
         @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
@@ -99,7 +99,7 @@
             <li class="nav-item {{ request()->routeIs('news.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('news.index') }}">
                     <i class="fas fa-fw fa-newspaper"></i>
-                    <span>News</span></a>
+                    <span>Berita</span></a>
             </li>
         @endif
 
@@ -108,14 +108,14 @@
             <li class="nav-item {{ request()->routeIs('user.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fas fa-fw fa-user"></i>
-                    <span>Users</span></a>
+                    <span>Pengguna</span></a>
             </li>
         @endif
 
         <li class="nav-item {{ request()->routeIs('events.index') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('events.index') }}">
                 <i class="fas fa-fw fa-calendar"></i>
-                <span>Events</span></a>
+                <span>Acara</span></a>
         </li>
 
         {{-- <li class="nav-item">
@@ -136,7 +136,7 @@
         <li class="nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('donations.index') }}">
                 <i class="fas fa-fw fa-credit-card"></i>
-                <span>Donations</span></a>
+                <span>Derma</span></a>
         </li>
 
         @if (auth()->user()->role === 'user')
@@ -144,7 +144,7 @@
             <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('message.index') }}">
                     <i class="fas fa-fw fa-comment"></i>
-                    <span>Messages</span></a>
+                    <span>Mesej</span></a>
             </li>
         @endif
 
@@ -152,7 +152,7 @@
         <li class="nav-item {{ request()->routeIs('inquiries.index') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('inquiries.index') }}">
                 <i class="fas fa-fw fa-envelope"></i>
-                <span>Inquiries</span></a>
+                <span>Pertanyaan</span></a>
         </li>
 
         @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
@@ -160,7 +160,7 @@
             <li class="nav-item {{ request()->routeIs('profile.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('profile.index') }}">
                     <i class="fas fa-fw fa-address-card"></i>
-                    <span>Alumni Profile</span></a>
+                    <span>Profil Alumni</span></a>
             </li>
         @endif
 
@@ -251,13 +251,13 @@
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="{{ route('profile.edit', auth()->user()->id) }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                                    Profil
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal"
                                     data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Log Keluar
                                 </a>
                             </div>
                         </li>
@@ -331,18 +331,18 @@
                     <i class="fas fa-sign-out-alt text-primary"></i>
                 </div>
                 <!-- Modal Header -->
-                <h5 class="modal-title fw-bold mb-2" id="logoutModalLabel">Ready to Logout?</h5>
+                <h5 class="modal-title fw-bold mb-2" id="logoutModalLabel">Anda Pasti Untuk Log Keluar?</h5>
                 <p class="text-muted mb-4">
-                    Click "Logout" below to exit safely.
+                    Klik "Log Keluar" di bawah untuk keluar dengan selamat.
                 </p>
                 <!-- Buttons -->
                 <div class="d-flex justify-content-center gap-3">
                     <button type="button" class="btn btn-secondary px-4 mr-4" data-dismiss="modal">
-                        Cancel
+                        Batal
                     </button>
                     <button type="button" class="btn btn-danger px-4"
                         onclick="document.getElementById('logout-form').submit();">
-                        Logout
+                        Log Keluar
                     </button>
                 </div>
             </div>
@@ -435,45 +435,45 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-        const userRole = "{{ auth()->user()->role }}"; // Get the user's role
+        // document.addEventListener('DOMContentLoaded', function() {
+        // const userRole = "{{ auth()->user()->role }}"; // Get the user's role
 
-        // Only run this script for users
-        if (userRole === 'user') {
-            const messageBadge = document.querySelector('#messagesDropdown .badge-counter');
-            const inboxBadge = document.querySelector('.sidebar .badge-danger'); // Inbox badge in the sidebar
-            let lastChecked = new Date().toISOString(); // Initialize with the current time
+        // // Only run this script for users
+        // if (userRole === 'user') {
+        //     const messageBadge = document.querySelector('#messagesDropdown .badge-counter');
+        //     const inboxBadge = document.querySelector('.sidebar .badge-danger'); // Inbox badge in the sidebar
+        //     let lastChecked = new Date().toISOString(); // Initialize with the current time
 
-            // Function to fetch new message count
-            function fetchNewMessageCount() {
-                fetch(`/messages/new-count?last_checked=${lastChecked}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.count > 0) {
-                            // Update the notification badge in staff-base
-                            if (messageBadge) {
-                                messageBadge.textContent = data.count; // Set the total count
-                            }
+        //     // Function to fetch new message count
+        //     function fetchNewMessageCount() {
+        //         fetch(`/messages/new-count?last_checked=${lastChecked}`)
+        //             .then(response => response.json())
+        //             .then(data => {
+        //                 if (data.count > 0) {
+        //                     // Update the notification badge in staff-base
+        //                     if (messageBadge) {
+        //                         messageBadge.textContent = data.count; // Set the total count
+        //                     }
 
-                            // Update the inbox badge in the index page
-                            if (inboxBadge) {
-                                inboxBadge.textContent = data.count; // Set the total count
-                            }
+        //                     // Update the inbox badge in the index page
+        //                     if (inboxBadge) {
+        //                         inboxBadge.textContent = data.count; // Set the total count
+        //                     }
 
-                            // Update the last checked time
-                            lastChecked = new Date().toISOString();
-                        }
-                    })
-                    .catch(error => console.error('Error fetching new message count:', error));
-            }
+        //                     // Update the last checked time
+        //                     lastChecked = new Date().toISOString();
+        //                 }
+        //             })
+        //             .catch(error => console.error('Error fetching new message count:', error));
+        //     }
 
-            // Fetch the initial count when the page loads
-            fetchNewMessageCount();
+        //     // Fetch the initial count when the page loads
+        //     fetchNewMessageCount();
 
-            // Poll the server every 10 seconds
-            setInterval(fetchNewMessageCount, 2000); // Adjust the interval as needed
-        }
-        });
+        //     // Poll the server every 10 seconds
+        //     setInterval(fetchNewMessageCount, 2000); // Adjust the interval as needed
+        // }
+        // });
 
         // const {
         //     ClassicEditor,

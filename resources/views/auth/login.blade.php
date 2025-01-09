@@ -10,21 +10,23 @@
     <title>RPTAR Alumni</title>
     <!-- Custom fonts for this template-->
     <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="assets/css/sb-admin-2.css" rel="stylesheet">
 </head>
 
 <body style="background-color: #a12c2f">
     <div class="container-fluid">
-        <!-- Outer Row -->
+        <!-- Baris Luar -->
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-12 col-md-9">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-3">
-                        <!-- Nested Row within Card Body -->
+                        <!-- Baris Bersarang dalam Badan Kad -->
                         <div class="row">
-                            <!-- Left Section with Logo and Background Image -->
+                            <!-- Bahagian Kiri dengan Logo dan Imej Latar Belakang -->
                             <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
                             <div class="col-lg-6">
                                 <div class="p-4">
@@ -32,10 +34,10 @@
                                         <img src="assets/images/RP.png" alt="Logo">
                                     </div>
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Selamat Kembali</h1>
                                     </div>
-                                    <!-- Display general login errors (e.g., incorrect credentials) -->
-                                    @if ($errors->any())
+                                    <!-- Paparkan ralat log masuk umum (contoh: maklumat salah) -->
+                                    {{-- @if ($errors->any())
                                         <div class="alert alert-danger">
                                             <ul>
                                                 @foreach ($errors->all() as $error)
@@ -43,34 +45,46 @@
                                                 @endforeach
                                             </ul>
                                         </div>
-                                    @endif
+                                    @endif --}}
 
                                     <form method="POST" action="{{ route('login') }}" class="user">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
+                                            <input type="email"
+                                                class="form-control form-control-user @error('email') is-invalid @enderror"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Email Address..." name="email" value="{{ old('email') }}">
+                                                placeholder="Emel" name="email" value="{{ old('email') }}">
+                                            @error('email')
+                                                <span class="invalid-feedback ml-2" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" name="password">
+                                            <input type="password"
+                                                class="form-control form-control-user @error('password') is-invalid @enderror"
+                                                id="exampleInputPassword" placeholder="Kata Laluan" name="password">
+                                            @error('password')
+                                                <span class="invalid-feedback ml-2" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck"
                                                     name="remember">
-                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                                <label class="custom-control-label" for="customCheck">Ingat Saya</label>
                                             </div>
                                         </div>
-                                        <button class="btn btn-danger btn-user btn-block" type="submit">Sign in</button>
+                                        <button class="btn btn-danger btn-user btn-block" type="submit">Log Masuk</button>
                                         <hr>
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="{{ route('password.request') }}">Forgot Password?</a>
+                                        <a class="small" href="{{ route('password.request') }}">Lupa Kata Laluan?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="{{ route('register') }}">Create an Account!</a>
+                                        <a class="small" href="{{ route('register') }}">Daftar Akaun!</a>
                                     </div>
                                 </div>
                             </div>

@@ -5,7 +5,7 @@
         <!-- Page Heading -->
         <div class="mb-3">
             <a href="{{ route('events.index') }}" class="text-decoration-none text-dark">
-                <i class="fas fa-arrow-left"></i> Back to Events List
+                <i class="fas fa-arrow-left"></i> Kembali ke Acara
             </a>
         </div>
 
@@ -36,8 +36,8 @@
                             </p>
                         </div>
                         <p class="mb-3">
-                            <strong>Organizer:</strong> {{ $events->organizers->organizer_name ?? 'N/A' }}<br>
-                            <strong>Contact:</strong> {{ $events->organizers->organizer_contact ?? 'N/A' }} |
+                            <strong>Penganjur:</strong> {{ $events->organizers->organizer_name ?? 'N/A' }}<br>
+                            <strong>Hubungan:</strong> {{ $events->organizers->organizer_contact ?? 'N/A' }} |
                             {{ $events->organizers->organizer_email ?? 'N/A' }}
                         </p>
                         <p class="text-muted">{{ $events->description }}</p>
@@ -52,43 +52,41 @@
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0">Event Details</h5>
+                        <h5 class="mb-0">Butiran Acara</h5>
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Location:</strong></span>
+                                <span><strong>Lokasi:</strong></span>
                                 <span>{{ $events->location ?? 'TBD' }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Capacity:</strong></span>
+                                <span><strong>Kapasiti:</strong></span>
                                 <span>{{ $events->capacity }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Available Slot:</strong></span>
+                                <span><strong>Slot Tersedia:</strong></span>
                                 <span>{{ $events->capacity - $events->registered_count }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Registered Participants:</strong></span>
+                                <span><strong>Peserta Berdaftar:</strong></span>
                                 <span>{{ $events->registered_count }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Event Active:</strong></span>
+                                <span><strong>Acara Aktif:</strong></span>
                                 <span>
-                                    {{ $events->is_active ? 'Active' : 'Inactive' }}
+                                    {{ $events->is_active ? 'Aktif' : 'Tidak Aktif' }}
                                 </span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
-                                <span><strong>Event Status:</strong></span>
+                                <span><strong>Status Acara:</strong></span>
                                 @if ($events->status === 'approved')
-                                    <span class="badge rounded-pill text-white bg-success p-2">Approved</span>
+                                    <span class="badge rounded-pill text-white bg-success p-2">Diluluskan</span>
                                 @elseif($events->status === 'rejected')
-                                    <span class="badge rounded-pill text-white bg-danger p-2">Rejected</span>
+                                    <span class="badge rounded-pill text-white bg-danger p-2">Ditolak</span>
                                 @else
-                                    <span class="badge rounded-pill text-white bg-warning p-2">Pending</span>
+                                    <span class="badge rounded-pill text-white bg-warning p-2">Dalam Proses</span>
                                 @endif
-
-
                                 </span>
                             </li>
                         </ul>
@@ -100,21 +98,20 @@
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Registered Participants</h5>
-
+                        <h5 class="mb-0">Peserta Berdaftar</h5>
                     </div>
                     <div class="card-body">
                         @if ($participants->isEmpty())
-                            <p class="text-muted">No participants registered yet.</p>
+                            <p class="text-muted">Tiada peserta berdaftar lagi.</p>
                         @else
                             <table class="table table-striped table-responsive" id="dataTable">
                                 <thead class="bg-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Contact</th>
-                                        <th>Registered At</th>
+                                        <th>Nama</th>
+                                        <th>Emel</th>
+                                        <th>Hubungan</th>
+                                        <th>Daftar Pada</th>
                                     </tr>
                                 </thead>
                                 <tbody>

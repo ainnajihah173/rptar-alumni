@@ -3,24 +3,24 @@
     <!-- Page Heading -->
     <div class="mb-3">
         <a href="{{ route('donations.index') }}" class="text-decoration-none text-dark">
-            <i class="fas fa-arrow-left"></i> Back to Donations List
+            <i class="fas fa-arrow-left"></i> Kembali ke Senarai Derma
         </a>
     </div>
 
     @if (auth()->user()->role === 'user')
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-dark">Make Donation</h6>
+                <h6 class="m-0 font-weight-bold text-dark">Buat Derma</h6>
             </div>
 
             <div class="card-body">
                 <!-- Campaign Preview Section -->
                 <div class="campaign-preview mb-4 p-4 border rounded bg-light">
-                    <h5 class="font-weight-bold text-dark mb-3">Campaign Preview</h5>
+                    <h5 class="font-weight-bold text-dark mb-3">Pratonton Kempen</h5>
                     <div class="row">
                         <div class="col-md-4">
                             <img src="{{ $campaigns->image_path ? asset('storage/' . $campaigns->image_path) : asset('assets/images/default-event.jpg') }}"
-                                alt="Campaign Image" class="img-fluid rounded shadow-sm">
+                                alt="Gambar Kempen" class="img-fluid rounded shadow-sm">
                         </div>
                         <div class="col-md-8">
                             <!-- Status Badge -->
@@ -49,7 +49,7 @@
                                 $endDate = \Carbon\Carbon::parse($campaigns->end_date);
                             @endphp
                             <p class="mb-2">
-                                <strong>Date:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}
+                                <strong>Tarikh:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}
                             </p>
             
                             <!-- Progress Bar -->
@@ -65,17 +65,17 @@
             
                             <!-- Raised and Target Amount -->
                             <p class="mb-1">
-                                <strong>Raised:</strong> RM {{ number_format($campaigns->current_amount, 2) }}
+                                <strong>Jumlah Dikumpul:</strong> RM {{ number_format($campaigns->current_amount, 2) }}
                             </p>
                             <p>
-                                <strong>Target Amount:</strong> RM {{ number_format($campaigns->target_amount, 2) }}
+                                <strong>Jumlah Sasaran:</strong> RM {{ number_format($campaigns->target_amount, 2) }}
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <p class="text-muted font-14 mb-4">
-                    Please fill in the form below to make your donation. Your support makes a difference!
+                    Sila isi borang di bawah untuk membuat derma. Sokongan anda membuat perbezaan!
                 </p>
 
                 <!-- Donation Form -->
@@ -84,25 +84,26 @@
                     <input type="hidden" name="campaign_id" value="{{ $campaigns->id }}">
 
                     <div class="row justify-content-center align-items-center g-2">
-                        <!-- Donation Amount -->
+                        <!-- Donor's Name -->
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="amount" class="form-label">Donor's Name</label>
+                                <label for="full_name" class="form-label">Nama Penderma</label>
                                 <input type="text" class="form-control" name="full_name" readonly
                                     value="{{ $users->profile->full_name }}">
                             </div>
                         </div>
-                        <!-- Donation Amount -->
+                        <!-- Donor's Contact Number -->
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="amount" class="form-label">Donor's Contact Number</label>
+                                <label for="contact_number" class="form-label">Nombor Telefon Penderma</label>
                                 <input type="text" class="form-control" name="contact_number" readonly
                                     value="{{ $users->profile->contact_number }}">
                             </div>
                         </div>
+                        <!-- Donor's Email -->
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="amount" class="form-label">Donor's Email</label>
+                                <label for="email" class="form-label">Emel Penderma</label>
                                 <input type="text" class="form-control" name="email" readonly
                                     value="{{ $users->email }}">
                             </div>
@@ -110,29 +111,18 @@
                         <!-- Donation Amount -->
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="amount" class="form-label">Donation Amount (RM)</label>
+                                <label for="amount" class="form-label">Jumlah Derma (RM)</label>
                                 <input type="number" id="amount" class="form-control" name="amount" required
-                                    placeholder="Enter amount" min="1">
+                                    placeholder="Masukkan jumlah" min="1">
                             </div>
                         </div>
                         <div class="col-lg-6"></div>
-                        <!-- Is Anonymous -->
-                        {{-- <div class="col-lg-6">
-                            <div class="form-group mb-3">
-                                <label for="is_anonymous" class="form-label">Donate Anonymously</label>
-                                <div class="form-check">
-                                    <input type="checkbox" id="is_anonymous" class="form-check-input" name="is_anonymous">
-                                    <label for="is_anonymous" class="form-check-label">Yes, donate anonymously</label>
-                                </div>
-                            </div>
-                        </div> --}}
-
                     </div>
 
                     <!-- Form Actions -->
                     <div class="text-center mt-4">
-                        <button type="button" onclick="history.back()" class="btn btn-light mr-3">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                        <button type="button" onclick="history.back()" class="btn btn-light mr-3">Batal</button>
+                        <button type="submit" class="btn btn-primary">Teruskan ke Pembayaran</button>
                     </div>
                 </form>
             </div>
@@ -165,17 +155,17 @@
         <!-- Page Heading -->
         <div class="mb-3">
             <a href="{{ route('donations.index') }}" class="text-decoration-none text-dark">
-                <i class="fas fa-arrow-left"></i> Back to Donations List
+                <i class="fas fa-arrow-left"></i> Kembali ke Senarai Derma
             </a>
         </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold text-dark">Update Donation</h6>
+                <h6 class="m-0 font-weight-bold text-dark">Kemaskini Derma</h6>
             </div>
 
             <div class="card-body">
                 <p class="text-muted font-14">
-                    Please update the form below.
+                    Sila kemaskini borang di bawah.
                 </p>
                 <form action="{{ route('donations.update', $campaigns->id) }}" method="POST"
                     enctype="multipart/form-data">
@@ -184,47 +174,47 @@
                     <div class="row justify-content-center align-items-center g-2">
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="title">Donation Title<span class="text-danger">*</span></label>
+                                <label for="title">Tajuk Derma<span class="text-danger">*</span></label>
                                 <input type="text" id="title" class="form-control" name="title" required
-                                    value="{{ $campaigns->title }}" placeholder="Donation Title">
+                                    value="{{ $campaigns->title }}" placeholder="Tajuk Derma">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="target_amount">Target Amount<span class="text-danger">*</span></label>
+                                <label for="target_amount">Jumlah Sasaran<span class="text-danger">*</span></label>
                                 <input type="number" id="target_amount" class="form-control" name="target_amount"
                                     required value="{{ $campaigns->target_amount }}" placeholder="0" min="1">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="start_date">Start Date<span class="text-danger">*</span></label>
+                                <label for="start_date">Tarikh Mula<span class="text-danger">*</span></label>
                                 <input type="date" id="start_date" class="form-control" name="start_date" required
                                     value="{{ $campaigns->start_date }}">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="end_date">End Date<span class="text-danger">*</span></label>
+                                <label for="end_date">Tarikh Tamat<span class="text-danger">*</span></label>
                                 <input type="date" id="end_date" class="form-control" name="end_date" required
                                     value="{{ $campaigns->end_date }}">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="description">Description<span class="text-danger">*</span></label>
+                                <label for="description">Penerangan<span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="description" required>{{ $campaigns->description }}</textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label for="image">Upload File</label>
+                                <label for="image">Muat Naik Fail</label>
                                 <input type="file" name="image_path" id="image" class="custom-file">
                                 @if ($campaigns->image_path)
                                     <div class="">
-                                        <p>Current Image:<a href="{{ asset('storage/' . $campaigns->image_path) }}"
+                                        <p>Gambar Semasa:<a href="{{ asset('storage/' . $campaigns->image_path) }}"
                                                 target="_blank" class="text-decoration-none">
-                                                View Image
+                                                Lihat Gambar
                                             </a></p>
                                     </div>
                                 @endif
@@ -233,9 +223,9 @@
                     </div>
                     <!-- end row-->
                     <div class="text-center mt-2">
-                        <button type="button" onclick="history.back()" class="btn btn-light mr-3">Cancel</button>
+                        <button type="button" onclick="history.back()" class="btn btn-light mr-3">Batal</button>
                         <button type="submit" class="btn btn-primary">
-                            Update
+                            Kemaskini
                         </button>
                     </div>
                 </form>

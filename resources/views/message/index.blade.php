@@ -2,22 +2,22 @@
 
 @section('content')
     <div class="container-fluid">
-        <h3 class="text-center" style="color: #eb3a2a;">Messages</h3>
-        <p class="text-center text-muted">Send the message and stay connected.</p>
+        <h3 class="text-center" style="color: #eb3a2a;">Mesej</h3>
+        <p class="text-center text-muted">Hantar mesej dan kekal berhubung.</p>
 
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-2 col-12 mb-3">
-                <button class="btn btn-danger btn-block mb-3" data-toggle="modal" data-target="#newMessageModal">New
-                    Message</button>
+                <button class="btn btn-danger btn-block mb-3" data-toggle="modal" data-target="#newMessageModal">Mesej
+                    Baru</button>
                 <!-- Delete Selected Button -->
                 {{-- <button id="deleteSelected" class="btn btn-danger btn-block mb-3" data-toggle="modal"
                     data-target="#deleteConfirmationModal" disabled>
-                    <i class="fas fa-trash"></i> Delete Selected
+                    <i class="fas fa-trash"></i> Padam Pilihan
                 </button> --}}
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Inbox
+                        Kotak Masuk
                         <span class="badge badge-danger badge-pill">{{$count}}</span>
                     </li>
                 </ul>
@@ -31,12 +31,12 @@
                         <thead>
                             <tr>
                                 <th><input type="checkbox" id="selectAll"></th>
-                                <th>Sender</th>
-                                <th>Receiver</th>
-                                <th>Subject</th>
-                                <th>Message</th>
-                                <th>Time</th>
-                                <th>Action</th>
+                                <th>Pengirim</th>
+                                <th>Penerima</th>
+                                <th>Subjek</th>
+                                <th>Mesej</th>
+                                <th>Masa</th>
+                                <th>Tindakan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,21 +53,21 @@
                                         <!-- View Conversation Icon -->
                                         @if ($message->sender_id !== auth()->user()->id)
                                             <a href="{{ route('message.conversation', $message->id) }}"
-                                                class="action-icon-primary mr-2" title="View Conversation">
+                                                class="action-icon-primary mr-2" title="Lihat Perbualan">
                                                 <i class="fas fa-reply text-primary"></i>
                                             </a>
                                         @endif
                                         <!-- Reply Icon (only if the logged-in user is not the sender) -->
                                         {{-- @if ($message->sender_id !== auth()->user()->id)
                                             <a href="" class="action-icon-primary mr-2" data-toggle="modal"
-                                                data-target="#replyModal{{ $message->id }}" title="Reply">
+                                                data-target="#replyModal{{ $message->id }}" title="Balas">
                                                 <i class="fas fa-reply text-success"></i>
                                             </a>
                                         @endif --}}
 
                                         <!-- Delete Icon -->
                                         <a href="" class="action-icon-danger" data-toggle="modal"
-                                            data-target="#delete{{ $message->id }}" title="Delete">
+                                            data-target="#delete{{ $message->id }}" title="Padam">
                                             <i class="fas fa-trash text-danger"></i>
                                         </a>
                                     </td>
@@ -94,18 +94,18 @@
                                             </div>
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center pt-3 pb-0">
-                                                <h5 class="font-weight-bold mb-3">Delete All Conversation</h5>
-                                                <p class="text-muted mb-3">This action cannot be undone. Are you sure?</p>
+                                                <h5 class="font-weight-bold mb-3">Padam Semua Perbualan</h5>
+                                                <p class="text-muted mb-3">Tindakan ini tidak boleh dibatalkan. Adakah anda pasti?</p>
                                             </div>
                                             <!-- Modal Footer -->
                                             <div class="modal-footer justify-content-center py-3 border-0">
                                                 <button type="button" class="btn btn-secondary px-4"
-                                                    data-dismiss="modal">No, Keep it</button>
+                                                    data-dismiss="modal">Tidak, Simpan</button>
                                                 <form method="POST" action="{{ route('message.destroy', $message->id) }}"
                                                     class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger px-4">Yes, Delete!</button>
+                                                    <button type="submit" class="btn btn-danger px-4">Ya, Padam!</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -125,7 +125,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">
-                        <i class="fas fa-envelope"></i> New Message
+                        <i class="fas fa-envelope"></i> Mesej Baru
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
@@ -138,22 +138,22 @@
                         </div>
                         <div class="form-group">
                             <select name="receiver_id" id="receiver_id" class="form-control" required>
-                                <option value="">Select Recipient</option>
+                                <option value="">Pilih Penerima</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->profile->full_name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <input name="subject" type="text" class="form-control" placeholder="Subject" required>
+                            <input name="subject" type="text" class="form-control" placeholder="Subjek" required>
                         </div>
                         <div class="form-group">
-                            <textarea name="message" class="form-control" placeholder="Message" rows="4" required></textarea>
+                            <textarea name="message" class="form-control" placeholder="Mesej" rows="4" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-envelope"></i> Send Message
+                            <i class="fas fa-envelope"></i> Hantar Mesej
                         </button>
                     </div>
                 </form>
@@ -168,7 +168,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteConfirmationModalLabel">
-                        <i class="fas fa-trash"></i> Delete Messages
+                        <i class="fas fa-trash"></i> Padam Mesej
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -178,13 +178,13 @@
                     @csrf
                     @method('DELETE')
                     <div class="modal-body">
-                        Are you sure you want to delete the selected messages?
+                        Adakah anda pasti mahu memadam mesej yang dipilih?
                         <!-- Hidden input to store selected message IDs -->
                         <input type="hidden" name="selected_ids" id="selected_ids">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">Padam</button>
                     </div>
                 </form>
             </div>

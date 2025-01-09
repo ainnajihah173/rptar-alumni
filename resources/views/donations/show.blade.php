@@ -3,22 +3,22 @@
     <!-- Page Heading -->
     <div class="mb-3">
         <a href="{{ route('donations.index') }}" class="text-decoration-none text-dark">
-            <i class="fas fa-arrow-left"></i> Back to Donations List
+            <i class="fas fa-arrow-left"></i> Kembali ke Senarai Derma
         </a>
     </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-dark">Show Donation</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Paparan Derma</h6>
         </div>
 
         <div class="card-body">
             <!-- Campaign Preview Section -->
             <div class="campaign-preview p-4 border rounded bg-light">
-                <h5 class="font-weight-bold text-dark mb-3">Campaign Preview</h5>
+                <h5 class="font-weight-bold text-dark mb-3">Pratonton Kempen</h5>
                 <div class="row">
                     <div class="col-md-4">
                         <img src="{{ $campaigns->image_path ? asset('storage/' . $campaigns->image_path) : asset('assets/images/default-event.jpg') }}"
-                            alt="Campaign Image" class="img-fluid rounded shadow-sm">
+                            alt="Gambar Kempen" class="img-fluid rounded shadow-sm">
                     </div>
                     <div class="col-md-8">
                         <!-- Status Badge -->
@@ -47,7 +47,7 @@
                             $endDate = \Carbon\Carbon::parse($campaigns->end_date);
                         @endphp
                         <p class="mb-2">
-                            <strong>Date:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}
+                            <strong>Tarikh:</strong> {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}
                         </p>
         
                         <!-- Progress Bar -->
@@ -63,10 +63,10 @@
         
                         <!-- Raised and Target Amount -->
                         <p class="mb-1">
-                            <strong>Raised:</strong> RM {{ number_format($campaigns->current_amount, 2) }}
+                            <strong>Jumlah Dikumpul:</strong> RM {{ number_format($campaigns->current_amount, 2) }}
                         </p>
                         <p>
-                            <strong>Target Amount:</strong> RM {{ number_format($campaigns->target_amount, 2) }}
+                            <strong>Jumlah Sasaran:</strong> RM {{ number_format($campaigns->target_amount, 2) }}
                         </p>
                     </div>
                 </div>
@@ -79,11 +79,11 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Donor's Name</th>
-                            <th>Donation Amount</th>
-                            <th>Donation Date</th>
+                            <th>Nama Penderma</th>
+                            <th>Jumlah Derma</th>
+                            <th>Tarikh Derma</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Tindakan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,11 +95,11 @@
                                 <td>{{ $donation->created_at->format('d M Y') }}</td>
                                 <td>
                                     @if ($donation->payment_status == 'successful')
-                                        <span class="badge bg-success text-white">Succesful</span>
+                                        <span class="badge bg-success text-white">Berjaya</span>
                                     @elseif ($donation->payment_status == 'rejected')
-                                        <span class="badge bg-danger text-white">Rejected</span>
+                                        <span class="badge bg-danger text-white">Ditolak</span>
                                     @else
-                                        <span class="badge bg-warning text-white">Pending</span>
+                                        <span class="badge bg-warning text-white">Menunggu</span>
                                     @endif
                                 </td>
                                 <td>
@@ -113,8 +113,6 @@
                 </table>
             </div>
         </div>
-
-
     </div>
 
     <style>

@@ -9,8 +9,8 @@
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <h3 class="text-gray-800">Welcome back, {{ $user->profile->full_name }}!</h3>
-                                    <p class="text-gray-600 mb-0">Here’s what’s happening in your alumni community.</p>
+                                    <h3 class="text-gray-800">Selamat kembali, {{ $user->profile->full_name }}!</h3>
+                                    <p class="text-gray-600 mb-0">Inilah yang berlaku dalam komuniti alumni anda.</p>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-user fa-2x text-gray-300"></i> <!-- User Icon -->
@@ -29,7 +29,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        My Donations
+                                        Jumlah Derma Saya
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         RM {{ number_format($donationSummary, 2) }}
@@ -50,7 +50,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        My Upcoming Events
+                                        Acara Akan Datang
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         {{ $upcomingEvents->count() }}
@@ -71,7 +71,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        My Inquiries
+                                        Pertanyaan Saya
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         {{ $recentInquiries->count() }}
@@ -91,7 +91,7 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">My Upcoming Events</h5>
+                            <h5 class="card-title">Acara Akan Datang</h5>
                             <div id="calendar" class="calendar-container"></div> <!-- Calendar will be rendered here -->
                         </div>
                     </div>
@@ -103,9 +103,9 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Latest News</h5>
+                            <h5 class="card-title">Berita Terkini</h5>
                             @if ($latestNews->isEmpty())
-                                <p>No news available.</p>
+                                <p>Tiada berita terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($latestNews as $news)
@@ -127,7 +127,7 @@
                                             <div class="flex-grow-1">
                                                 <h6>{{ $news->title }}</h6>
                                                 <p class="mb-1">{{ Str::limit($news->content, 100) }}</p>
-                                                <small>Posted on
+                                                <small>Diterbitkan pada
                                                     {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
                                             </div>
                                         </a>
@@ -212,8 +212,8 @@
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <h3 class="text-gray-800">Welcome back, {{ $admin->name }}!</h3>
-                                    <p class="text-gray-600 mb-0">Here’s an overview of your system.</p>
+                                    <h3 class="text-gray-800">Selamat kembali, {{ $admin->name }}!</h3>
+                                    <p class="text-gray-600 mb-0">Inilah gambaran keseluruhan sistem anda.</p>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-user-shield fa-2x text-gray-300"></i> <!-- Admin Icon -->
@@ -233,7 +233,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Total Users
+                                        Jumlah Pengguna
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         {{ $totalUsers }}
@@ -254,7 +254,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        Total Events
+                                        Jumlah Acara
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         {{ $totalEvents }}
@@ -275,7 +275,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        Total Donations
+                                        Jumlah Derma
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         {{ $totalDonations }}
@@ -296,7 +296,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                        Total Inquiries
+                                        Jumlah Pertanyaan
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                         {{ $totalInquiries }}
@@ -317,7 +317,7 @@
                 <div class="col-xl-6 col-md-12 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-primary">Donation Trends</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Trend Derma</h6>
                         </div>
                         <div class="card-body">
                             <canvas id="donationChart"></canvas>
@@ -329,7 +329,7 @@
                 <div class="col-xl-6 col-md-12 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-success">User Role Distribution</h6>
+                            <h6 class="m-0 font-weight-bold text-success">Taburan Peranan Pengguna</h6>
                         </div>
                         <div class="card-body">
                             <canvas id="userRoleChart"></canvas>
@@ -344,17 +344,17 @@
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-info">Recent Users</h6>
+                            <h6 class="m-0 font-weight-bold text-info">Pengguna Terkini</h6>
                         </div>
                         <div class="card-body">
                             @if ($recentUsers->isEmpty())
-                                <p>No recent users.</p>
+                                <p>Tiada pengguna terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($recentUsers as $user)
                                         <div class="list-group-item">
                                             <h6>{{ $user->name }}</h6>
-                                            <small>Joined on
+                                            <small>Menyertai pada
                                                 {{ \Carbon\Carbon::parse($user->created_at)->format('d M Y') }}</small>
                                         </div>
                                     @endforeach
@@ -368,17 +368,17 @@
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-success">Upcoming Events</h6>
+                            <h6 class="m-0 font-weight-bold text-success">Acara Akan Datang</h6>
                         </div>
                         <div class="card-body">
                             @if ($upcomingEvents->isEmpty())
-                                <p>No upcoming events.</p>
+                                <p>Tiada acara akan datang.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($upcomingEvents as $event)
                                         <div class="list-group-item">
                                             <h6>{{ $event->name }}</h6>
-                                            <small>Date: @if ($event->start_date == $event->end_date)
+                                            <small>Tarikh: @if ($event->start_date == $event->end_date)
                                                     {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
                                                 @else
                                                     {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
@@ -397,17 +397,17 @@
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-warning">Recent Donations</h6>
+                            <h6 class="m-0 font-weight-bold text-warning">Derma Terkini</h6>
                         </div>
                         <div class="card-body">
                             @if ($recentDonations->isEmpty())
-                                <p>No recent donations.</p>
+                                <p>Tiada derma terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($recentDonations as $donation)
                                         <div class="list-group-item">
                                             <h6>RM {{ number_format($donation->amount, 2) }}</h6>
-                                            <small>Donated on
+                                            <small>Derma pada
                                                 {{ \Carbon\Carbon::parse($donation->created_at)->format('d F Y') }}</small>
                                         </div>
                                     @endforeach
@@ -421,17 +421,17 @@
                 <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-danger">Recent Inquiries</h6>
+                            <h6 class="m-0 font-weight-bold text-danger">Pertanyaan Terkini</h6>
                         </div>
                         <div class="card-body">
                             @if ($recentInquiries->isEmpty())
-                                <p>No recent inquiries.</p>
+                                <p>Tiada pertanyaan terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($recentInquiries as $inquiry)
                                         <div class="list-group-item">
                                             <h6>{{ $inquiry->title }}</h6>
-                                            <small>Submitted on
+                                            <small>Dihantar pada
                                                 {{ \Carbon\Carbon::parse($inquiry->created_at)->format('d F Y') }}</small>
                                         </div>
                                     @endforeach
@@ -454,7 +454,7 @@
                 data: {
                     labels: {!! json_encode($donationHistory->pluck('month')) !!},
                     datasets: [{
-                        label: 'Donations (RM)',
+                        label: 'Derma (RM)',
                         data: {!! json_encode($donationHistory->pluck('total')) !!},
                         borderColor: 'rgba(0, 123, 255, 1)',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
@@ -477,9 +477,9 @@
                 const userRoleChart = new Chart(userRoleCtx, {
                     type: 'bar', // You can also use 'pie' or 'doughnut' for a different style
                     data: {
-                        labels: ['Admin', 'Staff', 'User'], // Labels for each category
+                        labels: ['Admin', 'Staf', 'Pengguna'], // Labels for each category
                         datasets: [{
-                            label: 'Total Users',
+                            label: 'Jumlah Pengguna',
                             data: [
                                 {{ $adminCount = $userCounts['admin'] ?? 0 }}, // Admin count
                                 {{ $staffCount = $userCounts['staff'] ?? 0 }}, // Staff count
@@ -518,8 +518,8 @@
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <h3 class="text-gray-800">Welcome back, {{ $user->profile->full_name }}!</h3>
-                                    <p class="text-gray-600 mb-0">Here’s what’s happening in your alumni community.</p>
+                                    <h3 class="text-gray-800">Selamat kembali, {{ $user->profile->full_name }}!</h3>
+                                    <p class="text-gray-600 mb-0">Inilah yang berlaku dalam komuniti alumni anda.</p>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-user fa-2x text-gray-300"></i> <!-- User Icon -->
@@ -539,7 +539,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        Total Donations
+                                        Jumlah Derma
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         RM {{ number_format($donationSummary, 2) }}
@@ -560,7 +560,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        Upcoming Events
+                                        Acara Akan Datang
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         {{ $upcomingEvents->count() }}
@@ -581,7 +581,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        Total Inquiries
+                                        Jumlah Pertanyaan
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
                                         {{ $recentInquiries->count() }}
@@ -602,7 +602,7 @@
                 <div class="col-xl-6 col-md-12 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-primary">Donation Trends</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Trend Derma</h6>
                         </div>
                         <div class="card-body">
                             <canvas id="donationChart"></canvas>
@@ -614,7 +614,7 @@
                 <div class="col-xl-6 col-md-12 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-success">Event Participation</h6>
+                            <h6 class="m-0 font-weight-bold text-success">Penyertaan Acara</h6>
                         </div>
                         <div class="card-body">
                             <canvas id="eventChart"></canvas>
@@ -628,11 +628,11 @@
                 <div class="col-xl-4 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-info">Recent News</h6>
+                            <h6 class="m-0 font-weight-bold text-info">Berita Terkini</h6>
                         </div>
                         <div class="card-body">
                             @if ($latestNews->isEmpty())
-                                <p>No news available.</p>
+                                <p>Tiada berita terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($latestNews as $news)
@@ -654,7 +654,7 @@
                                             <div class="flex-grow-1">
                                                 <h6>{{ $news->title }}</h6>
                                                 <p class="mb-1">{{ Str::limit($news->content, 100) }}</p>
-                                                <small>Posted on
+                                                <small>Diterbitkan pada
                                                     {{ \Carbon\Carbon::parse($news->published_date)->format('d F Y') }}</small>
                                             </div>
                                         </a>
@@ -668,11 +668,11 @@
                 <div class="col-xl-4 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-success">Upcoming Events</h6>
+                            <h6 class="m-0 font-weight-bold text-success">Acara Akan Datang</h6>
                         </div>
                         <div class="card-body">
                             @if ($upcomingEvents->isEmpty())
-                                <p>No upcoming events.</p>
+                                <p>Tiada acara akan datang.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($upcomingEvents as $event)
@@ -694,7 +694,7 @@
                                             <div class="flex-grow-1">
                                                 <h6>{{ $event->name }}</h6>
                                                 <p class="mb-1">{{ $event->description }}</p>
-                                                <small>Date: @if ($event->start_date == $event->end_date)
+                                                <small>Tarikh: @if ($event->start_date == $event->end_date)
                                                         {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
                                                     @else
                                                         {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }} -
@@ -714,18 +714,18 @@
                 <div class="col-xl-4 col-md-6 mb-4">
                     <div class="card shadow h-100">
                         <div class="card-header bg-white">
-                            <h6 class="m-0 font-weight-bold text-warning">Recent Inquiries</h6>
+                            <h6 class="m-0 font-weight-bold text-warning">Pertanyaan Terkini</h6>
                         </div>
                         <div class="card-body">
                             @if ($recentInquiries->isEmpty())
-                                <p>No recent inquiries.</p>
+                                <p>Tiada pertanyaan terkini.</p>
                             @else
                                 <div class="list-group">
                                     @foreach ($recentInquiries as $inquiry)
                                         <div class="list-group-item">
                                             <h6>{{ $inquiry->title }}</h6>
                                             <p class="mb-1">{{ Str::limit($inquiry->message, 100) }}</p>
-                                            <small>Submitted on {{ $inquiry->created_at }}</small>
+                                            <small>Dihantar pada {{ $inquiry->created_at }}</small>
                                         </div>
                                     @endforeach
                                 </div>
@@ -746,7 +746,7 @@
                 data: {
                     labels: {!! json_encode($donationHistory->pluck('month')) !!},
                     datasets: [{
-                        label: 'Donations (RM)',
+                        label: 'Derma (RM)',
                         data: {!! json_encode($donationHistory->pluck('total')) !!},
                         borderColor: 'rgba(0, 123, 255, 1)',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
@@ -770,7 +770,7 @@
                 data: {
                     labels: {!! json_encode($eventParticipation->pluck('month')) !!},
                     datasets: [{
-                        label: 'Events Attended',
+                        label: 'Acara Dihadiri',
                         data: {!! json_encode($eventParticipation->pluck('total')) !!},
                         backgroundColor: 'rgba(40, 167, 69, 0.8)',
                         borderColor: 'rgba(40, 167, 69, 1)',

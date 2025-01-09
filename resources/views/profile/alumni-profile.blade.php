@@ -2,8 +2,8 @@
 
 @section('content')
     <!-- Page Heading -->
-    <h3 class="text-center" style="color: #eb3a2a;">Alumnus Profile</h3>
-    <p class="text-center text-muted">Your profile, your story. Share your journey with us</p>
+    <h3 class="text-center" style="color: #eb3a2a;">Profil Alumni</h3>
+    <p class="text-center text-muted">Profil anda, kisah anda. Kongsi perjalanan anda bersama kami.</p>
 
     <!-- Alumni Cards Section -->
     <div class="row">
@@ -24,11 +24,12 @@
                     </div>
                     <!-- Card Footer with Buttons -->
                     <div class="card-footer border-0 bg-light">
-                        <a href="mailto:{{$alumnus->user->email}}" class="btn btn-sm w-45 btn-secondary"> <!-- Standardized button color -->
-                            <i class="fas fa-envelope"></i> Send Email
+                        <a href="mailto:{{ $alumnus->user->email }}" class="btn btn-sm w-45 btn-secondary">
+                            <!-- Standardized button color -->
+                            <i class="fas fa-envelope"></i> Hantar Emel
                         </a>
-                        <a href="{{ route('profile.show', $alumnus->id)}}" class="btn btn-outline-dark btn-sm w-45">
-                            <i class="fas fa-user"></i> View Profile
+                        <a href="{{ route('profile.show', $alumnus->id) }}" class="btn btn-outline-dark btn-sm w-45">
+                            <i class="fas fa-user"></i> Lihat Profil
                         </a>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
         <ul class="pagination justify-content-center">
             <li class="page-item {{ $alumni->onFirstPage() ? 'disabled' : '' }}">
                 <a class="page-link" href="{{ $alumni->previousPageUrl() }}" tabindex="-1"
-                    aria-disabled="true">Previous</a>
+                    aria-disabled="true">Sebelumnya</a>
             </li>
             @for ($i = 1; $i <= $alumni->lastPage(); $i++)
                 <li class="page-item {{ $alumni->currentPage() === $i ? 'active' : '' }}">
@@ -49,7 +50,7 @@
                 </li>
             @endfor
             <li class="page-item {{ $alumni->hasMorePages() ? '' : 'disabled' }}">
-                <a class="page-link" href="{{ $alumni->nextPageUrl() }}">Next</a>
+                <a class="page-link" href="{{ $alumni->nextPageUrl() }}">Seterusnya</a>
             </li>
         </ul>
     </nav>
