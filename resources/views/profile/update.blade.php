@@ -47,6 +47,17 @@
         }
     </style>
 
+    <!-- Display general error messages -->
+    @if (session('errors'))
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (session('errors')->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Edit Profile Card -->
     <div class="card form-card" style="max-width: 1100px; margin: auto;">
         <div class="form-header" style="background: {{ $roleColors[$user->role] }}">
@@ -162,25 +173,37 @@
             <form action="{{ route('profile.change-password', $user->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-
+            
                 <div class="row">
+                    <!-- Current Password -->
                     <div class="col-md-6 mb-3">
                         <label for="current_password">Kata Laluan Semasa<span class="text-danger">*</span></label>
-                        <input type="password" id="current_password" class="form-control" name="current_password"
-                            required>
+                        <input type="password" id="current_password" class="form-control" name="current_password" required>
+                        @error('current_password')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
+            
+                    <!-- New Password -->
                     <div class="col-md-6 mb-3">
                         <label for="new_password">Kata Laluan Baru<span class="text-danger">*</span></label>
                         <input type="password" id="new_password" class="form-control" name="new_password" required>
+                        @error('new_password')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
+            
+                    <!-- Confirm New Password -->
                     <div class="col-md-6 mb-3">
-                        <label for="new_password_confirmation">Sahkan Kata Laluan Baru<span
-                                class="text-danger">*</span></label>
-                        <input type="password" id="new_password_confirmation" class="form-control"
-                            name="new_password_confirmation" required>
+                        <label for="new_password_confirmation">Sahkan Kata Laluan Baru<span class="text-danger">*</span></label>
+                        <input type="password" id="new_password_confirmation" class="form-control" name="new_password_confirmation" required>
+                        @error('new_password_confirmation')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-
+            
+                <!-- Submit Button -->
                 <div class="text-center mt-4">
                     <button type="submit" class="btn {{ $roleButtons[$user->role] }}">Tukar Kata Laluan</button>
                 </div>

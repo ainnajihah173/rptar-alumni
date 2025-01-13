@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -22,7 +23,7 @@ class ProfileController extends Controller
         $alumni = Profile::whereHas('user', function ($query) {
             $query->where('role', 'user');
         })->with('user')->paginate(6);
-    
+
         return view('profile.alumni-profile', compact('alumni'));
     }
 
@@ -93,23 +94,40 @@ class ProfileController extends Controller
     public function changePassword(Request $request, $id)
     {
         $user = User::findOrFail($id);
-
-        // Validate the request
+    
+        // Validate the request with custom error messages
         $request->validate([
             'current_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => [
+                'required',
+                'confirmed',
+                Password::min(8) // Minimum length of 8 characters
+                    ->letters() // Must contain at least one letter
+                    ->mixedCase() // Must contain both uppercase and lowercase letters
+                    ->numbers() // Must contain at least one number
+                    ->symbols() // Must contain at least one special character
+            ]
+        ], [
+            'current_password.required' => 'Kata laluan semasa diperlukan.',
+            'new_password.required' => 'Kata laluan baru diperlukan.',
+            'new_password.confirmed' => 'Pengesahan kata laluan tidak sepadan.',
+            'new_password.min' => 'Kata laluan mesti mengandungi sekurang-kurangnya 8 aksara.',
+            'new_password.letters' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu huruf.',
+            'new_password.mixedCase' => 'Kata laluan mesti mengandungi huruf besar dan kecil.',
+            'new_password.numbers' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu nombor.',
+            'new_password.symbols' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu aksara khas.',
         ]);
-
+    
         // Check if the current password matches
         if (!Hash::check($request->input('current_password'), $user->password)) {
-            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
+            return back()->withErrors(['current_password' => 'Kata laluan semasa tidak betul.']);
         }
-
+    
         // Update the password
         $user->password = Hash::make($request->input('new_password'));
         $user->save();
-
-        return redirect()->route('profile.edit', $id)->with('success', 'Kata Laluan berjaya dikemaskini!');
+    
+        return redirect()->route('profile.edit', $id)->with('success', 'Kata laluan berjaya dikemaskini!');
     }
 
 
