@@ -21,7 +21,7 @@ class DonationController extends Controller
         // For Staff/Admin
         if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin') {
             // Fetch all campaigns sorted by start_date and status
-            $campaigns = Campaign::orderByRaw("FIELD(status, 'pending', 'rejected', 'active', 'closed')") ->paginate(10);
+            $campaigns = Campaign::orderByRaw("FIELD(status, 'pending', 'rejected', 'active', 'closed')")->paginate(20);
 
             // Automatically set campaigns to 'closed' if end_date has passed or target_amount is reached
             foreach ($campaigns as $campaign) {
@@ -38,12 +38,12 @@ class DonationController extends Controller
             // First Tab: Active campaigns where current_amount < target_amount
             $activeCampaigns = Campaign::where('status', 'active')
                 ->whereColumn('current_amount', '<', 'target_amount')
-                ->paginate(10);
+                ->paginate(6);
 
             // Second Tab: User's donations
             $userDonations = Donation::where('user_id', auth()->id())
                 ->with('campaign')
-                ->paginate(10);
+                ->paginate(30);
 
             return view('donations.index', [
                 'activeCampaigns' => $activeCampaigns,
@@ -91,7 +91,7 @@ class DonationController extends Controller
                 'image_path' => $imagePath,
             ]);
 
-            return redirect()->route('donations.index')->with('success', 'Campaign created successfully!');
+            return redirect()->route('donations.index')->with('success', 'Kempen berjaya disimpan!');
         } else {
             $campaign = Campaign::findOrFail($request->input('campaign_id'));
 
@@ -106,7 +106,7 @@ class DonationController extends Controller
             $campaign->current_amount += $request->input('amount');
             $campaign->save();
 
-            return redirect()->route('donations.index')->with('success', 'We have received your donation, thank you!');
+            return redirect()->route('donations.index')->with('success', 'Kami telah menerima sumbangan anda, terima kasih!');
         }
 
     }
@@ -171,7 +171,7 @@ class DonationController extends Controller
         $campaign->save();
 
         // Redirect with a success message
-        return redirect()->route('donations.index')->with('success', 'Campaign updated successfully!');
+        return redirect()->route('donations.index')->with('success', 'Kempen berjaya dikemaskini!');
 
     }
 
@@ -192,21 +192,21 @@ class DonationController extends Controller
         $campaign->delete();
 
         // Redirect with a success message
-        return redirect()->route('donations.index')->with('success', 'Campaign deleted successfully!');
+        return redirect()->route('donations.index')->with('success', 'Kempen berjaya dihapuskan!');
     }
 
     public function approve($id)
     {
         $campaign = Campaign::find($id);
         $campaign->update(['status' => 'active']);
-        return redirect()->route('donations.index')->with('success', 'Campaign approved successfully!');
+        return redirect()->route('donations.index')->with('success', 'Kempen telah diterima!');
     }
 
     public function reject($id)
     {
         $campaign = Campaign::find($id);
         $campaign->update(['status' => 'rejected']);
-        return redirect()->route('donations.index')->with('success', 'Campaign rejected successfully!');
+        return redirect()->route('donations.index')->with('success', 'Kempen telah ditolak!');
     }
 
     public function generateReceipt($id)

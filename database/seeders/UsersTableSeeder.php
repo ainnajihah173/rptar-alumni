@@ -88,7 +88,7 @@ class UsersTableSeeder extends Seeder
             [
                 'user_id' => $user->id,
                 'full_name' => 'Regular User',
-                'gender' => 'other',
+                'gender' => 'female',
                 'date_of_birth' => '2000-10-10',
                 'contact_number' => '5555555555',
                 'address' => '789 User Street, User City',
@@ -100,7 +100,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         // Create sample users and profiles
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $user = User::create([
                 'name' => 'User ' . $i,
                 'email' => 'user' . $i . '@example.com',

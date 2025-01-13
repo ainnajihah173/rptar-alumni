@@ -23,7 +23,7 @@ class NewsController extends Controller
             // Fetch news sorted by status (drafts first) and then by published date (newest first)
             $news = News::orderBy('is_active') // Drafts first (is_active = 0)
                 ->orderByDesc('published_date') // Sort by date (newest first)
-                ->paginate(10);
+                ->paginate(30);
             return view('news.index', compact('news', 'totalNews', 'publishedNews', 'draftNews'));
         } else
             $news = News::whereNotNull('published_date')->orderByDesc('published_date')->get();
@@ -75,7 +75,7 @@ class NewsController extends Controller
         $news->save();
 
         // 4. Redirect or return a response
-        return redirect()->route('news.index')->with('success', 'News created successfully!');
+        return redirect()->route('news.index')->with('success', 'Berita berjaya disimpan!');
 
     }
 
@@ -144,7 +144,7 @@ class NewsController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('news.index')
-            ->with('success', 'News updated successfully!');
+            ->with('success', 'Berita berjaya dikemaskini!');
     }
 
     /**
@@ -158,7 +158,7 @@ class NewsController extends Controller
         }
         News::destroy($id);
         return redirect()->route('news.index')
-            ->with('success', "News Deleted Successfully!");
+            ->with('success', "Berita berjaya dihapuskan!");
     }
 
     

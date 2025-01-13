@@ -71,7 +71,8 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p class="text-muted mt-2">Sila ambil perhatian bahawa kata laluan ini hanya boleh dilihat sekali sahaja. Anda boleh menukarnya selepas log masuk.</p>
+                        <p class="text-muted mt-2">Sila ambil perhatian bahawa kata laluan ini hanya boleh dilihat sekali
+                            sahaja. Anda boleh menukarnya selepas log masuk.</p>
                         <hr>
                         <p>{!! session('modal') !!}</p>
                     </div>
@@ -95,7 +96,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -118,8 +119,10 @@
                                     <td>
                                         <!-- Show Page-->
                                         @if ($users->role === 'user')
-                                            <a href="">
-                                                <i class="fas fa-eye text-dark mr-2 fa-sm"></i></a>
+                                            <a href="#" data-toggle="modal"
+                                                data-target="#view-modal{{ $users->id }}">
+                                                <i class="fas fa-eye text-dark mr-2 fa-sm"></i>
+                                            </a>
                                         @endif
                                         <!-- Edit Page-->
                                         @if ($users->role === 'staff' || $users->role === 'admin')
@@ -134,6 +137,83 @@
                                         </a>
                                     </td>
                                 </tr>
+
+                                <!-- View Modal -->
+                                <div class="modal fade" id="view-modal{{ $users->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="viewUserModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow-lg rounded-lg">
+                                            <!-- Close Button -->
+                                            <button type="button" class="close position-absolute" data-dismiss="modal"
+                                                aria-label="Close" style="top: 15px; right: 20px; font-size: 1.5rem;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <!-- Modal Header -->
+                                            <div
+                                                class="modal-header border-0 text-center pt-4 d-flex flex-column align-items-center">
+                                                <h4 class="modal-title font-weight-bold" id="viewUserModalLabel">Maklumat
+                                                    Pengguna</h4>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body px-5 py-2">
+                                                <div class="form-row">
+                                                    <!-- User Name -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserName" class="font-weight-bold">Nama</label>
+                                                        <input type="text" id="viewUserName" class="form-control"
+                                                            value="{{ $users->name }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <!-- Role -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserRole" class="font-weight-bold">Nama Penuh</label>
+                                                        <input type="text" id="viewUserRole" class="form-control"
+                                                            value="{{ ucfirst($users->profile->full_name) ?? 'N/A' }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <!-- Email -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserEmail" class="font-weight-bold">Emel</label>
+                                                        <input type="email" id="viewUserEmail" class="form-control"
+                                                            value="{{ $users->email }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <!-- Gender -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserGender" class="font-weight-bold">Jantina</label>
+                                                        <input type="text" id="viewUserGender" class="form-control"
+                                                            value="{{ $users->profile->gender == 'male' ? 'Lelaki' : 'Perempuan' }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <!-- Gender -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserGender" class="font-weight-bold">Nombor Telefon</label>
+                                                        <input type="text" id="viewUserGender" class="form-control"
+                                                            value="{{ $users->profile->contact_number ?? 'N/A' }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <!-- Role -->
+                                                    <div class="form-group col-md-12">
+                                                        <label for="viewUserRole" class="font-weight-bold">Peranan</label>
+                                                        <input type="text" id="viewUserRole" class="form-control"
+                                                            value="{{ ucfirst($users->role) }}" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer border-0 d-flex justify-content-center py-3">
+                                                <button type="button" class="btn btn-secondary px-4"
+                                                    data-dismiss="modal">Tutup</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Create User Modal -->
                                 <div class="modal fade" id="create-modal" tabindex="-1" role="dialog"
                                     aria-labelledby="createUserModalLabel" aria-hidden="true">
@@ -157,10 +237,10 @@
                                                     <div class="form-row">
                                                         <!-- User Name -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userName" class="font-weight-bold">Nama Pengguna<span
-                                                                    class="text-danger">*</span></label>
+                                                            <label for="userName" class="font-weight-bold">Nama
+                                                                Pengguna<span class="text-danger">*</span></label>
                                                             <input type="text" id="userName" class="form-control"
-                                                                name="name" placeholder="John Smith" required>
+                                                                name="name" placeholder="username" required>
                                                         </div>
                                                     </div>
                                                     <div class="form-row">
@@ -188,11 +268,11 @@
                                                     <div class="form-row">
                                                         <!-- Password -->
                                                         <div class="form-group col-md-12">
-                                                            <label for="userPassword"
-                                                                class="font-weight-bold">Kata Laluan<span
-                                                                    class="text-danger">*</span></label>
+                                                            <label for="userPassword" class="font-weight-bold">Kata
+                                                                Laluan<span class="text-danger">*</span></label>
                                                             <input type="password" id="userPassword" class="form-control"
-                                                                name="password" placeholder="Masukkan Kata Laluan" required>
+                                                                name="password" placeholder="Masukkan Kata Laluan"
+                                                                required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -220,7 +300,8 @@
                                             <!-- Modal Header -->
                                             <div
                                                 class="modal-header border-0 text-center pt-4 d-flex flex-column align-items-center">
-                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">Kemaskini
+                                                <h4 class="modal-title font-weight-bold" id="createUserModalLabel">
+                                                    Kemaskini
                                                     Pengguna</h4>
                                             </div>
                                             <!-- Modal Body -->
@@ -296,7 +377,8 @@
                                             <!-- Modal Body -->
                                             <div class="modal-body text-center pt-3 pb-0">
                                                 <h5 class="font-weight-bold mb-3">Padam Pengguna</h5>
-                                                <p class="text-muted mb-3">Tindakan ini tidak boleh dibatalkan. Adakah anda pasti?
+                                                <p class="text-muted mb-3">Tindakan ini tidak boleh dibatalkan. Adakah anda
+                                                    pasti?
                                                 </p>
                                             </div>
                                             <!-- Modal Footer -->

@@ -8,6 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>RPTAR Alumni</title>
+    <link rel="shortcut icon" href="{{ asset('assets/images/cuba.png')}}">
     <!-- Custom fonts for this template-->
     <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link

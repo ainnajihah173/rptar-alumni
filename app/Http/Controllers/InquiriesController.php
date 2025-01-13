@@ -21,7 +21,7 @@ class InquiriesController extends Controller
             // Get inquiries specific to the logged-in user
             $inquiries = Inquiries::where('user_id', $user->id)
                 ->orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
-                ->paginate(10);
+                ->paginate(20);
 
             $counts = [
                 'Total' => $inquiries->total(),
@@ -33,7 +33,7 @@ class InquiriesController extends Controller
             // Get inquiries assigned to the staff member
             $inquiries = Inquiries::where('assign_id', $user->id)
                 ->orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
-                ->paginate(10);
+                ->paginate(20);
 
             $counts = [
                 'Total' => Inquiries::count(),
@@ -45,7 +45,7 @@ class InquiriesController extends Controller
         } elseif ($user->role === 'admin') {
             // Get all inquiries for admin
             $inquiries = Inquiries::orderByRaw("FIELD(status, 'Pending', 'In Progress', 'Resolved')")
-                ->paginate(10);
+                ->paginate(20);
 
             $counts = [
                 'Total' => $inquiries->total(),
@@ -102,7 +102,7 @@ class InquiriesController extends Controller
         $inquiry->save();
 
         // Redirect with success message
-        return redirect()->route('inquiries.index')->with('success', 'Inquiry created successfully.');
+        return redirect()->route('inquiries.index')->with('success', 'Pertanyaan berjaya disimpan');
     }
 
     /**
@@ -168,7 +168,7 @@ class InquiriesController extends Controller
 
         $inquiry->save();
 
-        return redirect()->route('inquiries.index')->with('success', 'Inquiry updated successfully!');
+        return redirect()->route('inquiries.index')->with('success', 'Pertanyaan berjaya dikemaskini!');
     }
 
 
@@ -183,6 +183,6 @@ class InquiriesController extends Controller
         }
         Inquiries::destroy($id);
         return redirect()->route('inquiries.index')
-            ->with('success', "Inquiries Deleted Successfully!");
+            ->with('success', "Pertanyaan berjaya dihapuskan!");
     }
 }

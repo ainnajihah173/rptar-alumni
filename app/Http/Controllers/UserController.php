@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -23,7 +24,7 @@ class UserController extends Controller
     $news = News::orderBy('published_date', 'desc')->take(4)->get();
     $donations = Campaign::where('status', 'active') // ENUM value
       ->orderBy('start_date', 'desc')
-      ->take(1)
+      ->take(3)
       ->get();
 
     // Pass data to the view
@@ -53,11 +54,7 @@ class UserController extends Controller
       $totalInquiries = Inquiries::count();
 
       // Fetch donation history for the chart (last 6 months)
-      $donationHistory = Donation::selectRaw('SUM(amount) as total, MONTH(created_at) as month')
-        ->where('created_at', '>=', Carbon::now()->subMonths(6))
-        ->groupBy('month')
-        ->orderBy('month', 'asc')
-        ->get();
+      $donationHistory = Campaign::select('title', 'current_amount')->where('status', 'active')->get();
 
       // Fetch total users by role
       $userCounts = User::selectRaw('role, COUNT(*) as total')
@@ -120,25 +117,18 @@ class UserController extends Controller
         ->get();
 
       // Fetch total donations
-      $donationSummary = Donation::sum('amount');
+      $donationSummary = Campaign::where('status', 'active')->count();
 
       // Fetch recent inquiries (e.g., last 5 inquiries)
       $recentInquiries = Inquiries::orderBy('created_at', 'desc')
         ->take(3)
         ->get();
 
-      // Fetch donation history for the chart (last 6 months)
-      $donationHistory = Donation::selectRaw('SUM(amount) as total, MONTH(created_at) as month')
-        ->where('created_at', '>=', Carbon::now()->subMonths(6))
-        ->groupBy('month')
-        ->orderBy('month', 'asc')
-        ->get();
+      // Fetch campaign current amount
+      $donationHistory = Campaign::select('title', 'current_amount')->where('status', 'active')->get();
 
       // Fetch event participation for the chart (last 6 months)
-      $eventParticipation = Events::selectRaw('COUNT(*) as total, MONTH(start_date) as month')
-        ->where('start_date', '>=', Carbon::now()->subMonths(6))
-        ->groupBy('month')
-        ->orderBy('month', 'asc')
+      $eventParticipation = Events::select('name', 'registered_count')->where('is_active', true)
         ->get();
 
       // Pass data to the view
@@ -219,7 +209,7 @@ class UserController extends Controller
 
   public function index()
   {
-    $users = User::all();
+    $users = User::orderBy('role')->get();
     return view('user.index', compact('users'));
   }
 
@@ -250,7 +240,7 @@ class UserController extends Controller
 
     // Return to user list with success message
     return redirect()->route('user.index')
-      ->with('success', 'User created successfully.')
+      ->with('success', 'Pengguna berjaya disimpan')
       ->with('modal', '<strong>Email:</strong> ' . $user->email . '<br><br><strong>Password:</strong> ' . $request->password);
   }
 
@@ -263,9 +253,36 @@ class UserController extends Controller
   }
 
 
-  public function update(Request $request, $id)
+  public function forgotPassword(Request $request)
   {
+    // Validate the request
+    $request->validate([
+      'email' => 'required|email|exists:users,email',
+      'password' => [
+        'required',
+        'confirmed',
+        Password::min(8) // Minimum length of 8 characters
+          ->letters() // Must contain at least one letter
+          ->mixedCase() // Must contain both uppercase and lowercase letters
+          ->numbers() // Must contain at least one number
+          ->symbols() // Must contain at least one special character
+      ]
+    ]);
 
+    // Find the user by email
+    $user = User::where('email', $request->email)->first();
+
+    if ($user) {
+      // Update the user's password
+      $user->password = Hash::make($request->password);
+      $user->save();
+
+      // Redirect with success message
+      return redirect()->back()->with('success', 'Kata laluan berjaya dikemas kini.');
+    }
+
+    // If user not found, redirect with error message
+    return redirect()->back()->with('error', 'Emel tidak dijumpai.');
   }
 
   /**
@@ -275,7 +292,7 @@ class UserController extends Controller
   {
     User::destroy($id);
     return redirect()->route('user.index')
-      ->with('success', "User Deleted Successfully!");
+      ->with('success', "Pengguna berjaya dihapuskan!");
 
   }
 

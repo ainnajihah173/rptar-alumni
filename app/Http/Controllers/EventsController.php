@@ -41,13 +41,12 @@ class EventsController extends Controller
             $registeredEvents = Events::whereHas('participants', function ($query) use ($user) {
                 $query->where('user_id', $user->id); // Filter events where the user is a participant
             })
-                ->paginate(6); // 6 events per page
+                ->paginate(30); // 6 events per page
 
             return view('events.index', compact('events', 'registeredEvents'));
         } else {
             // For admins/staff: Show all events, sorted by status
-            $events = Events::orderByRaw("FIELD(status, 'pending', 'rejected', 'approved')") // Sort by status
-                ->paginate(10); // 10 events per page
+            $events = Events::orderByRaw("FIELD(status, 'pending', 'rejected', 'approved')")->paginate(20); // 10 events per page
             return view('events.index', compact('events'));
         }
     }
@@ -109,7 +108,7 @@ class EventsController extends Controller
             'registered_count' => 0,
         ]);
 
-        return redirect()->route('events.index')->with('success', 'Events created successfully!');
+        return redirect()->route('events.index')->with('success', 'Acara berjaya disimpan!');
     }
 
     /**
@@ -192,7 +191,7 @@ class EventsController extends Controller
             ]);
         }
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        return redirect()->route('events.index')->with('success', 'Acara berjaya dikemaskini!');
     }
 
 
@@ -223,21 +222,21 @@ class EventsController extends Controller
         $event->delete();
 
         // Redirect with success message
-        return redirect()->route('events.index')->with('success', "Event Deleted Successfully!");
+        return redirect()->route('events.index')->with('success', "Acara berjaya dihapuskan!");
     }
 
     public function approve($id)
     {
         $events = Events::find($id);
         $events->update(['status' => 'approved', 'is_active' => true]);
-        return redirect()->route('events.index')->with('success', 'Event approved successfully!');
+        return redirect()->route('events.index')->with('success', 'Acara telah diterima!');
     }
 
     public function reject($id)
     {
         $events = Events::find($id);
         $events->update(['status' => 'rejected']);
-        return redirect()->route('events.index')->with('success', 'Event rejected successfully!');
+        return redirect()->route('events.index')->with('success', 'Acara telah ditolak!');
     }
 
     public function register(Request $request, $id)
@@ -246,11 +245,11 @@ class EventsController extends Controller
 
         // Check if the user is already registered for the event
         if ($event->participants->contains('user_id', auth()->id())) {
-            return redirect()->back()->with('error', 'You are already registered for this event.');
+            return redirect()->back()->with('error', 'Anda sudah mendaftar acara ini!');
         }
 
         if ($event->registered_count >= $event->capacity) {
-            return redirect()->back()->with('error', 'Event is full.');
+            return redirect()->back()->with('error', 'Acara ini sudah penuh');
         }
 
         EventParticipant::create([
@@ -262,7 +261,7 @@ class EventsController extends Controller
 
         $event->increment('registered_count');
 
-        return redirect()->back()->with('success', 'You have successfully registered for the event.');
+        return redirect()->back()->with('success', 'Anda telah berjaya mendaftar acara ini!');
     }
 
     public function addOrganizer(Request $request)
@@ -278,7 +277,7 @@ class EventsController extends Controller
         $organizer->save();
 
         // Redirect back with a success message
-        return redirect()->route('events.index')->with('success', 'Organizer added successfully!');
+        return redirect()->route('events.index')->with('success', 'Penganjur berjaya disimpan');
     }
 
 

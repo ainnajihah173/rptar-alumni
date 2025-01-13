@@ -40,7 +40,7 @@
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
-  --background-color: #f8fbfc;
+  --background-color: #e8e1e160;
   --surface-color: #ffffff;
 }
 
@@ -851,7 +851,7 @@ section,
 --------------------------------------------------------------*/
 .hero {
   width: 100%;
-  min-height: 70vh;
+  min-height: 100vh;
   position: relative;
   padding: 180px 0 40px 0;
   display: flex;
@@ -871,7 +871,7 @@ section,
 
 .hero .hero-bg::before {
   content: "";
-  background: color-mix(in srgb, var(--background-color), transparent 15%);
+  background: rgba(0, 0, 0, 0.8); /* Black with 50% opacity for a dark overlay */
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -894,7 +894,7 @@ section,
 }
 
 .hero p {
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  color: color-mix(in srgb, var(--default-color));
   margin: 5px 0 30px 0;
   font-size: 20px;
   font-weight: 400;

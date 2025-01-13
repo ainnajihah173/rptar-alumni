@@ -70,7 +70,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
         
         // Redirect to the profile edit page after registration
-        return redirect()->route('profile.edit', $user->id)->with('warning', 'Please complete your profile before proceeding.');
+        return redirect()->route('profile.edit', $user->id)->with('warning', 'Sila lengkapkan profil anda sebelum ke halaman seterusnya.');
         // return redirect()->route('dashboard');
     }
 }

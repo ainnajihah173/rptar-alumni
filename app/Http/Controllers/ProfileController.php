@@ -86,7 +86,7 @@ class ProfileController extends Controller
 
         $profile->save();
 
-        return redirect()->route('profile.edit', $id)->with('success', 'Profile updated successfully!');
+        return redirect()->route('profile.edit', $id)->with('success', 'Profil berjaya dikemaskini!');
     }
 
     // Change the password
@@ -109,7 +109,7 @@ class ProfileController extends Controller
         $user->password = Hash::make($request->input('new_password'));
         $user->save();
 
-        return redirect()->route('profile.edit', $id)->with('success', 'Password changed successfully!');
+        return redirect()->route('profile.edit', $id)->with('success', 'Kata Laluan berjaya dikemaskini!');
     }
 
 

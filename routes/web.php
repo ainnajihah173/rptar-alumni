@@ -40,6 +40,7 @@ require __DIR__ . '/auth.php';
 
 //Portal
 Route::get('/', [UserController::class, 'portal'])->name('portal');
+Route::put('/store-new', [UserController::class, 'forgotPassword'])->name('forgot-password');
 
 Route::middleware('auth')->group(function () {
 

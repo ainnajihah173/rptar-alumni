@@ -11,6 +11,8 @@
 
     <title>RPTAR Alumni</title>
 
+    <link rel="shortcut icon" href="{{ asset('assets/images/cuba.png') }}">
+
     <!-- Custom fonts for this template-->
     <link href="{{ asset('../assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
@@ -56,6 +58,7 @@
 
 <body id="page-top">
 
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -78,47 +81,47 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('dashboard') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Halaman Utama</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Pilihan
-        </div>
-
-        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
-            <!-- Nav Item - News -->
-            <li class="nav-item {{ request()->routeIs('news.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('news.index') }}">
-                    <i class="fas fa-fw fa-newspaper"></i>
-                    <span>Berita</span></a>
+        @if (auth()->user()->profile->full_name)
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Halaman Utama</span></a>
             </li>
-        @endif
 
-        @if (auth()->user()->role === 'admin')
-            <!-- Nav Item - News -->
-            <li class="nav-item {{ request()->routeIs('user.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('user.index') }}">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Pengguna</span></a>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Pilihan
+            </div>
+
+            @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
+                <!-- Nav Item - News -->
+                <li class="nav-item {{ request()->routeIs('news.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('news.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>Berita</span></a>
+                </li>
+            @endif
+
+            @if (auth()->user()->role === 'admin')
+                <!-- Nav Item - News -->
+                <li class="nav-item {{ request()->routeIs('user.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('user.index') }}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Pengguna</span></a>
+                </li>
+            @endif
+
+            <li class="nav-item {{ request()->routeIs('events.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('events.index') }}">
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>Acara</span></a>
             </li>
-        @endif
 
-        <li class="nav-item {{ request()->routeIs('events.index') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('events.index') }}">
-                <i class="fas fa-fw fa-calendar"></i>
-                <span>Acara</span></a>
-        </li>
-
-        {{-- <li class="nav-item">
+            {{-- <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                 aria-expanded="true" aria-controls="collapseThree">
                 <i class="fas fa-fw fa-credit-card"></i>
@@ -132,38 +135,38 @@
             </div>
         </li> --}}
 
-        <!-- Nav Item - News -->
-        <li class="nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('donations.index') }}">
-                <i class="fas fa-fw fa-credit-card"></i>
-                <span>Derma</span></a>
-        </li>
-
-        @if (auth()->user()->role === 'user')
             <!-- Nav Item - News -->
-            <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('message.index') }}">
-                    <i class="fas fa-fw fa-comment"></i>
-                    <span>Mesej</span></a>
+            <li class="nav-item {{ request()->routeIs('donations.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('donations.index') }}">
+                    <i class="fas fa-fw fa-credit-card"></i>
+                    <span>Derma</span></a>
             </li>
-        @endif
 
-        <!-- Nav Item - News -->
-        <li class="nav-item {{ request()->routeIs('inquiries.index') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('inquiries.index') }}">
-                <i class="fas fa-fw fa-envelope"></i>
-                <span>Pertanyaan</span></a>
-        </li>
+            @if (auth()->user()->role === 'user')
+                <!-- Nav Item - News -->
+                <li class="nav-item {{ request()->routeIs('message.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('message.index') }}">
+                        <i class="fas fa-fw fa-comment"></i>
+                        <span>Mesej</span></a>
+                </li>
+            @endif
 
-        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
             <!-- Nav Item - News -->
-            <li class="nav-item {{ request()->routeIs('profile.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('profile.index') }}">
-                    <i class="fas fa-fw fa-address-card"></i>
-                    <span>Profil Alumni</span></a>
+            <li class="nav-item {{ request()->routeIs('inquiries.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('inquiries.index') }}">
+                    <i class="fas fa-fw fa-envelope"></i>
+                    <span>Pertanyaan</span></a>
             </li>
-        @endif
 
+            @if (auth()->user()->role === 'staff' || auth()->user()->role === 'user')
+                <!-- Nav Item - News -->
+                <li class="nav-item {{ request()->routeIs('profile.index') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('profile.index') }}">
+                        <i class="fas fa-fw fa-address-card"></i>
+                        <span>Profil Alumni</span></a>
+                </li>
+            @endif
+        @endif
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 

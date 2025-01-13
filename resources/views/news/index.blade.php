@@ -164,7 +164,7 @@
                             <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark-gradient p-4">
                                 <h2 class="card-title fw-bold text-white mb-2">{{ $news->first()->title }}</h2>
                                 <p class="text-white-50 small mb-1">Oleh {{ $news->first()->users->profile->full_name }} |
-                                    {{ $news->first()->created_at->format('d M Y') }}</p>
+                                    {{ \Carbon\Carbon::parse($news->first()->published_date)->format('d F Y') }}</p>
                                 <p class="card-text text-white-50">{!! Str::limit($news->first()->content, 150) !!}</p>
                                 <a href="{{ route('news.show', $news->first()->id) }}"
                                     class="btn btn-danger btn-sm align-self-start">Baca

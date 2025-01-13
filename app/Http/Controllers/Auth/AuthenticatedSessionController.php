@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
 
         // Check if the profile is incomplete
         if (!$user->profile->full_name) {
-            return redirect()->route('profile.edit', $user->id)->with('warning', 'Please complete your profile before proceeding.');
+            return redirect()->route('profile.edit', $user->id)->with('warning', 'Sila lengkapkan profil anda sebelum ke halaman seterusnya.');
         } else {
             return redirect()->intended(RouteServiceProvider::HOME);
         }

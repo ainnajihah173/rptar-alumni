@@ -432,7 +432,7 @@
                                         <div class="list-group-item">
                                             <h6>{{ $inquiry->title }}</h6>
                                             <small>Dihantar pada
-                                                {{ \Carbon\Carbon::parse($inquiry->created_at)->format('d F Y') }}</small>
+                                                {{ \Carbon\Carbon::parse($inquiry->created_at)->format('d M Y') }}</small>
                                         </div>
                                     @endforeach
                                 </div>
@@ -452,10 +452,10 @@
             const donationChart = new Chart(donationCtx, {
                 type: 'line',
                 data: {
-                    labels: {!! json_encode($donationHistory->pluck('month')) !!},
+                    labels: {!! json_encode($donationHistory->pluck('title')) !!},
                     datasets: [{
-                        label: 'Derma (RM)',
-                        data: {!! json_encode($donationHistory->pluck('total')) !!},
+                        label: 'Kutipan Derma (RM)',
+                        data: {!! json_encode($donationHistory->pluck('current_amount')) !!},
                         borderColor: 'rgba(0, 123, 255, 1)',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         borderWidth: 2
@@ -539,14 +539,14 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-uppercase mb-1">
-                                        Jumlah Derma
+                                        Jumlah Kempen
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-white">
-                                        RM {{ number_format($donationSummary, 2) }}
+                                        {{ $donationSummary }}
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-donate fa-2x text-white"></i> <!-- Donation Icon -->
+                                    <i class="fas fa-calendar fa-2x text-white"></i> <!-- Donation Icon -->
                                 </div>
                             </div>
                         </div>
@@ -744,10 +744,10 @@
             const donationChart = new Chart(donationCtx, {
                 type: 'line',
                 data: {
-                    labels: {!! json_encode($donationHistory->pluck('month')) !!},
+                    labels: {!! json_encode($donationHistory->pluck('title')) !!},
                     datasets: [{
-                        label: 'Derma (RM)',
-                        data: {!! json_encode($donationHistory->pluck('total')) !!},
+                        label: 'Jumlah Derma Dikumpul (RM)',
+                        data: {!! json_encode($donationHistory->pluck('current_amount')) !!},
                         borderColor: 'rgba(0, 123, 255, 1)',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         borderWidth: 2
@@ -768,10 +768,10 @@
             const eventChart = new Chart(eventCtx, {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($eventParticipation->pluck('month')) !!},
+                    labels: {!! json_encode($eventParticipation->pluck('name')) !!},
                     datasets: [{
                         label: 'Acara Dihadiri',
-                        data: {!! json_encode($eventParticipation->pluck('total')) !!},
+                        data: {!! json_encode($eventParticipation->pluck('registered_count')) !!},
                         backgroundColor: 'rgba(40, 167, 69, 0.8)',
                         borderColor: 'rgba(40, 167, 69, 1)',
                         borderWidth: 1

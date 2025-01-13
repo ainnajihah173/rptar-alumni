@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>RPTAR Alumni - Lupa Kata Laluan</title>
+    <title>RPTAR Alumni</title>
+    <link rel="shortcut icon" href="{{ asset('assets/images/cuba.png')}}">
     <!-- Custom fonts for this template-->
     <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -37,41 +38,39 @@
                                         <h1 class="h4 text-gray-900 mb-4">Lupa Kata Laluan?</h1>
                                         <p class="text-muted">Masukkan alamat emel dan kata laluan baru anda</p>
                                     </div>
-                                    <!-- Paparkan ralat jika ada -->
-                                    @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul>
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
-
-                                    <!-- Paparkan mesej kejayaan jika ada -->
-                                    @if (session('status'))
+                                    <!-- Display Success Message -->
+                                    @if (session('success'))
                                         <div class="alert alert-success">
-                                            {{ session('status') }}
+                                            {{ session('success') }}
                                         </div>
                                     @endif
-
-                                    <!-- Borang Tetapan Semula Kata Laluan -->
-                                    <form method="POST" action="{{ route('password.store') }}" class="user">
+                                    <form method="POST" action="{{ route('forgot-password') }}" class="user">
                                         @csrf
+                                        @method('PUT')
 
                                         <!-- Email Field -->
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
+                                            <input type="email" class="form-control form-control-user @error('email') is-invalid @enderror"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Alamat Emel..." name="email"
-                                                value="" required>
+                                                placeholder="Alamat Emel..." name="email" value="{{ old('email') }}"
+                                                required>
+                                            @error('email')
+                                                <span class="invalid-feedback ml-2" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
 
                                         <!-- Password Field -->
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
+                                            <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror"
                                                 id="exampleInputPassword" placeholder="Kata Laluan Baru" name="password"
                                                 required>
+                                            @error('password')
+                                                <span class="invalid-feedback ml-2" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
 
                                         <!-- Confirm Password Field -->
@@ -80,6 +79,11 @@
                                                 id="exampleInputPasswordConfirmation"
                                                 placeholder="Sahkan Kata Laluan Baru" name="password_confirmation"
                                                 required>
+                                            @error('password_confirmation')
+                                                <span class="invalid-feedback ml-2" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
 
                                         <!-- Submit Button -->

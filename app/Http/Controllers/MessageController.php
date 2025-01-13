@@ -72,7 +72,7 @@ class MessageController extends Controller
             'message' => $request->message,
         ]);
 
-        return redirect()->route('message.index')->with('success', 'Message sent successfully!');
+        return redirect()->route('message.index')->with('success', 'Mesej berjaya dihantar!');
     }
 
     /**
@@ -129,7 +129,7 @@ class MessageController extends Controller
         }
 
         // Redirect back to the conversation page for non-AJAX requests
-        return redirect()->route('message.conversation', $originalMessage->id)->with('success', 'Reply sent successfully!');
+        return redirect()->route('message.conversation', $originalMessage->id)->with('success', 'Reply berjaya dibalas!');
     }
 
     /**
@@ -213,6 +213,6 @@ class MessageController extends Controller
         }
 
         return redirect()->route('message.index')
-            ->with('success', 'Conversation deleted successfully!');
+            ->with('success', 'Semua perbualan berjaya dihapuskan!');
     }
 }

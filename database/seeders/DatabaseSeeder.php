@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             NewsSeeder::class,
             EventsSeeder::class,
             EventOrganizerSeeder::class,
+            DonationSeeder::class,
+            CampaignSeeder::class,
         ]);
     }
 }
