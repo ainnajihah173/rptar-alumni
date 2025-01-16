@@ -103,7 +103,7 @@
 
         <!-- Donation Details -->
         <div class="details">
-            <p><strong>Nombor Resit:</strong> {{ $donation->receipt_number ?? 'N/A' }}</p>
+            <p><strong>Nombor Resit:</strong> #123{{ $donation->users->id ?? 'N/A' }}</p>
             <p><strong>Nama Penderma:</strong> {{ $donation->users->profile->full_name }}</p>
             <p><strong>Jumlah Derma:</strong> RM {{ number_format($donation->amount, 2) }}</p>
             <p><strong>Kempen:</strong> {{ $donation->campaign->title }}</p>

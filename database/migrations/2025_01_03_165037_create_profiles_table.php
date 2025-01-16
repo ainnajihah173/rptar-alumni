@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreignId('user_id')->nullable();
             $table->string('full_name')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('contact_number')->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string('instagram')->nullable();
             $table->string('linkedin')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

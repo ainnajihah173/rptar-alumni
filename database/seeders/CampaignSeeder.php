@@ -41,7 +41,7 @@ class CampaignSeeder extends Seeder
             [
                 'created_by' => 2,
                 'title' => 'Kempen Pakaian Sekolah',
-                'image_path' => 'donation_images/3.jpg',
+                'image_path' => 'donation_images/3.png',
                 'description' => 'Membekalkan pakaian sekolah untuk anak-anak yatim di RPTAR.',
                 'target_amount' => 15000.00,
                 'current_amount' => 0.0,
