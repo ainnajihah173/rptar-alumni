@@ -106,12 +106,13 @@ class UserController extends Controller
 
 
     } elseif ($user->role === 'staff') {
-      // Staff-specific logic (if needed)
-      // Fetch latest news (e.g., last 5 news articles)
+      
+      // Fetch latest news 
       $latestNews = News::orderBy('published_date', 'desc')->take(3)->get();
 
-      // Fetch upcoming events (e.g., events after today)
+      // Fetch upcoming events 
       $upcomingEvents = Events::where('start_date', '>=', Carbon::now())
+        ->where('is_active', 1) 
         ->orderBy('start_date', 'asc')
         ->take(4)
         ->get();
@@ -119,7 +120,7 @@ class UserController extends Controller
       // Fetch total donations
       $donationSummary = Campaign::where('status', 'active')->count();
 
-      // Fetch recent inquiries (e.g., last 5 inquiries)
+      // Fetch recent inquiries
       $recentInquiries = Inquiries::orderBy('created_at', 'desc')
         ->take(3)
         ->get();
@@ -143,7 +144,7 @@ class UserController extends Controller
       ));
 
     } else {
-      // Fetch latest news (e.g., last 3 news articles)
+      // Fetch latest news 
       $latestNews = News::orderBy('published_date', 'desc')->take(3)->get();
 
       // Fetch upcoming events that the user has registered for
@@ -152,9 +153,8 @@ class UserController extends Controller
         ->whereHas('participants', function ($query) use ($user) {
           $query->where('user_id', $user->id); // Filter events where the user is a participant
         })
-        ->get(); // Execute the query
+        ->get(); 
 
-      // Format events for FullCalendar
       // Format events for FullCalendar
       $formattedEvents = $upcomingEvents->map(function ($event) {
         return [
@@ -169,13 +169,13 @@ class UserController extends Controller
       // Fetch user's donation summary
       $donationSummary = Donation::where('user_id', $user->id)->sum('amount');
 
-      // Fetch user's recent inquiries (e.g., last 5 inquiries)
+      // Fetch user's recent inquiries 
       $recentInquiries = Inquiries::where('user_id', $user->id)
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->get();
 
-      // Fetch donation history for the chart (last 6 months)
+      // Fetch donation history for the chart 
       $donationHistory = Donation::where('user_id', $user->id)
         ->selectRaw('SUM(amount) as total, MONTH(created_at) as month')
         ->where('created_at', '>=', Carbon::now()->subMonths(6))
@@ -183,7 +183,7 @@ class UserController extends Controller
         ->orderBy('month', 'asc')
         ->get();
 
-      // Fetch event participation for the chart (last 6 months)
+      // Fetch event participation for the chart 
       $eventParticipation = Events::whereHas('participants', function ($query) use ($user) {
         $query->where('user_id', $user->id);
       })

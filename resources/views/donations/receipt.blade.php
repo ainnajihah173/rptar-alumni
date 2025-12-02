@@ -105,7 +105,14 @@
         <div class="details">
             <p><strong>Nombor Resit:</strong> #123{{ $donation->users->id ?? 'N/A' }}</p>
             <p><strong>Nama Penderma:</strong> {{ $donation->users->profile->full_name }}</p>
-            <p><strong>Jumlah Derma:</strong> RM {{ number_format($donation->amount, 2) }}</p>
+            <p>
+            <strong>Jumlah Derma:</strong> RM 
+            @if(auth()->check() && in_array(auth()->user()->role, ['staff', 'admin']))
+                ****
+            @else
+                {{ number_format($donation->amount, 2) }}
+            @endif
+        </p>
             <p><strong>Kempen:</strong> {{ $donation->campaign->title }}</p>
             <p><strong>Tarikh Derma:</strong> {{ $donation->created_at->format('d M Y') }}</p>
             <p><strong>Status Pembayaran:</strong> {{ ucfirst($donation->payment_status) }}</p>

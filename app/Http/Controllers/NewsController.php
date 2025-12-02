@@ -19,11 +19,21 @@ class NewsController extends Controller
         if (auth()->user()->role === 'staff') {
             $totalNews = News::count();
             $publishedNews = News::where('is_active', 1)->count();
-            $draftNews = News::where('is_active', 0)->count();
+            $draftNews = News::where('is_active', 0)->where('user_id', auth()->user()->id)->count();
             // Fetch news sorted by status (drafts first) and then by published date (newest first)
-            $news = News::orderBy('is_active') // Drafts first (is_active = 0)
-                ->orderByDesc('published_date') // Sort by date (newest first)
+            $news = News::where(function ($query) {
+                // Condition A: Show All Published News (visible to everyone)
+                $query->where('is_active', 1)
+                    // Condition B: OR Show Drafts only if I am the author
+                    ->orWhere(function ($subQuery) {
+                        $subQuery->where('is_active', 0)
+                            ->where('user_id', auth()->id());
+                    });
+            })
+                ->orderBy('is_active', 'asc') 
+                ->orderByDesc('published_date')
                 ->paginate(30);
+
             return view('news.index', compact('news', 'totalNews', 'publishedNews', 'draftNews'));
         } else
             $news = News::whereNotNull('published_date')->orderByDesc('published_date')->get();
@@ -86,10 +96,10 @@ class NewsController extends Controller
     {
         $news = News::find($id);
         $otherNews = News::where('id', '!=', $news->id) // Exclude the current news article
-                        ->whereNotNull('published_date') // Only include published news
-                        ->orderBy('published_date', 'desc') // Sort by published date (latest first)
-                        ->take(5) // Limit to 5 other news articles
-                        ->get();
+            ->whereNotNull('published_date') // Only include published news
+            ->orderBy('published_date', 'desc') // Sort by published date (latest first)
+            ->take(5) // Limit to 5 other news articles
+            ->get();
         return view('news.show', compact('news', 'otherNews'));
     }
 
@@ -161,8 +171,8 @@ class NewsController extends Controller
             ->with('success', "Berita berjaya dihapuskan!");
     }
 
-    
-//     public function export()
+
+    //     public function export()
 //     {
 //         return Excel::download(new NewsExport, 'news.xlsx');
 //     }

@@ -45,8 +45,10 @@ class EventsController extends Controller
 
             return view('events.index', compact('events', 'registeredEvents'));
         } else {
-            // For admins/staff: Show all events, sorted by status
-            $events = Events::orderByRaw("FIELD(status, 'pending', 'rejected', 'approved')")->paginate(20); // 10 events per page
+            // For admins/staff: Show all events
+            $events = Events::orderByRaw("FIELD(status, 'pending', 'rejected', 'approved')")
+                ->orderBy('start_date', 'desc') // Sorts by latest date first
+                ->paginate(20);
             return view('events.index', compact('events'));
         }
     }

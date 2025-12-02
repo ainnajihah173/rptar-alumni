@@ -44,13 +44,14 @@ class RegisteredUserController extends Controller
                     ->symbols() // Must contain at least one special character
             ],
             [
-                'password.required' => 'The password field is required.',
-                'password.confirmed' => 'The password confirmation does not match.',
-                'password.min' => 'The password must be at least 8 characters.',
-                'password.letters' => 'The password must contain at least one letter.',
-                'password.mixedCase' => 'The password must contain both uppercase and lowercase letters.',
-                'password.numbers' => 'The password must contain at least one number.',
-                'password.symbols' => 'The password must contain at least one special character.',
+                'password.required' => 'Kata laluan diperlukan.',
+                'password.confirmed' => 'Pengesahan kata laluan tidak sepadan.',
+                'password.min' => 'Kata laluan mesti sekurang-kurangnya 8 aksara.',
+                'password.letters' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu huruf.',
+                'password.mixedCase' => 'Kata laluan mesti mengandungi huruf besar dan huruf kecil.',
+                'password.numbers' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu nombor.',
+                'password.symbols' => 'Kata laluan mesti mengandungi sekurang-kurangnya satu aksara khas.',
+
             ]
         ]);
 
@@ -68,7 +69,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-        
+
         // Redirect to the profile edit page after registration
         return redirect()->route('profile.edit', $user->id)->with('warning', 'Sila lengkapkan profil anda sebelum ke halaman seterusnya.');
         // return redirect()->route('dashboard');

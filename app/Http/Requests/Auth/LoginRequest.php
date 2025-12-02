@@ -49,12 +49,12 @@ class LoginRequest extends FormRequest
             if (!$userExists) {
                 // If email does not exist, throw an email-specific error
                 throw ValidationException::withMessages([
-                    'email' => __("Sorry, we don't recognize this email"),
+                    'email' => __("Maaf, kami tidak mengenali emel ini"),
                 ]);
             } else {
                 // If email exists but password is incorrect, throw a password-specific error
                 throw ValidationException::withMessages([
-                    'password' => __('Your password is incorrect'),
+                    'password' => __('Kata laluan anda salah. Sila cuba lagi'),
                 ]);
             }
         }

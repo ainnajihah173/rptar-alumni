@@ -21,7 +21,7 @@ class DonationController extends Controller
         // For Staff/Admin
         if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin') {
             // Fetch all campaigns sorted by start_date and status
-            $campaigns = Campaign::orderByRaw("FIELD(status, 'pending', 'rejected', 'active', 'closed')")->paginate(20);
+            $campaigns = Campaign::orderByRaw("FIELD(status, 'pending', 'rejected', 'active', 'closed')")->orderBy('end_date', 'desc')->paginate(20);
 
             // Automatically set campaigns to 'closed' if end_date has passed or target_amount is reached
             foreach ($campaigns as $campaign) {

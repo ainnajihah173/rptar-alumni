@@ -24,7 +24,7 @@
                         <!-- Status Badge -->
                         @php
                             $status = $campaigns->status;
-                            $formattedStatus = ucfirst($status); // Assuming 'status' is a field in your database
+                            $formattedStatus = ucfirst($status); 
                             $badgeColor = match ($status) {
                                 'pending' => 'badge-secondary',
                                 'rejected' => 'badge-danger',
@@ -80,7 +80,7 @@
                         <tr>
                             <th>No.</th>
                             <th>Nama Penderma</th>
-                            <th>Jumlah Derma</th>
+                            <!--<th>Jumlah Derma</th>-->
                             <th>Tarikh Derma</th>
                             <th>Status</th>
                             <th>Tindakan</th>
@@ -91,7 +91,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $donation->users->profile->full_name }}</td>
-                                <td>RM {{ number_format($donation->amount, 2) }}</td>
+                                <!--<td>RM {{ number_format($donation->amount, 2) }}</td>-->
                                 <td>{{ $donation->created_at->format('d M Y') }}</td>
                                 <td>
                                     @if ($donation->payment_status == 'successful')
